@@ -1,12 +1,13 @@
 'use client'
 
-import { ThemeProvider, AppHeader } from 'spotify-design-system'
+import { ThemeProvider, AppHeader, Sidebar } from 'spotify-design-system'
 import React from 'react';
 
 export default function Home() {
   return (
     <ThemeProvider>
       <div className="min-h-screen bg-spotify-dark text-white">
+        {/* Header */}
         <AppHeader 
           isAuthenticated={false}
           onSearch={() => console.log('Search clicked')}
@@ -14,6 +15,153 @@ export default function Home() {
           onSignUp={() => console.log('Sign up clicked')}
           onInstallApp={() => console.log('Install app clicked')}
         />
+        
+        {/* Main Layout */}
+        <div className="flex h-screen">
+          {/* Sidebar */}
+          <Sidebar />
+          
+          {/* Main Content */}
+          <div className="flex-1 flex flex-col">
+            {/* Content Area */}
+            <div className="flex-1 overflow-y-auto p-6">
+              {/* Welcome Section */}
+              <div className="mb-8">
+                <h1 className="text-3xl font-bold mb-6">Good afternoon</h1>
+                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4">
+                  {/* Playlist Cards */}
+                  {Array.from({ length: 6 }).map((_, i) => (
+                    <div key={i} className="bg-spotify-surface rounded-lg p-4 hover:bg-gray-700 transition-colors cursor-pointer group">
+                      <div className="aspect-square bg-gradient-to-br from-purple-500 to-pink-500 rounded-lg mb-4 flex items-center justify-center">
+                        <svg className="w-12 h-12 text-white" fill="currentColor" viewBox="0 0 24 24">
+                          <path d="M8 5v14l11-7z"/>
+                        </svg>
+                      </div>
+                      <h3 className="font-semibold text-white group-hover:text-spotify-green transition-colors">
+                        Playlist {i + 1}
+                      </h3>
+                      <p className="text-gray-400 text-sm mt-1">
+                        By User
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+              
+              {/* Recently Played */}
+              <div className="mb-8">
+                <h2 className="text-2xl font-bold mb-6">Recently played</h2>
+                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4">
+                  {Array.from({ length: 6 }).map((_, i) => (
+                    <div key={i} className="bg-spotify-surface rounded-lg p-4 hover:bg-gray-700 transition-colors cursor-pointer group">
+                      <div className="aspect-square bg-gradient-to-br from-blue-500 to-green-500 rounded-lg mb-4 flex items-center justify-center">
+                        <svg className="w-12 h-12 text-white" fill="currentColor" viewBox="0 0 24 24">
+                          <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                        </svg>
+                      </div>
+                      <h3 className="font-semibold text-white group-hover:text-spotify-green transition-colors">
+                        Recently Played {i + 1}
+                      </h3>
+                      <p className="text-gray-400 text-sm mt-1">
+                        Playlist
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+              
+              {/* Made for You */}
+              <div className="mb-8">
+                <h2 className="text-2xl font-bold mb-6">Made for you</h2>
+                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4">
+                  {Array.from({ length: 6 }).map((_, i) => (
+                    <div key={i} className="bg-spotify-surface rounded-lg p-4 hover:bg-gray-700 transition-colors cursor-pointer group">
+                      <div className="aspect-square bg-gradient-to-br from-red-500 to-orange-500 rounded-lg mb-4 flex items-center justify-center">
+                        <svg className="w-12 h-12 text-white" fill="currentColor" viewBox="0 0 24 24">
+                          <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                        </svg>
+                      </div>
+                      <h3 className="font-semibold text-white group-hover:text-spotify-green transition-colors">
+                        Made for You {i + 1}
+                      </h3>
+                      <p className="text-gray-400 text-sm mt-1">
+                        Made for you
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+            
+            {/* Music Player */}
+            <div className="h-20 bg-spotify-black border-t border-gray-800 flex items-center px-4">
+              <div className="flex items-center space-x-4 w-1/4">
+                <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-pink-500 rounded flex items-center justify-center">
+                  <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M8 5v14l11-7z"/>
+                  </svg>
+                </div>
+                <div>
+                  <h4 className="text-white font-medium">Song Title</h4>
+                  <p className="text-gray-400 text-sm">Artist Name</p>
+                </div>
+                <button className="text-gray-400 hover:text-white">
+                  <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                  </svg>
+                </button>
+              </div>
+              
+              <div className="flex-1 flex flex-col items-center space-y-2">
+                <div className="flex items-center space-x-4">
+                  <button className="text-gray-400 hover:text-white">
+                    <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M6 6h2v12H6zm3.5 6l8.5 6V6z"/>
+                    </svg>
+                  </button>
+                  <button className="bg-white text-black rounded-full p-2 hover:scale-105 transition-transform">
+                    <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M8 5v14l11-7z"/>
+                    </svg>
+                  </button>
+                  <button className="text-gray-400 hover:text-white">
+                    <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z"/>
+                    </svg>
+                  </button>
+                </div>
+                <div className="flex items-center space-x-2 w-full max-w-md">
+                  <span className="text-xs text-gray-400">0:00</span>
+                  <div className="flex-1 bg-gray-600 rounded-full h-1">
+                    <div className="bg-white rounded-full h-1 w-1/3"></div>
+                  </div>
+                  <span className="text-xs text-gray-400">3:45</span>
+                </div>
+              </div>
+              
+              <div className="w-1/4 flex items-center justify-end space-x-2">
+                <button className="text-gray-400 hover:text-white">
+                  <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                  </svg>
+                </button>
+                <button className="text-gray-400 hover:text-white">
+                  <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/>
+                  </svg>
+                </button>
+                <div className="flex items-center space-x-1">
+                  <svg className="w-4 h-4 text-gray-400" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/>
+                  </svg>
+                  <div className="w-16 bg-gray-600 rounded-full h-1">
+                    <div className="bg-white rounded-full h-1 w-1/2"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </ThemeProvider>
   )
