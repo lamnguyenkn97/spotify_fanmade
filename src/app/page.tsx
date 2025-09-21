@@ -2,6 +2,7 @@
 
 import { ThemeProvider, AppHeader, Sidebar, Card, Typography } from 'spotify-design-system'
 import React from 'react';
+import homepageData from './data/homepageData.json';
 
 export default function Home() {
   return (
@@ -27,31 +28,11 @@ export default function Home() {
             <div className="flex-1 overflow-y-auto p-6">
               {/* Welcome Section */}
               <div className="mb-8">
-                <Typography variant="title" size="2xl">
-                  Good afternoon
+                <Typography variant="title" size={'xl'}>
+                  {homepageData.data.home.greeting.transformedLabel}
                 </Typography>
                 <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4">
-                  {/* Playlist Cards */}
-                  {Array.from({ length: 6 }).map((_, i) => (
-                    <Card 
-                      key={i} 
-                      title={`Playlist ${i + 1}`} 
-                      subtitle="By User"
-                      variant="default"
-                      size="md"
-                      showPlayButton={true}
-                      onPlayClick={() => console.log(`Playing Playlist ${i + 1}`)}
-                    />
-                  ))}
-                </div>
-              </div>
-              
-              {/* Recently Played */}
-              <div className="mb-8">
-                <Typography variant="heading" size="xl">
-                  Recently played
-                </Typography>
-                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4">
+                  {/* Recently Played Playlists */}
                   {Array.from({ length: 6 }).map((_, i) => (
                     <Card 
                       key={i} 
@@ -66,25 +47,64 @@ export default function Home() {
                 </div>
               </div>
               
-              {/* Made for You */}
-              <div className="mb-8">
-                <Typography variant="body" size={'2xl'}>
-                  Made for you
-                </Typography>
-                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4">
-                  {Array.from({ length: 6 }).map((_, i) => (
-                    <Card 
-                      key={i} 
-                      title={`Made for You ${i + 1}`} 
-                      subtitle="Made for you"
-                      variant="default"
-                      size="md"
-                      showPlayButton={true}
-                      onPlayClick={() => console.log(`Playing Made for You ${i + 1}`)}
-                    />
-                  ))}
-                </div>
-              </div>
+              {/* Dynamic Sections from Data */}
+              {homepageData.data.home.sectionContainer.sections.items.map((section, sectionIndex) => {
+                if (!section.data.title.transformedLabel) return null;
+                
+                return (
+                  <div key={sectionIndex} className="mb-8">
+                    <Typography variant="title" size={'xl'}>
+                      {section.data.title.transformedLabel}
+                    </Typography>
+                    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4">
+                      {section.sectionItems.items.slice(0, 6).map((item, itemIndex) => {
+                        // Handle different content types
+                        if (item.content.__typename === 'TrackResponseWrapper') {
+                          const track = item.content.data as any;
+                          return (
+                            <Card 
+                              key={itemIndex} 
+                              title={track.name || 'Unknown Track'}
+                              subtitle={track.artists?.items?.[0]?.profile?.name || 'Unknown Artist'}
+                              variant="default"
+                              size="md"
+                              showPlayButton={true}
+                              onPlayClick={() => console.log(`Playing ${track.name}`)}
+                            />
+                          );
+                        } else if (item.content.__typename === 'ArtistResponseWrapper') {
+                          const artist = item.content.data as any;
+                          return (
+                            <Card 
+                              key={itemIndex} 
+                              title={artist.profile?.name || 'Unknown Artist'}
+                              subtitle="Artist"
+                              variant="artist"
+                              size="md"
+                              showPlayButton={true}
+                              onPlayClick={() => console.log(`Playing ${artist.profile?.name}`)}
+                            />
+                          );
+                        } else if (item.content.__typename === 'AlbumResponseWrapper') {
+                          const album = item.content.data as any;
+                          return (
+                            <Card 
+                              key={itemIndex} 
+                              title={album.name || 'Unknown Album'}
+                              subtitle={album.artists?.items?.[0]?.profile?.name || 'Unknown Artist'}
+                              variant="default"
+                              size="md"
+                              showPlayButton={true}
+                              onPlayClick={() => console.log(`Playing ${album.name}`)}
+                            />
+                          );
+                        }
+                        return null;
+                      })}
+                    </div>
+                  </div>
+                );
+              })}
             </div>
             
             {/* Music Player */}

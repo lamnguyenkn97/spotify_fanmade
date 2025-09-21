@@ -1,0 +1,3292 @@
+{
+  "data": {
+    "home": {
+      "__typename": "HomeResponsePayload",
+      "greeting": {
+        "transformedLabel": "Good afternoon",
+        "translatedBaseText": "Good afternoon"
+      },
+      "sectionContainer": {
+        "sections": {
+          "items": [
+            {
+              "data": {
+                "__typename": "HomeGenericSectionData",
+                "headerEntity": {
+                  "__typename": "UnknownType"
+                },
+                "subtitle": {
+                  "transformedLabel": "",
+                  "translatedBaseText": null
+                },
+                "title": {
+                  "transformedLabel": "Trending songs",
+                  "translatedBaseText": "Trending songs"
+                }
+              },
+              "sectionItems": {
+                "items": [
+                  {
+                    "content": {
+                      "__typename": "TrackResponseWrapper",
+                      "data": {
+                        "__typename": "Track",
+                        "albumOfTrack": {
+                          "coverArt": {
+                            "extractedColors": {
+                              "colorDark": {
+                                "hex": "#A04030",
+                                "isFallback": false
+                              }
+                            },
+                            "sources": [
+                              {
+                                "height": 300,
+                                "url": "https://i.scdn.co/image/ab67616d00001e028a00c8f7854711c7e15d301f",
+                                "width": 300
+                              },
+                              {
+                                "height": 64,
+                                "url": "https://i.scdn.co/image/ab67616d000048518a00c8f7854711c7e15d301f",
+                                "width": 64
+                              },
+                              {
+                                "height": 640,
+                                "url": "https://i.scdn.co/image/ab67616d0000b2738a00c8f7854711c7e15d301f",
+                                "width": 640
+                              }
+                            ]
+                          },
+                          "name": "SAU CƠN SUY",
+                          "uri": "spotify:album:0VyQpNJn0vQl2x5QZQ1jub"
+                        },
+                        "artists": {
+                          "items": [
+                            {
+                              "profile": {
+                                "name": "RHYDER"
+                              },
+                              "uri": "spotify:artist:1W2pigH6UYwuTuFbwoSfVZ"
+                            }
+                          ]
+                        },
+                        "associationsV3": {
+                          "audioAssociations": {
+                            "items": []
+                          }
+                        },
+                        "contentRating": {
+                          "label": "NONE"
+                        },
+                        "name": "SAU CƠN SUY",
+                        "uri": "spotify:track:3VFb1YDFdoS6vRYW9n0egd"
+                      }
+                    },
+                    "data": null,
+                    "uri": "spotify:track:3VFb1YDFdoS6vRYW9n0egd"
+                  },
+                  {
+                    "content": {
+                      "__typename": "TrackResponseWrapper",
+                      "data": {
+                        "__typename": "Track",
+                        "albumOfTrack": {
+                          "coverArt": {
+                            "extractedColors": {
+                              "colorDark": {
+                                "hex": "#386068",
+                                "isFallback": false
+                              }
+                            },
+                            "sources": [
+                              {
+                                "height": 300,
+                                "url": "https://i.scdn.co/image/ab67616d00001e020786828d7944be0c8b2aa7dc",
+                                "width": 300
+                              },
+                              {
+                                "height": 64,
+                                "url": "https://i.scdn.co/image/ab67616d000048510786828d7944be0c8b2aa7dc",
+                                "width": 64
+                              },
+                              {
+                                "height": 640,
+                                "url": "https://i.scdn.co/image/ab67616d0000b2730786828d7944be0c8b2aa7dc",
+                                "width": 640
+                              }
+                            ]
+                          },
+                          "name": "MỘT NGÀY NÀO ĐÓ",
+                          "uri": "spotify:album:2zyJnYZj6meIXc5cbMTJIg"
+                        },
+                        "artists": {
+                          "items": [
+                            {
+                              "profile": {
+                                "name": "Hoàng Dũng"
+                              },
+                              "uri": "spotify:artist:6OzE2OdvV2tGAxSBsBuZ74"
+                            },
+                            {
+                              "profile": {
+                                "name": "Đen"
+                              },
+                              "uri": "spotify:artist:1LEtM3AleYg1xabW6CRkpi"
+                            },
+                            {
+                              "profile": {
+                                "name": "Bạn Nhạc."
+                              },
+                              "uri": "spotify:artist:77JieyHvTBIdnZFWJ6K4Xi"
+                            }
+                          ]
+                        },
+                        "associationsV3": {
+                          "audioAssociations": {
+                            "items": []
+                          }
+                        },
+                        "contentRating": {
+                          "label": "NONE"
+                        },
+                        "name": "MỘT NGÀY NÀO ĐÓ",
+                        "uri": "spotify:track:0y9syFsnSuYnf0RUqxE1Ah"
+                      }
+                    },
+                    "data": null,
+                    "uri": "spotify:track:0y9syFsnSuYnf0RUqxE1Ah"
+                  },
+                  {
+                    "content": {
+                      "__typename": "TrackResponseWrapper",
+                      "data": {
+                        "__typename": "Track",
+                        "albumOfTrack": {
+                          "coverArt": {
+                            "extractedColors": {
+                              "colorDark": {
+                                "hex": "#303870",
+                                "isFallback": false
+                              }
+                            },
+                            "sources": [
+                              {
+                                "height": 300,
+                                "url": "https://i.scdn.co/image/ab67616d00001e02408de2819925aaed9f799a9f",
+                                "width": 300
+                              },
+                              {
+                                "height": 64,
+                                "url": "https://i.scdn.co/image/ab67616d00004851408de2819925aaed9f799a9f",
+                                "width": 64
+                              },
+                              {
+                                "height": 640,
+                                "url": "https://i.scdn.co/image/ab67616d0000b273408de2819925aaed9f799a9f",
+                                "width": 640
+                              }
+                            ]
+                          },
+                          "name": "Love Game",
+                          "uri": "spotify:album:1vyxo3BO4guXsPYgWoV9gl"
+                        },
+                        "artists": {
+                          "items": [
+                            {
+                              "profile": {
+                                "name": "Low G"
+                              },
+                              "uri": "spotify:artist:6TITnFVRcl0AcZ4syE7Toe"
+                            },
+                            {
+                              "profile": {
+                                "name": "tlinh"
+                              },
+                              "uri": "spotify:artist:3diftVOq7aEIebXKkC34oR"
+                            }
+                          ]
+                        },
+                        "associationsV3": {
+                          "audioAssociations": {
+                            "items": []
+                          }
+                        },
+                        "contentRating": {
+                          "label": "EXPLICIT"
+                        },
+                        "name": "Love Game",
+                        "uri": "spotify:track:0x7rhEP1Tak1guiTYODlic"
+                      }
+                    },
+                    "data": null,
+                    "uri": "spotify:track:0x7rhEP1Tak1guiTYODlic"
+                  },
+                  {
+                    "content": {
+                      "__typename": "TrackResponseWrapper",
+                      "data": {
+                        "__typename": "Track",
+                        "albumOfTrack": {
+                          "coverArt": {
+                            "extractedColors": {
+                              "colorDark": {
+                                "hex": "#D80808",
+                                "isFallback": false
+                              }
+                            },
+                            "sources": [
+                              {
+                                "height": 300,
+                                "url": "https://i.scdn.co/image/ab67616d00001e028e2436033be92c06e4afee32",
+                                "width": 300
+                              },
+                              {
+                                "height": 64,
+                                "url": "https://i.scdn.co/image/ab67616d000048518e2436033be92c06e4afee32",
+                                "width": 64
+                              },
+                              {
+                                "height": 640,
+                                "url": "https://i.scdn.co/image/ab67616d0000b2738e2436033be92c06e4afee32",
+                                "width": 640
+                              }
+                            ]
+                          },
+                          "name": "Không Buông",
+                          "uri": "spotify:album:6XkJNJGMV0VxaaxlfB3ss3"
+                        },
+                        "artists": {
+                          "items": [
+                            {
+                              "profile": {
+                                "name": "Hngle"
+                              },
+                              "uri": "spotify:artist:7kBsX15IDun9YxuVmKCMYJ"
+                            },
+                            {
+                              "profile": {
+                                "name": "Ari"
+                              },
+                              "uri": "spotify:artist:6cV92JqHZPWNfa7T4oAvR9"
+                            }
+                          ]
+                        },
+                        "associationsV3": {
+                          "audioAssociations": {
+                            "items": []
+                          }
+                        },
+                        "contentRating": {
+                          "label": "NONE"
+                        },
+                        "name": "Không Buông",
+                        "uri": "spotify:track:1ApIGNgp1azc0qB61x4GzG"
+                      }
+                    },
+                    "data": null,
+                    "uri": "spotify:track:1ApIGNgp1azc0qB61x4GzG"
+                  },
+                  {
+                    "content": {
+                      "__typename": "TrackResponseWrapper",
+                      "data": {
+                        "__typename": "Track",
+                        "albumOfTrack": {
+                          "coverArt": {
+                            "extractedColors": {
+                              "colorDark": {
+                                "hex": "#7A766D",
+                                "isFallback": false
+                              }
+                            },
+                            "sources": [
+                              {
+                                "height": 300,
+                                "url": "https://i.scdn.co/image/ab67616d00001e02b819585ed384b50b1c1d385f",
+                                "width": 300
+                              },
+                              {
+                                "height": 64,
+                                "url": "https://i.scdn.co/image/ab67616d00004851b819585ed384b50b1c1d385f",
+                                "width": 64
+                              },
+                              {
+                                "height": 640,
+                                "url": "https://i.scdn.co/image/ab67616d0000b273b819585ed384b50b1c1d385f",
+                                "width": 640
+                              }
+                            ]
+                          },
+                          "name": "30 The Album",
+                          "uri": "spotify:album:5J9qu9b3RHAmjKqVyN31VX"
+                        },
+                        "artists": {
+                          "items": [
+                            {
+                              "profile": {
+                                "name": "Seachains"
+                              },
+                              "uri": "spotify:artist:6UiKZD9yB7Gxjol62s431k"
+                            }
+                          ]
+                        },
+                        "associationsV3": {
+                          "audioAssociations": {
+                            "items": []
+                          }
+                        },
+                        "contentRating": {
+                          "label": "NONE"
+                        },
+                        "name": "Âm Thầm Vàng",
+                        "uri": "spotify:track:02El5WezsW88jBzMOte6EM"
+                      }
+                    },
+                    "data": null,
+                    "uri": "spotify:track:02El5WezsW88jBzMOte6EM"
+                  },
+                  {
+                    "content": {
+                      "__typename": "TrackResponseWrapper",
+                      "data": {
+                        "__typename": "Track",
+                        "albumOfTrack": {
+                          "coverArt": {
+                            "extractedColors": {
+                              "colorDark": {
+                                "hex": "#1080A0",
+                                "isFallback": false
+                              }
+                            },
+                            "sources": [
+                              {
+                                "height": 300,
+                                "url": "https://i.scdn.co/image/ab67616d00001e029618d96374acb03ecf111ccb",
+                                "width": 300
+                              },
+                              {
+                                "height": 64,
+                                "url": "https://i.scdn.co/image/ab67616d000048519618d96374acb03ecf111ccb",
+                                "width": 64
+                              },
+                              {
+                                "height": 640,
+                                "url": "https://i.scdn.co/image/ab67616d0000b2739618d96374acb03ecf111ccb",
+                                "width": 640
+                              }
+                            ]
+                          },
+                          "name": "OE OE",
+                          "uri": "spotify:album:1dzRp6F8Qtvq6KgJ0a2iHN"
+                        },
+                        "artists": {
+                          "items": [
+                            {
+                              "profile": {
+                                "name": "JSOL"
+                              },
+                              "uri": "spotify:artist:6EybZ5zwPNEtEngfrEMevN"
+                            },
+                            {
+                              "profile": {
+                                "name": "HURRYKNG"
+                              },
+                              "uri": "spotify:artist:5ulyphh5uJrH4Gb1JpSMkV"
+                            }
+                          ]
+                        },
+                        "associationsV3": {
+                          "audioAssociations": {
+                            "items": []
+                          }
+                        },
+                        "contentRating": {
+                          "label": "NONE"
+                        },
+                        "name": "TÍNH LƯỜI",
+                        "uri": "spotify:track:2kDSmCn0vv4zQydj9UCAZO"
+                      }
+                    },
+                    "data": null,
+                    "uri": "spotify:track:2kDSmCn0vv4zQydj9UCAZO"
+                  },
+                  {
+                    "content": {
+                      "__typename": "TrackResponseWrapper",
+                      "data": {
+                        "__typename": "Track",
+                        "albumOfTrack": {
+                          "coverArt": {
+                            "extractedColors": {
+                              "colorDark": {
+                                "hex": "#686898",
+                                "isFallback": false
+                              }
+                            },
+                            "sources": [
+                              {
+                                "height": 300,
+                                "url": "https://i.scdn.co/image/ab67616d00001e020a1da4458e155bec77ca5822",
+                                "width": 300
+                              },
+                              {
+                                "height": 64,
+                                "url": "https://i.scdn.co/image/ab67616d000048510a1da4458e155bec77ca5822",
+                                "width": 64
+                              },
+                              {
+                                "height": 640,
+                                "url": "https://i.scdn.co/image/ab67616d0000b2730a1da4458e155bec77ca5822",
+                                "width": 640
+                              }
+                            ]
+                          },
+                          "name": "Cho Em Đi",
+                          "uri": "spotify:album:1hMRRPo0Rwq95O7VYlvl4w"
+                        },
+                        "artists": {
+                          "items": [
+                            {
+                              "profile": {
+                                "name": "Pháp Kiều"
+                              },
+                              "uri": "spotify:artist:13c4ijEkXNvEFoxGxwp5Su"
+                            }
+                          ]
+                        },
+                        "associationsV3": {
+                          "audioAssociations": {
+                            "items": []
+                          }
+                        },
+                        "contentRating": {
+                          "label": "NONE"
+                        },
+                        "name": "Cho Em Đi",
+                        "uri": "spotify:track:6AJ4Ds1Xi8dFxDudkTggVB"
+                      }
+                    },
+                    "data": null,
+                    "uri": "spotify:track:6AJ4Ds1Xi8dFxDudkTggVB"
+                  },
+                  {
+                    "content": {
+                      "__typename": "TrackResponseWrapper",
+                      "data": {
+                        "__typename": "Track",
+                        "albumOfTrack": {
+                          "coverArt": {
+                            "extractedColors": {
+                              "colorDark": {
+                                "hex": "#497F7F",
+                                "isFallback": false
+                              }
+                            },
+                            "sources": [
+                              {
+                                "height": 300,
+                                "url": "https://i.scdn.co/image/ab67616d00001e0238adee88ff1cac0cdd7dd3a0",
+                                "width": 300
+                              },
+                              {
+                                "height": 64,
+                                "url": "https://i.scdn.co/image/ab67616d0000485138adee88ff1cac0cdd7dd3a0",
+                                "width": 64
+                              },
+                              {
+                                "height": 640,
+                                "url": "https://i.scdn.co/image/ab67616d0000b27338adee88ff1cac0cdd7dd3a0",
+                                "width": 640
+                              }
+                            ]
+                          },
+                          "name": "Hải Trình Tan Vỡ",
+                          "uri": "spotify:album:7JDPfd2erMNpRDIPlRCmuk"
+                        },
+                        "artists": {
+                          "items": [
+                            {
+                              "profile": {
+                                "name": "Trungg I.U"
+                              },
+                              "uri": "spotify:artist:6Ue0BbbTOdBjcO4QZB5sio"
+                            },
+                            {
+                              "profile": {
+                                "name": "Phạm Anh Duy"
+                              },
+                              "uri": "spotify:artist:5HnaYivMXMHeOKCvyPGUkk"
+                            }
+                          ]
+                        },
+                        "associationsV3": {
+                          "audioAssociations": {
+                            "items": []
+                          }
+                        },
+                        "contentRating": {
+                          "label": "NONE"
+                        },
+                        "name": "Hải Trình Tan Vỡ",
+                        "uri": "spotify:track:5teXF6aAKNuZSSpaP7Bjbo"
+                      }
+                    },
+                    "data": null,
+                    "uri": "spotify:track:5teXF6aAKNuZSSpaP7Bjbo"
+                  },
+                  {
+                    "content": {
+                      "__typename": "TrackResponseWrapper",
+                      "data": {
+                        "__typename": "Track",
+                        "albumOfTrack": {
+                          "coverArt": {
+                            "extractedColors": {
+                              "colorDark": {
+                                "hex": "#085010",
+                                "isFallback": false
+                              }
+                            },
+                            "sources": [
+                              {
+                                "height": 300,
+                                "url": "https://i.scdn.co/image/ab67616d00001e024568e8062c20ce97b8e0cdb6",
+                                "width": 300
+                              },
+                              {
+                                "height": 64,
+                                "url": "https://i.scdn.co/image/ab67616d000048514568e8062c20ce97b8e0cdb6",
+                                "width": 64
+                              },
+                              {
+                                "height": 640,
+                                "url": "https://i.scdn.co/image/ab67616d0000b2734568e8062c20ce97b8e0cdb6",
+                                "width": 640
+                              }
+                            ]
+                          },
+                          "name": "Trọn Đời",
+                          "uri": "spotify:album:2e6elrQcZ9p7tYdMrEft5L"
+                        },
+                        "artists": {
+                          "items": [
+                            {
+                              "profile": {
+                                "name": "Kha"
+                              },
+                              "uri": "spotify:artist:6tWaQSIL7reD85PKStNk28"
+                            }
+                          ]
+                        },
+                        "associationsV3": {
+                          "audioAssociations": {
+                            "items": []
+                          }
+                        },
+                        "contentRating": {
+                          "label": "NONE"
+                        },
+                        "name": "Trọn Đời",
+                        "uri": "spotify:track:43HsWutEmwN6isjmLluHpx"
+                      }
+                    },
+                    "data": null,
+                    "uri": "spotify:track:43HsWutEmwN6isjmLluHpx"
+                  },
+                  {
+                    "content": {
+                      "__typename": "TrackResponseWrapper",
+                      "data": {
+                        "__typename": "Track",
+                        "albumOfTrack": {
+                          "coverArt": {
+                            "extractedColors": {
+                              "colorDark": {
+                                "hex": "#777777",
+                                "isFallback": false
+                              }
+                            },
+                            "sources": [
+                              {
+                                "height": 300,
+                                "url": "https://i.scdn.co/image/ab67616d00001e024b56a34b0c2b3798fd46f855",
+                                "width": 300
+                              },
+                              {
+                                "height": 64,
+                                "url": "https://i.scdn.co/image/ab67616d000048514b56a34b0c2b3798fd46f855",
+                                "width": 64
+                              },
+                              {
+                                "height": 640,
+                                "url": "https://i.scdn.co/image/ab67616d0000b2734b56a34b0c2b3798fd46f855",
+                                "width": 640
+                              }
+                            ]
+                          },
+                          "name": "COLOR OUTSIDE THE LINES",
+                          "uri": "spotify:album:2yMfaynthtWVAkJ5A3Kwrf"
+                        },
+                        "artists": {
+                          "items": [
+                            {
+                              "profile": {
+                                "name": "CORTIS"
+                              },
+                              "uri": "spotify:artist:1ebt9HnXdyYA6KgLXr1n4P"
+                            }
+                          ]
+                        },
+                        "associationsV3": {
+                          "audioAssociations": {
+                            "items": []
+                          }
+                        },
+                        "contentRating": {
+                          "label": "NONE"
+                        },
+                        "name": "GO!",
+                        "uri": "spotify:track:6OWWZtNQORY1McaZmOrwhc"
+                      }
+                    },
+                    "data": null,
+                    "uri": "spotify:track:6OWWZtNQORY1McaZmOrwhc"
+                  },
+                  {
+                    "content": {
+                      "__typename": "TrackResponseWrapper",
+                      "data": {
+                        "__typename": "Track",
+                        "albumOfTrack": {
+                          "coverArt": {
+                            "extractedColors": {
+                              "colorDark": {
+                                "hex": "#0050A0",
+                                "isFallback": false
+                              }
+                            },
+                            "sources": [
+                              {
+                                "height": 300,
+                                "url": "https://i.scdn.co/image/ab67616d00001e0225324b44f288cc2660cf17f8",
+                                "width": 300
+                              },
+                              {
+                                "height": 64,
+                                "url": "https://i.scdn.co/image/ab67616d0000485125324b44f288cc2660cf17f8",
+                                "width": 64
+                              },
+                              {
+                                "height": 640,
+                                "url": "https://i.scdn.co/image/ab67616d0000b27325324b44f288cc2660cf17f8",
+                                "width": 640
+                              }
+                            ]
+                          },
+                          "name": "Chỉ cần bên anh (Will you marry me?)",
+                          "uri": "spotify:album:5lulni68uoRSlwWAiBnuxA"
+                        },
+                        "artists": {
+                          "items": [
+                            {
+                              "profile": {
+                                "name": "ERIK"
+                              },
+                              "uri": "spotify:artist:1L1VfizWn4DkFt602yD80U"
+                            },
+                            {
+                              "profile": {
+                                "name": "Orange"
+                              },
+                              "uri": "spotify:artist:5lAfakPZgxFKgiJD6xAF1G"
+                            }
+                          ]
+                        },
+                        "associationsV3": {
+                          "audioAssociations": {
+                            "items": []
+                          }
+                        },
+                        "contentRating": {
+                          "label": "NONE"
+                        },
+                        "name": "Chỉ cần bên anh (Will you marry me?)",
+                        "uri": "spotify:track:7w0MWZpfmhMmTaH6lKEYp1"
+                      }
+                    },
+                    "data": null,
+                    "uri": "spotify:track:7w0MWZpfmhMmTaH6lKEYp1"
+                  },
+                  {
+                    "content": {
+                      "__typename": "TrackResponseWrapper",
+                      "data": {
+                        "__typename": "Track",
+                        "albumOfTrack": {
+                          "coverArt": {
+                            "extractedColors": {
+                              "colorDark": {
+                                "hex": "#700008",
+                                "isFallback": false
+                              }
+                            },
+                            "sources": [
+                              {
+                                "height": 300,
+                                "url": "https://i.scdn.co/image/ab67616d00001e023e5a1515b5f85c7b45619273",
+                                "width": 300
+                              },
+                              {
+                                "height": 64,
+                                "url": "https://i.scdn.co/image/ab67616d000048513e5a1515b5f85c7b45619273",
+                                "width": 64
+                              },
+                              {
+                                "height": 640,
+                                "url": "https://i.scdn.co/image/ab67616d0000b2733e5a1515b5f85c7b45619273",
+                                "width": 640
+                              }
+                            ]
+                          },
+                          "name": "AM I THE DRAMA?",
+                          "uri": "spotify:album:1LsNb6mVitbLZCxnRsbCDJ"
+                        },
+                        "artists": {
+                          "items": [
+                            {
+                              "profile": {
+                                "name": "Cardi B"
+                              },
+                              "uri": "spotify:artist:4kYSro6naA4h99UJvo89HB"
+                            },
+                            {
+                              "profile": {
+                                "name": "Kehlani"
+                              },
+                              "uri": "spotify:artist:0cGUm45nv7Z6M6qdXYQGTX"
+                            }
+                          ]
+                        },
+                        "associationsV3": {
+                          "audioAssociations": {
+                            "items": []
+                          }
+                        },
+                        "contentRating": {
+                          "label": "EXPLICIT"
+                        },
+                        "name": "Safe (feat. Kehlani)",
+                        "uri": "spotify:track:5q9I5RmmrLC4U2mW2BnF3K"
+                      }
+                    },
+                    "data": null,
+                    "uri": "spotify:track:5q9I5RmmrLC4U2mW2BnF3K"
+                  },
+                  {
+                    "content": {
+                      "__typename": "TrackResponseWrapper",
+                      "data": {
+                        "__typename": "Track",
+                        "albumOfTrack": {
+                          "coverArt": {
+                            "extractedColors": {
+                              "colorDark": {
+                                "hex": "#204058",
+                                "isFallback": false
+                              }
+                            },
+                            "sources": [
+                              {
+                                "height": 300,
+                                "url": "https://i.scdn.co/image/ab67616d00001e02057de4b5c623b7cd19d54851",
+                                "width": 300
+                              },
+                              {
+                                "height": 64,
+                                "url": "https://i.scdn.co/image/ab67616d00004851057de4b5c623b7cd19d54851",
+                                "width": 64
+                              },
+                              {
+                                "height": 640,
+                                "url": "https://i.scdn.co/image/ab67616d0000b273057de4b5c623b7cd19d54851",
+                                "width": 640
+                              }
+                            ]
+                          },
+                          "name": "Anh Đã Không Biết Cách Yêu Em",
+                          "uri": "spotify:album:5W5zGLFhrRhu0W8eAv4lZN"
+                        },
+                        "artists": {
+                          "items": [
+                            {
+                              "profile": {
+                                "name": "Quang Đăng Trần"
+                              },
+                              "uri": "spotify:artist:2LX2SKJhvZjyH4Z7XMptjd"
+                            }
+                          ]
+                        },
+                        "associationsV3": {
+                          "audioAssociations": {
+                            "items": []
+                          }
+                        },
+                        "contentRating": {
+                          "label": "NONE"
+                        },
+                        "name": "Anh Đã Không Biết Cách Yêu Em",
+                        "uri": "spotify:track:2daxUR0gVJr2dOmOtYvW8R"
+                      }
+                    },
+                    "data": null,
+                    "uri": "spotify:track:2daxUR0gVJr2dOmOtYvW8R"
+                  },
+                  {
+                    "content": {
+                      "__typename": "TrackResponseWrapper",
+                      "data": {
+                        "__typename": "Track",
+                        "albumOfTrack": {
+                          "coverArt": {
+                            "extractedColors": {
+                              "colorDark": {
+                                "hex": "#802020",
+                                "isFallback": false
+                              }
+                            },
+                            "sources": [
+                              {
+                                "height": 300,
+                                "url": "https://i.scdn.co/image/ab67616d00001e027a3ade153f0ca03aa3ae2b19",
+                                "width": 300
+                              },
+                              {
+                                "height": 64,
+                                "url": "https://i.scdn.co/image/ab67616d000048517a3ade153f0ca03aa3ae2b19",
+                                "width": 64
+                              },
+                              {
+                                "height": 640,
+                                "url": "https://i.scdn.co/image/ab67616d0000b2737a3ade153f0ca03aa3ae2b19",
+                                "width": 640
+                              }
+                            ]
+                          },
+                          "name": "Nhẹ Tựa Khói Sương",
+                          "uri": "spotify:album:5RPPVd4Jm3RWTfVPYuykHN"
+                        },
+                        "artists": {
+                          "items": [
+                            {
+                              "profile": {
+                                "name": "Jun Phạm"
+                              },
+                              "uri": "spotify:artist:5bJcxnt5lkrDyKfPjtSBxP"
+                            },
+                            {
+                              "profile": {
+                                "name": "Bùi Lan Hương"
+                              },
+                              "uri": "spotify:artist:2XtMx7EHHODQSeBzDCBec9"
+                            }
+                          ]
+                        },
+                        "associationsV3": {
+                          "audioAssociations": {
+                            "items": []
+                          }
+                        },
+                        "contentRating": {
+                          "label": "NONE"
+                        },
+                        "name": "Nhẹ Tựa Khói Sương",
+                        "uri": "spotify:track:2VW3eQOfF0CBoP57HGpbgt"
+                      }
+                    },
+                    "data": null,
+                    "uri": "spotify:track:2VW3eQOfF0CBoP57HGpbgt"
+                  },
+                  {
+                    "content": {
+                      "__typename": "TrackResponseWrapper",
+                      "data": {
+                        "__typename": "Track",
+                        "albumOfTrack": {
+                          "coverArt": {
+                            "extractedColors": {
+                              "colorDark": {
+                                "hex": "#483030",
+                                "isFallback": false
+                              }
+                            },
+                            "sources": [
+                              {
+                                "height": 300,
+                                "url": "https://i.scdn.co/image/ab67616d00001e02205203d5b9990548fe1ce03b",
+                                "width": 300
+                              },
+                              {
+                                "height": 64,
+                                "url": "https://i.scdn.co/image/ab67616d00004851205203d5b9990548fe1ce03b",
+                                "width": 64
+                              },
+                              {
+                                "height": 640,
+                                "url": "https://i.scdn.co/image/ab67616d0000b273205203d5b9990548fe1ce03b",
+                                "width": 640
+                              }
+                            ]
+                          },
+                          "name": "Something Beautiful (Deluxe)",
+                          "uri": "spotify:album:3jyvGlsdgbUkdZnbpbZCCb"
+                        },
+                        "artists": {
+                          "items": [
+                            {
+                              "profile": {
+                                "name": "Miley Cyrus"
+                              },
+                              "uri": "spotify:artist:5YGY8feqx7naU7z4HrwZM6"
+                            },
+                            {
+                              "profile": {
+                                "name": "Lindsey Buckingham"
+                              },
+                              "uri": "spotify:artist:3Dzj993UEz8Z5ovxuirzFO"
+                            },
+                            {
+                              "profile": {
+                                "name": "Mick Fleetwood"
+                              },
+                              "uri": "spotify:artist:7bRRWmUqERkyOVSSU6MPFu"
+                            }
+                          ]
+                        },
+                        "associationsV3": {
+                          "audioAssociations": {
+                            "items": []
+                          }
+                        },
+                        "contentRating": {
+                          "label": "NONE"
+                        },
+                        "name": "Secrets (feat. Lindsey Buckingham & Mick Fleetwood)",
+                        "uri": "spotify:track:37u2vfn3zgAz98uTZM7KeZ"
+                      }
+                    },
+                    "data": null,
+                    "uri": "spotify:track:37u2vfn3zgAz98uTZM7KeZ"
+                  },
+                  {
+                    "content": {
+                      "__typename": "TrackResponseWrapper",
+                      "data": {
+                        "__typename": "Track",
+                        "albumOfTrack": {
+                          "coverArt": {
+                            "extractedColors": {
+                              "colorDark": {
+                                "hex": "#284890",
+                                "isFallback": false
+                              }
+                            },
+                            "sources": [
+                              {
+                                "height": 300,
+                                "url": "https://i.scdn.co/image/ab67616d00001e022c6280015fa71813e079c4ff",
+                                "width": 300
+                              },
+                              {
+                                "height": 64,
+                                "url": "https://i.scdn.co/image/ab67616d000048512c6280015fa71813e079c4ff",
+                                "width": 64
+                              },
+                              {
+                                "height": 640,
+                                "url": "https://i.scdn.co/image/ab67616d0000b2732c6280015fa71813e079c4ff",
+                                "width": 640
+                              }
+                            ]
+                          },
+                          "name": "Lội Ngược Dòng",
+                          "uri": "spotify:album:4yuIwuhNl8eMCSZWm9nYb3"
+                        },
+                        "artists": {
+                          "items": [
+                            {
+                              "profile": {
+                                "name": "Orange"
+                              },
+                              "uri": "spotify:artist:5lAfakPZgxFKgiJD6xAF1G"
+                            }
+                          ]
+                        },
+                        "associationsV3": {
+                          "audioAssociations": {
+                            "items": []
+                          }
+                        },
+                        "contentRating": {
+                          "label": "NONE"
+                        },
+                        "name": "Lội Ngược Dòng",
+                        "uri": "spotify:track:3W7xUIUUN8qNvzcD2tpdnm"
+                      }
+                    },
+                    "data": null,
+                    "uri": "spotify:track:3W7xUIUUN8qNvzcD2tpdnm"
+                  },
+                  {
+                    "content": {
+                      "__typename": "TrackResponseWrapper",
+                      "data": {
+                        "__typename": "Track",
+                        "albumOfTrack": {
+                          "coverArt": {
+                            "extractedColors": {
+                              "colorDark": {
+                                "hex": "#485068",
+                                "isFallback": false
+                              }
+                            },
+                            "sources": [
+                              {
+                                "height": 300,
+                                "url": "https://i.scdn.co/image/ab67616d00001e02eca3bc44c28ef42a81c72ad5",
+                                "width": 300
+                              },
+                              {
+                                "height": 64,
+                                "url": "https://i.scdn.co/image/ab67616d00004851eca3bc44c28ef42a81c72ad5",
+                                "width": 64
+                              },
+                              {
+                                "height": 640,
+                                "url": "https://i.scdn.co/image/ab67616d0000b273eca3bc44c28ef42a81c72ad5",
+                                "width": 640
+                              }
+                            ]
+                          },
+                          "name": "Công Ty 4",
+                          "uri": "spotify:album:0DJ4kSFK3kHAbkkwVHeGoO"
+                        },
+                        "artists": {
+                          "items": [
+                            {
+                              "profile": {
+                                "name": "Andree Right Hand"
+                              },
+                              "uri": "spotify:artist:4grjJqg7iwQ8RKHs8d9Snh"
+                            },
+                            {
+                              "profile": {
+                                "name": "Dangrangto"
+                              },
+                              "uri": "spotify:artist:5xY6E5PMZNtz9jDvxTRiGI"
+                            },
+                            {
+                              "profile": {
+                                "name": "TeuYungBoy"
+                              },
+                              "uri": "spotify:artist:3oD2yI1g6aT3KawHD8ZYaU"
+                            },
+                            {
+                              "profile": {
+                                "name": "WOKEUP"
+                              },
+                              "uri": "spotify:artist:0qAJ604EZMbkbpZ9NN6W6d"
+                            }
+                          ]
+                        },
+                        "associationsV3": {
+                          "audioAssociations": {
+                            "items": []
+                          }
+                        },
+                        "contentRating": {
+                          "label": "EXPLICIT"
+                        },
+                        "name": "Công Ty 4",
+                        "uri": "spotify:track:7p106V3HRaa0lCVL5oepMg"
+                      }
+                    },
+                    "data": null,
+                    "uri": "spotify:track:7p106V3HRaa0lCVL5oepMg"
+                  },
+                  {
+                    "content": {
+                      "__typename": "TrackResponseWrapper",
+                      "data": {
+                        "__typename": "Track",
+                        "albumOfTrack": {
+                          "coverArt": {
+                            "extractedColors": {
+                              "colorDark": {
+                                "hex": "#202840",
+                                "isFallback": false
+                              }
+                            },
+                            "sources": [
+                              {
+                                "height": 300,
+                                "url": "https://i.scdn.co/image/ab67616d00001e020cc91c7ef74526793cd4e333",
+                                "width": 300
+                              },
+                              {
+                                "height": 64,
+                                "url": "https://i.scdn.co/image/ab67616d000048510cc91c7ef74526793cd4e333",
+                                "width": 64
+                              },
+                              {
+                                "height": 640,
+                                "url": "https://i.scdn.co/image/ab67616d0000b2730cc91c7ef74526793cd4e333",
+                                "width": 640
+                              }
+                            ]
+                          },
+                          "name": "Điều Gì",
+                          "uri": "spotify:album:0TTtXZK63AAQOwNuEhWhNE"
+                        },
+                        "artists": {
+                          "items": [
+                            {
+                              "profile": {
+                                "name": "Will"
+                              },
+                              "uri": "spotify:artist:3HMWKU43x9GxkGWVP1KjQT"
+                            },
+                            {
+                              "profile": {
+                                "name": "VSTRA"
+                              },
+                              "uri": "spotify:artist:2aMo0CYbTieTisS0BlWc59"
+                            }
+                          ]
+                        },
+                        "associationsV3": {
+                          "audioAssociations": {
+                            "items": []
+                          }
+                        },
+                        "contentRating": {
+                          "label": "NONE"
+                        },
+                        "name": "Điều Gì",
+                        "uri": "spotify:track:1DsUEyuJuaXoGpCOWP1gsK"
+                      }
+                    },
+                    "data": null,
+                    "uri": "spotify:track:1DsUEyuJuaXoGpCOWP1gsK"
+                  },
+                  {
+                    "content": {
+                      "__typename": "TrackResponseWrapper",
+                      "data": {
+                        "__typename": "Track",
+                        "albumOfTrack": {
+                          "coverArt": {
+                            "extractedColors": {
+                              "colorDark": {
+                                "hex": "#946D6D",
+                                "isFallback": false
+                              }
+                            },
+                            "sources": [
+                              {
+                                "height": 300,
+                                "url": "https://i.scdn.co/image/ab67616d00001e025ded2ed0b1abbfdd2bbc531f",
+                                "width": 300
+                              },
+                              {
+                                "height": 64,
+                                "url": "https://i.scdn.co/image/ab67616d000048515ded2ed0b1abbfdd2bbc531f",
+                                "width": 64
+                              },
+                              {
+                                "height": 640,
+                                "url": "https://i.scdn.co/image/ab67616d0000b2735ded2ed0b1abbfdd2bbc531f",
+                                "width": 640
+                              }
+                            ]
+                          },
+                          "name": "CỨ ĐỔ TẠI CƠN MƯA (Solo & Piano)",
+                          "uri": "spotify:album:4KUltysecyQTzFZo8lY7Sj"
+                        },
+                        "artists": {
+                          "items": [
+                            {
+                              "profile": {
+                                "name": "EM XINH \"SAY HI\""
+                              },
+                              "uri": "spotify:artist:1I5CkmtLVWLUygTT3cLr5X"
+                            },
+                            {
+                              "profile": {
+                                "name": "Orange"
+                              },
+                              "uri": "spotify:artist:5lAfakPZgxFKgiJD6xAF1G"
+                            }
+                          ]
+                        },
+                        "associationsV3": {
+                          "audioAssociations": {
+                            "items": []
+                          }
+                        },
+                        "contentRating": {
+                          "label": "NONE"
+                        },
+                        "name": "CỨ ĐỔ TẠI CƠN MƯA - Solo & Piano",
+                        "uri": "spotify:track:2XMgt7faxpOomPIZN9TEK8"
+                      }
+                    },
+                    "data": null,
+                    "uri": "spotify:track:2XMgt7faxpOomPIZN9TEK8"
+                  },
+                  {
+                    "content": {
+                      "__typename": "TrackResponseWrapper",
+                      "data": {
+                        "__typename": "Track",
+                        "albumOfTrack": {
+                          "coverArt": {
+                            "extractedColors": {
+                              "colorDark": {
+                                "hex": "#8B7076",
+                                "isFallback": false
+                              }
+                            },
+                            "sources": [
+                              {
+                                "height": 300,
+                                "url": "https://i.scdn.co/image/ab67616d00001e0214dcf7a13797e4d5eafaba97",
+                                "width": 300
+                              },
+                              {
+                                "height": 64,
+                                "url": "https://i.scdn.co/image/ab67616d0000485114dcf7a13797e4d5eafaba97",
+                                "width": 64
+                              },
+                              {
+                                "height": 640,
+                                "url": "https://i.scdn.co/image/ab67616d0000b27314dcf7a13797e4d5eafaba97",
+                                "width": 640
+                              }
+                            ]
+                          },
+                          "name": "伯虎说DJ（小猫摇）",
+                          "uri": "spotify:album:5nKilQKOsWkwkhJjOUC3TZ"
+                        },
+                        "artists": {
+                          "items": [
+                            {
+                              "profile": {
+                                "name": "Mira Baby"
+                              },
+                              "uri": "spotify:artist:74nBf95GRSrqz3iGKW7PeY"
+                            }
+                          ]
+                        },
+                        "associationsV3": {
+                          "audioAssociations": {
+                            "items": []
+                          }
+                        },
+                        "contentRating": {
+                          "label": "NONE"
+                        },
+                        "name": "伯虎说DJ（小猫摇）",
+                        "uri": "spotify:track:2mkYjxGaBqcOnrE3SM9lBN"
+                      }
+                    },
+                    "data": null,
+                    "uri": "spotify:track:2mkYjxGaBqcOnrE3SM9lBN"
+                  }
+                ],
+                "pagingInfo": {
+                  "nextOffset": 0
+                },
+                "totalCount": 20
+              },
+              "uri": "spotify:section:0JQ5DB5E8N831KzFzsBBQ2"
+            },
+            {
+              "data": {
+                "__typename": "HomeGenericSectionData",
+                "headerEntity": {
+                  "__typename": "UnknownType"
+                },
+                "subtitle": {
+                  "transformedLabel": "",
+                  "translatedBaseText": null
+                },
+                "title": {
+                  "transformedLabel": "Popular artists",
+                  "translatedBaseText": "Popular artists"
+                }
+              },
+              "sectionItems": {
+                "items": [
+                  {
+                    "content": {
+                      "__typename": "ArtistResponseWrapper",
+                      "data": {
+                        "__typename": "Artist",
+                        "profile": {
+                          "name": "Sơn Tùng M-TP"
+                        },
+                        "uri": "spotify:artist:5dfZ5uSmzR7VQK0udbAVpf",
+                        "visuals": {
+                          "avatarImage": {
+                            "extractedColors": {
+                              "colorDark": {
+                                "hex": "#A85858",
+                                "isFallback": false
+                              }
+                            },
+                            "sources": [
+                              {
+                                "height": 640,
+                                "url": "https://i.scdn.co/image/ab6761610000e5eb5a79a6ca8c60e4ec1440be53",
+                                "width": 640
+                              },
+                              {
+                                "height": 160,
+                                "url": "https://i.scdn.co/image/ab6761610000f1785a79a6ca8c60e4ec1440be53",
+                                "width": 160
+                              },
+                              {
+                                "height": 320,
+                                "url": "https://i.scdn.co/image/ab676161000051745a79a6ca8c60e4ec1440be53",
+                                "width": 320
+                              }
+                            ]
+                          }
+                        }
+                      }
+                    },
+                    "data": null,
+                    "uri": "spotify:artist:5dfZ5uSmzR7VQK0udbAVpf"
+                  },
+                  {
+                    "content": {
+                      "__typename": "ArtistResponseWrapper",
+                      "data": {
+                        "__typename": "Artist",
+                        "profile": {
+                          "name": "SOOBIN"
+                        },
+                        "uri": "spotify:artist:6CGGvCBHWqQ4HXtn5aLhbh",
+                        "visuals": {
+                          "avatarImage": {
+                            "extractedColors": {
+                              "colorDark": {
+                                "hex": "#377EA5",
+                                "isFallback": false
+                              }
+                            },
+                            "sources": [
+                              {
+                                "height": 640,
+                                "url": "https://i.scdn.co/image/ab6761610000e5eb4bf18316dd0bd42ea5f9f8ec",
+                                "width": 640
+                              },
+                              {
+                                "height": 160,
+                                "url": "https://i.scdn.co/image/ab6761610000f1784bf18316dd0bd42ea5f9f8ec",
+                                "width": 160
+                              },
+                              {
+                                "height": 320,
+                                "url": "https://i.scdn.co/image/ab676161000051744bf18316dd0bd42ea5f9f8ec",
+                                "width": 320
+                              }
+                            ]
+                          }
+                        }
+                      }
+                    },
+                    "data": null,
+                    "uri": "spotify:artist:6CGGvCBHWqQ4HXtn5aLhbh"
+                  },
+                  {
+                    "content": {
+                      "__typename": "ArtistResponseWrapper",
+                      "data": {
+                        "__typename": "Artist",
+                        "profile": {
+                          "name": "HIEUTHUHAI"
+                        },
+                        "uri": "spotify:artist:5HZtdKfC4xU0wvhEyYDWiY",
+                        "visuals": {
+                          "avatarImage": {
+                            "extractedColors": {
+                              "colorDark": {
+                                "hex": "#502828",
+                                "isFallback": false
+                              }
+                            },
+                            "sources": [
+                              {
+                                "height": 640,
+                                "url": "https://i.scdn.co/image/ab6761610000e5eb21942907035a43a2d118c55c",
+                                "width": 640
+                              },
+                              {
+                                "height": 160,
+                                "url": "https://i.scdn.co/image/ab6761610000f17821942907035a43a2d118c55c",
+                                "width": 160
+                              },
+                              {
+                                "height": 320,
+                                "url": "https://i.scdn.co/image/ab6761610000517421942907035a43a2d118c55c",
+                                "width": 320
+                              }
+                            ]
+                          }
+                        }
+                      }
+                    },
+                    "data": null,
+                    "uri": "spotify:artist:5HZtdKfC4xU0wvhEyYDWiY"
+                  },
+                  {
+                    "content": {
+                      "__typename": "ArtistResponseWrapper",
+                      "data": {
+                        "__typename": "Artist",
+                        "profile": {
+                          "name": "Da LAB"
+                        },
+                        "uri": "spotify:artist:6zUWZmyi5MLOEynQ5wCI5f",
+                        "visuals": {
+                          "avatarImage": {
+                            "extractedColors": {
+                              "colorDark": {
+                                "hex": "#5A78A5",
+                                "isFallback": false
+                              }
+                            },
+                            "sources": [
+                              {
+                                "height": 640,
+                                "url": "https://i.scdn.co/image/ab6761610000e5eb62c092ca08054a8ce883ef7e",
+                                "width": 640
+                              },
+                              {
+                                "height": 160,
+                                "url": "https://i.scdn.co/image/ab6761610000f17862c092ca08054a8ce883ef7e",
+                                "width": 160
+                              },
+                              {
+                                "height": 320,
+                                "url": "https://i.scdn.co/image/ab6761610000517462c092ca08054a8ce883ef7e",
+                                "width": 320
+                              }
+                            ]
+                          }
+                        }
+                      }
+                    },
+                    "data": null,
+                    "uri": "spotify:artist:6zUWZmyi5MLOEynQ5wCI5f"
+                  },
+                  {
+                    "content": {
+                      "__typename": "ArtistResponseWrapper",
+                      "data": {
+                        "__typename": "Artist",
+                        "profile": {
+                          "name": "buitruonglinh"
+                        },
+                        "uri": "spotify:artist:7Cp2hGcriAaDUAWpXnSEwm",
+                        "visuals": {
+                          "avatarImage": {
+                            "extractedColors": {
+                              "colorDark": {
+                                "hex": "#706038",
+                                "isFallback": false
+                              }
+                            },
+                            "sources": [
+                              {
+                                "height": 640,
+                                "url": "https://i.scdn.co/image/ab6761610000e5eb9adfc46417bb7d546b4ab3dd",
+                                "width": 640
+                              },
+                              {
+                                "height": 160,
+                                "url": "https://i.scdn.co/image/ab6761610000f1789adfc46417bb7d546b4ab3dd",
+                                "width": 160
+                              },
+                              {
+                                "height": 320,
+                                "url": "https://i.scdn.co/image/ab676161000051749adfc46417bb7d546b4ab3dd",
+                                "width": 320
+                              }
+                            ]
+                          }
+                        }
+                      }
+                    },
+                    "data": null,
+                    "uri": "spotify:artist:7Cp2hGcriAaDUAWpXnSEwm"
+                  },
+                  {
+                    "content": {
+                      "__typename": "ArtistResponseWrapper",
+                      "data": {
+                        "__typename": "Artist",
+                        "profile": {
+                          "name": "Vũ."
+                        },
+                        "uri": "spotify:artist:57g2v7gJZepcwsuwssIfZs",
+                        "visuals": {
+                          "avatarImage": {
+                            "extractedColors": {
+                              "colorDark": {
+                                "hex": "#535353",
+                                "isFallback": true
+                              }
+                            },
+                            "sources": [
+                              {
+                                "height": 640,
+                                "url": "https://i.scdn.co/image/ab6761610000e5eb2d7150aa7e90e9a85610ab3d",
+                                "width": 640
+                              },
+                              {
+                                "height": 160,
+                                "url": "https://i.scdn.co/image/ab6761610000f1782d7150aa7e90e9a85610ab3d",
+                                "width": 160
+                              },
+                              {
+                                "height": 320,
+                                "url": "https://i.scdn.co/image/ab676161000051742d7150aa7e90e9a85610ab3d",
+                                "width": 320
+                              }
+                            ]
+                          }
+                        }
+                      }
+                    },
+                    "data": null,
+                    "uri": "spotify:artist:57g2v7gJZepcwsuwssIfZs"
+                  },
+                  {
+                    "content": {
+                      "__typename": "ArtistResponseWrapper",
+                      "data": {
+                        "__typename": "Artist",
+                        "profile": {
+                          "name": "tlinh"
+                        },
+                        "uri": "spotify:artist:3diftVOq7aEIebXKkC34oR",
+                        "visuals": {
+                          "avatarImage": {
+                            "extractedColors": {
+                              "colorDark": {
+                                "hex": "#D02828",
+                                "isFallback": false
+                              }
+                            },
+                            "sources": [
+                              {
+                                "height": 640,
+                                "url": "https://i.scdn.co/image/ab6761610000e5eb230e62752ca87da1d85d0445",
+                                "width": 640
+                              },
+                              {
+                                "height": 160,
+                                "url": "https://i.scdn.co/image/ab6761610000f178230e62752ca87da1d85d0445",
+                                "width": 160
+                              },
+                              {
+                                "height": 320,
+                                "url": "https://i.scdn.co/image/ab67616100005174230e62752ca87da1d85d0445",
+                                "width": 320
+                              }
+                            ]
+                          }
+                        }
+                      }
+                    },
+                    "data": null,
+                    "uri": "spotify:artist:3diftVOq7aEIebXKkC34oR"
+                  },
+                  {
+                    "content": {
+                      "__typename": "ArtistResponseWrapper",
+                      "data": {
+                        "__typename": "Artist",
+                        "profile": {
+                          "name": "Vũ Cát Tường"
+                        },
+                        "uri": "spotify:artist:7yquVKfxBuNFJbG9cy2R8A",
+                        "visuals": {
+                          "avatarImage": {
+                            "extractedColors": {
+                              "colorDark": {
+                                "hex": "#687880",
+                                "isFallback": false
+                              }
+                            },
+                            "sources": [
+                              {
+                                "height": 640,
+                                "url": "https://i.scdn.co/image/ab6761610000e5ebb6f728660d5609ec077de870",
+                                "width": 640
+                              },
+                              {
+                                "height": 160,
+                                "url": "https://i.scdn.co/image/ab6761610000f178b6f728660d5609ec077de870",
+                                "width": 160
+                              },
+                              {
+                                "height": 320,
+                                "url": "https://i.scdn.co/image/ab67616100005174b6f728660d5609ec077de870",
+                                "width": 320
+                              }
+                            ]
+                          }
+                        }
+                      }
+                    },
+                    "data": null,
+                    "uri": "spotify:artist:7yquVKfxBuNFJbG9cy2R8A"
+                  },
+                  {
+                    "content": {
+                      "__typename": "ArtistResponseWrapper",
+                      "data": {
+                        "__typename": "Artist",
+                        "profile": {
+                          "name": "ANH TRAI \"SAY HI\""
+                        },
+                        "uri": "spotify:artist:4wZ6awunqaaVLl5j0WpDFu",
+                        "visuals": {
+                          "avatarImage": {
+                            "extractedColors": {
+                              "colorDark": {
+                                "hex": "#197FA5",
+                                "isFallback": false
+                              }
+                            },
+                            "sources": [
+                              {
+                                "height": 640,
+                                "url": "https://i.scdn.co/image/ab6761610000e5eb97d758a5602772c33428697e",
+                                "width": 640
+                              },
+                              {
+                                "height": 160,
+                                "url": "https://i.scdn.co/image/ab6761610000f17897d758a5602772c33428697e",
+                                "width": 160
+                              },
+                              {
+                                "height": 320,
+                                "url": "https://i.scdn.co/image/ab6761610000517497d758a5602772c33428697e",
+                                "width": 320
+                              }
+                            ]
+                          }
+                        }
+                      }
+                    },
+                    "data": null,
+                    "uri": "spotify:artist:4wZ6awunqaaVLl5j0WpDFu"
+                  },
+                  {
+                    "content": {
+                      "__typename": "ArtistResponseWrapper",
+                      "data": {
+                        "__typename": "Artist",
+                        "profile": {
+                          "name": "Kai Đinh"
+                        },
+                        "uri": "spotify:artist:3E6LGptA8lBEXPHAQCE3vr",
+                        "visuals": {
+                          "avatarImage": {
+                            "extractedColors": {
+                              "colorDark": {
+                                "hex": "#67788F",
+                                "isFallback": false
+                              }
+                            },
+                            "sources": [
+                              {
+                                "height": 640,
+                                "url": "https://i.scdn.co/image/ab6761610000e5eb970c660df90d9923cc3f18bb",
+                                "width": 640
+                              },
+                              {
+                                "height": 160,
+                                "url": "https://i.scdn.co/image/ab6761610000f178970c660df90d9923cc3f18bb",
+                                "width": 160
+                              },
+                              {
+                                "height": 320,
+                                "url": "https://i.scdn.co/image/ab67616100005174970c660df90d9923cc3f18bb",
+                                "width": 320
+                              }
+                            ]
+                          }
+                        }
+                      }
+                    },
+                    "data": null,
+                    "uri": "spotify:artist:3E6LGptA8lBEXPHAQCE3vr"
+                  }
+                ],
+                "pagingInfo": {
+                  "nextOffset": 10
+                },
+                "totalCount": 50
+              },
+              "uri": "spotify:section:0JQ5DAnM3wGh0gz1MXnu3C"
+            },
+            {
+              "data": {
+                "__typename": "HomeGenericSectionData",
+                "headerEntity": {
+                  "__typename": "UnknownType"
+                },
+                "subtitle": {
+                  "transformedLabel": "",
+                  "translatedBaseText": null
+                },
+                "title": {
+                  "transformedLabel": "Popular albums and singles",
+                  "translatedBaseText": "Popular albums and singles"
+                }
+              },
+              "sectionItems": {
+                "items": [
+                  {
+                    "content": {
+                      "__typename": "AlbumResponseWrapper",
+                      "data": {
+                        "__typename": "Album",
+                        "artists": {
+                          "items": [
+                            {
+                              "profile": {
+                                "name": "Sơn Tùng M-TP"
+                              },
+                              "uri": "spotify:artist:5dfZ5uSmzR7VQK0udbAVpf"
+                            }
+                          ]
+                        },
+                        "coverArt": {
+                          "extractedColors": {
+                            "colorDark": {
+                              "hex": "#B04048",
+                              "isFallback": false
+                            }
+                          },
+                          "sources": [
+                            {
+                              "height": 300,
+                              "url": "https://i.scdn.co/image/ab67616d00001e02794744c57c9f35db88249842",
+                              "width": 300
+                            },
+                            {
+                              "height": 64,
+                              "url": "https://i.scdn.co/image/ab67616d00004851794744c57c9f35db88249842",
+                              "width": 64
+                            },
+                            {
+                              "height": 640,
+                              "url": "https://i.scdn.co/image/ab67616d0000b273794744c57c9f35db88249842",
+                              "width": 640
+                            }
+                          ]
+                        },
+                        "name": "m-tp M-TP",
+                        "playability": {
+                          "playable": true,
+                          "reason": "PLAYABLE"
+                        },
+                        "albumType": "ALBUM",
+                        "uri": "spotify:album:1AaxmI2e1HRhbwe9XJGPnT"
+                      }
+                    },
+                    "data": null,
+                    "uri": "spotify:album:1AaxmI2e1HRhbwe9XJGPnT"
+                  },
+                  {
+                    "content": {
+                      "__typename": "AlbumResponseWrapper",
+                      "data": {
+                        "__typename": "Album",
+                        "artists": {
+                          "items": [
+                            {
+                              "profile": {
+                                "name": "HIEUTHUHAI"
+                              },
+                              "uri": "spotify:artist:5HZtdKfC4xU0wvhEyYDWiY"
+                            }
+                          ]
+                        },
+                        "coverArt": {
+                          "extractedColors": {
+                            "colorDark": {
+                              "hex": "#B84800",
+                              "isFallback": false
+                            }
+                          },
+                          "sources": [
+                            {
+                              "height": 300,
+                              "url": "https://i.scdn.co/image/ab67616d00001e02c006b0181a3846c1c63e178f",
+                              "width": 300
+                            },
+                            {
+                              "height": 64,
+                              "url": "https://i.scdn.co/image/ab67616d00004851c006b0181a3846c1c63e178f",
+                              "width": 64
+                            },
+                            {
+                              "height": 640,
+                              "url": "https://i.scdn.co/image/ab67616d0000b273c006b0181a3846c1c63e178f",
+                              "width": 640
+                            }
+                          ]
+                        },
+                        "name": "Ai Cũng Phải Bắt Đầu Từ Đâu Đó",
+                        "playability": {
+                          "playable": true,
+                          "reason": "PLAYABLE"
+                        },
+                        "albumType": "ALBUM",
+                        "uri": "spotify:album:4faMbTZifuYsBllYHZsFKJ"
+                      }
+                    },
+                    "data": null,
+                    "uri": "spotify:album:4faMbTZifuYsBllYHZsFKJ"
+                  },
+                  {
+                    "content": {
+                      "__typename": "AlbumResponseWrapper",
+                      "data": {
+                        "__typename": "Album",
+                        "artists": {
+                          "items": [
+                            {
+                              "profile": {
+                                "name": "Jung Kook"
+                              },
+                              "uri": "spotify:artist:6HaGTQPmzraVmaVxvz6EUc"
+                            }
+                          ]
+                        },
+                        "coverArt": {
+                          "extractedColors": {
+                            "colorDark": {
+                              "hex": "#003820",
+                              "isFallback": false
+                            }
+                          },
+                          "sources": [
+                            {
+                              "height": 300,
+                              "url": "https://i.scdn.co/image/ab67616d00001e02741fd4807f442af3f7359316",
+                              "width": 300
+                            },
+                            {
+                              "height": 64,
+                              "url": "https://i.scdn.co/image/ab67616d00004851741fd4807f442af3f7359316",
+                              "width": 64
+                            },
+                            {
+                              "height": 640,
+                              "url": "https://i.scdn.co/image/ab67616d0000b273741fd4807f442af3f7359316",
+                              "width": 640
+                            }
+                          ]
+                        },
+                        "name": "GOLDEN",
+                        "playability": {
+                          "playable": true,
+                          "reason": "PLAYABLE"
+                        },
+                        "albumType": "ALBUM",
+                        "uri": "spotify:album:5pSk3c3wVwnb2arb6ohCPU"
+                      }
+                    },
+                    "data": null,
+                    "uri": "spotify:album:5pSk3c3wVwnb2arb6ohCPU"
+                  },
+                  {
+                    "content": {
+                      "__typename": "AlbumResponseWrapper",
+                      "data": {
+                        "__typename": "Album",
+                        "artists": {
+                          "items": [
+                            {
+                              "profile": {
+                                "name": "Wxrdie"
+                              },
+                              "uri": "spotify:artist:1Jmkhzve9TuXHUUWGmpANw"
+                            }
+                          ]
+                        },
+                        "coverArt": {
+                          "extractedColors": {
+                            "colorDark": {
+                              "hex": "#903028",
+                              "isFallback": false
+                            }
+                          },
+                          "sources": [
+                            {
+                              "height": 300,
+                              "url": "https://i.scdn.co/image/ab67616d00001e02f3b9c8061be9fc0bdebad64e",
+                              "width": 300
+                            },
+                            {
+                              "height": 64,
+                              "url": "https://i.scdn.co/image/ab67616d00004851f3b9c8061be9fc0bdebad64e",
+                              "width": 64
+                            },
+                            {
+                              "height": 640,
+                              "url": "https://i.scdn.co/image/ab67616d0000b273f3b9c8061be9fc0bdebad64e",
+                              "width": 640
+                            }
+                          ]
+                        },
+                        "name": "THE WXRDIES",
+                        "playability": {
+                          "playable": true,
+                          "reason": "PLAYABLE"
+                        },
+                        "albumType": "ALBUM",
+                        "uri": "spotify:album:1wmnEWgcDdCcOujQpLwYxc"
+                      }
+                    },
+                    "data": null,
+                    "uri": "spotify:album:1wmnEWgcDdCcOujQpLwYxc"
+                  },
+                  {
+                    "content": {
+                      "__typename": "AlbumResponseWrapper",
+                      "data": {
+                        "__typename": "Album",
+                        "artists": {
+                          "items": [
+                            {
+                              "profile": {
+                                "name": "Obito"
+                              },
+                              "uri": "spotify:artist:0ZbgKh0FgPYeFP38nVaEGp"
+                            },
+                            {
+                              "profile": {
+                                "name": "Shiki"
+                              },
+                              "uri": "spotify:artist:3hRnvEdu1iPyB6EzMBbuZq"
+                            }
+                          ]
+                        },
+                        "coverArt": {
+                          "extractedColors": {
+                            "colorDark": {
+                              "hex": "#203848",
+                              "isFallback": false
+                            }
+                          },
+                          "sources": [
+                            {
+                              "height": 300,
+                              "url": "https://i.scdn.co/image/ab67616d00001e02a06a6b51d0dc296d48505ee6",
+                              "width": 300
+                            },
+                            {
+                              "height": 64,
+                              "url": "https://i.scdn.co/image/ab67616d00004851a06a6b51d0dc296d48505ee6",
+                              "width": 64
+                            },
+                            {
+                              "height": 640,
+                              "url": "https://i.scdn.co/image/ab67616d0000b273a06a6b51d0dc296d48505ee6",
+                              "width": 640
+                            }
+                          ]
+                        },
+                        "name": "Đánh Đổi",
+                        "playability": {
+                          "playable": true,
+                          "reason": "PLAYABLE"
+                        },
+                        "albumType": "ALBUM",
+                        "uri": "spotify:album:03ZYR4zwCrkSsXTROnK2d0"
+                      }
+                    },
+                    "data": null,
+                    "uri": "spotify:album:03ZYR4zwCrkSsXTROnK2d0"
+                  },
+                  {
+                    "content": {
+                      "__typename": "AlbumResponseWrapper",
+                      "data": {
+                        "__typename": "Album",
+                        "artists": {
+                          "items": [
+                            {
+                              "profile": {
+                                "name": "SOOBIN"
+                              },
+                              "uri": "spotify:artist:6CGGvCBHWqQ4HXtn5aLhbh"
+                            }
+                          ]
+                        },
+                        "coverArt": {
+                          "extractedColors": {
+                            "colorDark": {
+                              "hex": "#5B7D7D",
+                              "isFallback": false
+                            }
+                          },
+                          "sources": [
+                            {
+                              "height": 300,
+                              "url": "https://i.scdn.co/image/ab67616d00001e028bdbdf691a5b791a5afb515b",
+                              "width": 300
+                            },
+                            {
+                              "height": 64,
+                              "url": "https://i.scdn.co/image/ab67616d000048518bdbdf691a5b791a5afb515b",
+                              "width": 64
+                            },
+                            {
+                              "height": 640,
+                              "url": "https://i.scdn.co/image/ab67616d0000b2738bdbdf691a5b791a5afb515b",
+                              "width": 640
+                            }
+                          ]
+                        },
+                        "name": "BẬT NÓ LÊN",
+                        "playability": {
+                          "playable": true,
+                          "reason": "PLAYABLE"
+                        },
+                        "albumType": "ALBUM",
+                        "uri": "spotify:album:5tlCVkYaDAmAtJ5YxejpWi"
+                      }
+                    },
+                    "data": null,
+                    "uri": "spotify:album:5tlCVkYaDAmAtJ5YxejpWi"
+                  },
+                  {
+                    "content": {
+                      "__typename": "AlbumResponseWrapper",
+                      "data": {
+                        "__typename": "Album",
+                        "artists": {
+                          "items": [
+                            {
+                              "profile": {
+                                "name": "buitruonglinh"
+                              },
+                              "uri": "spotify:artist:7Cp2hGcriAaDUAWpXnSEwm"
+                            }
+                          ]
+                        },
+                        "coverArt": {
+                          "extractedColors": {
+                            "colorDark": {
+                              "hex": "#89743E",
+                              "isFallback": false
+                            }
+                          },
+                          "sources": [
+                            {
+                              "height": 300,
+                              "url": "https://i.scdn.co/image/ab67616d00001e02fe0cbef064f18008462d29ef",
+                              "width": 300
+                            },
+                            {
+                              "height": 64,
+                              "url": "https://i.scdn.co/image/ab67616d00004851fe0cbef064f18008462d29ef",
+                              "width": 64
+                            },
+                            {
+                              "height": 640,
+                              "url": "https://i.scdn.co/image/ab67616d0000b273fe0cbef064f18008462d29ef",
+                              "width": 640
+                            }
+                          ]
+                        },
+                        "name": "Từng Ngày Như Mãi Mãi",
+                        "playability": {
+                          "playable": true,
+                          "reason": "PLAYABLE"
+                        },
+                        "albumType": "ALBUM",
+                        "uri": "spotify:album:2DCbDdIBNRxx0SxLtgyd4D"
+                      }
+                    },
+                    "data": null,
+                    "uri": "spotify:album:2DCbDdIBNRxx0SxLtgyd4D"
+                  },
+                  {
+                    "content": {
+                      "__typename": "AlbumResponseWrapper",
+                      "data": {
+                        "__typename": "Album",
+                        "artists": {
+                          "items": [
+                            {
+                              "profile": {
+                                "name": "Shiki"
+                              },
+                              "uri": "spotify:artist:3hRnvEdu1iPyB6EzMBbuZq"
+                            }
+                          ]
+                        },
+                        "coverArt": {
+                          "extractedColors": {
+                            "colorDark": {
+                              "hex": "#647C77",
+                              "isFallback": false
+                            }
+                          },
+                          "sources": [
+                            {
+                              "height": 300,
+                              "url": "https://i.scdn.co/image/ab67616d00001e02c353169a2288f403265ee402",
+                              "width": 300
+                            },
+                            {
+                              "height": 64,
+                              "url": "https://i.scdn.co/image/ab67616d00004851c353169a2288f403265ee402",
+                              "width": 64
+                            },
+                            {
+                              "height": 640,
+                              "url": "https://i.scdn.co/image/ab67616d0000b273c353169a2288f403265ee402",
+                              "width": 640
+                            }
+                          ]
+                        },
+                        "name": "Lặng",
+                        "playability": {
+                          "playable": true,
+                          "reason": "PLAYABLE"
+                        },
+                        "albumType": "EP",
+                        "uri": "spotify:album:1P7wZAMsCTQtRBdlEsStWN"
+                      }
+                    },
+                    "data": null,
+                    "uri": "spotify:album:1P7wZAMsCTQtRBdlEsStWN"
+                  },
+                  {
+                    "content": {
+                      "__typename": "AlbumResponseWrapper",
+                      "data": {
+                        "__typename": "Album",
+                        "artists": {
+                          "items": [
+                            {
+                              "profile": {
+                                "name": "ROSÉ"
+                              },
+                              "uri": "spotify:artist:3eVa5w3URK5duf6eyVDbu9"
+                            }
+                          ]
+                        },
+                        "coverArt": {
+                          "extractedColors": {
+                            "colorDark": {
+                              "hex": "#A00818",
+                              "isFallback": false
+                            }
+                          },
+                          "sources": [
+                            {
+                              "height": 300,
+                              "url": "https://i.scdn.co/image/ab67616d00001e025074bd0894cb1340b8d8a678",
+                              "width": 300
+                            },
+                            {
+                              "height": 64,
+                              "url": "https://i.scdn.co/image/ab67616d000048515074bd0894cb1340b8d8a678",
+                              "width": 64
+                            },
+                            {
+                              "height": 640,
+                              "url": "https://i.scdn.co/image/ab67616d0000b2735074bd0894cb1340b8d8a678",
+                              "width": 640
+                            }
+                          ]
+                        },
+                        "name": "rosie",
+                        "playability": {
+                          "playable": true,
+                          "reason": "PLAYABLE"
+                        },
+                        "albumType": "ALBUM",
+                        "uri": "spotify:album:7kFyd5oyJdVX2pIi6P4iHE"
+                      }
+                    },
+                    "data": null,
+                    "uri": "spotify:album:7kFyd5oyJdVX2pIi6P4iHE"
+                  },
+                  {
+                    "content": {
+                      "__typename": "AlbumResponseWrapper",
+                      "data": {
+                        "__typename": "Album",
+                        "artists": {
+                          "items": [
+                            {
+                              "profile": {
+                                "name": "Dương Domic"
+                              },
+                              "uri": "spotify:artist:4KPyQxL1zqEiBcTwW6c9HE"
+                            }
+                          ]
+                        },
+                        "coverArt": {
+                          "extractedColors": {
+                            "colorDark": {
+                              "hex": "#204080",
+                              "isFallback": false
+                            }
+                          },
+                          "sources": [
+                            {
+                              "height": 300,
+                              "url": "https://i.scdn.co/image/ab67616d00001e02aa8b2071efbaa7ec3f41b60b",
+                              "width": 300
+                            },
+                            {
+                              "height": 64,
+                              "url": "https://i.scdn.co/image/ab67616d00004851aa8b2071efbaa7ec3f41b60b",
+                              "width": 64
+                            },
+                            {
+                              "height": 640,
+                              "url": "https://i.scdn.co/image/ab67616d0000b273aa8b2071efbaa7ec3f41b60b",
+                              "width": 640
+                            }
+                          ]
+                        },
+                        "name": "Dữ Liệu Quý",
+                        "playability": {
+                          "playable": true,
+                          "reason": "PLAYABLE"
+                        },
+                        "albumType": "EP",
+                        "uri": "spotify:album:10Dwjqs7dJNxn2g1PkvRCw"
+                      }
+                    },
+                    "data": null,
+                    "uri": "spotify:album:10Dwjqs7dJNxn2g1PkvRCw"
+                  }
+                ],
+                "pagingInfo": {
+                  "nextOffset": 10
+                },
+                "totalCount": 30
+              },
+              "uri": "spotify:section:0JQ5DAnM3wGh0gz1MXnu3B"
+            },
+            {
+              "data": {
+                "__typename": "HomeGenericSectionData",
+                "headerEntity": {
+                  "__typename": "UnknownType"
+                },
+                "subtitle": {
+                  "transformedLabel": "",
+                  "translatedBaseText": null
+                },
+                "title": {
+                  "transformedLabel": "Popular radio",
+                  "translatedBaseText": "Popular radio"
+                }
+              },
+              "sectionItems": {
+                "items": [
+                  {
+                    "content": {
+                      "__typename": "PlaylistResponseWrapper",
+                      "data": {
+                        "__typename": "Playlist",
+                        "attributes": [
+                          {
+                            "key": "request_id",
+                            "value": "ssp~063f48936970997909cf84b71f1e51ab2882"
+                          },
+                          {
+                            "key": "should_show_promo_disclosure",
+                            "value": "true"
+                          },
+                          {
+                            "key": "send-impression-for-rows",
+                            "value": "true"
+                          },
+                          {
+                            "key": "correlation-id",
+                            "value": "ssp~063f48936970997909cf84b71f1e51ab2882"
+                          }
+                        ],
+                        "description": "With Da LAB, Chillies, buitruonglinh and more",
+                        "format": "inspiredby-mix",
+                        "images": {
+                          "items": [
+                            {
+                              "extractedColors": {
+                                "colorDark": {
+                                  "hex": "#A3694F",
+                                  "isFallback": false
+                                }
+                              },
+                              "sources": [
+                                {
+                                  "height": null,
+                                  "url": "https://pickasso.spotifycdn.com/image/ab67c0de0000deef/dt/v1/img/radio/artist/57g2v7gJZepcwsuwssIfZs/en-GB",
+                                  "width": null
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        "name": "Vũ. Radio",
+                        "ownerV2": {
+                          "data": {
+                            "__typename": "User",
+                            "name": "Spotify",
+                            "uri": "spotify:user:spotify"
+                          }
+                        },
+                        "uri": "spotify:playlist:37i9dQZF1E4BOudo0mIzwZ"
+                      }
+                    },
+                    "data": null,
+                    "uri": "spotify:playlist:37i9dQZF1E4BOudo0mIzwZ"
+                  },
+                  {
+                    "content": {
+                      "__typename": "PlaylistResponseWrapper",
+                      "data": {
+                        "__typename": "Playlist",
+                        "attributes": [
+                          {
+                            "key": "request_id",
+                            "value": "ssp~063f48936970997909cf84b71f1e51ab2882"
+                          },
+                          {
+                            "key": "should_show_promo_disclosure",
+                            "value": "true"
+                          },
+                          {
+                            "key": "send-impression-for-rows",
+                            "value": "true"
+                          },
+                          {
+                            "key": "correlation-id",
+                            "value": "ssp~063f48936970997909cf84b71f1e51ab2882"
+                          }
+                        ],
+                        "description": "With Bùi Anh Tuấn, Vũ., Vũ Cát Tường and more",
+                        "format": "inspiredby-mix",
+                        "images": {
+                          "items": [
+                            {
+                              "extractedColors": {
+                                "colorDark": {
+                                  "hex": "#8E69A3",
+                                  "isFallback": false
+                                }
+                              },
+                              "sources": [
+                                {
+                                  "height": null,
+                                  "url": "https://pickasso.spotifycdn.com/image/ab67c0de0000deef/dt/v1/img/radio/artist/3FwYnbtGNt8hJfjNuOfpeG/en-GB",
+                                  "width": null
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        "name": "Hà Anh Tuấn Radio",
+                        "ownerV2": {
+                          "data": {
+                            "__typename": "User",
+                            "name": "Spotify",
+                            "uri": "spotify:user:spotify"
+                          }
+                        },
+                        "uri": "spotify:playlist:37i9dQZF1E4pcdtow1yIdx"
+                      }
+                    },
+                    "data": null,
+                    "uri": "spotify:playlist:37i9dQZF1E4pcdtow1yIdx"
+                  },
+                  {
+                    "content": {
+                      "__typename": "PlaylistResponseWrapper",
+                      "data": {
+                        "__typename": "Playlist",
+                        "attributes": [
+                          {
+                            "key": "request_id",
+                            "value": "ssp~063f48936970997909cf84b71f1e51ab2882"
+                          },
+                          {
+                            "key": "should_show_promo_disclosure",
+                            "value": "true"
+                          },
+                          {
+                            "key": "send-impression-for-rows",
+                            "value": "true"
+                          },
+                          {
+                            "key": "correlation-id",
+                            "value": "ssp~063f48936970997909cf84b71f1e51ab2882"
+                          }
+                        ],
+                        "description": "With Da LAB, Sơn Tùng M-TP, AMEE and more",
+                        "format": "inspiredby-mix",
+                        "images": {
+                          "items": [
+                            {
+                              "extractedColors": {
+                                "colorDark": {
+                                  "hex": "#3E7DA1",
+                                  "isFallback": false
+                                }
+                              },
+                              "sources": [
+                                {
+                                  "height": null,
+                                  "url": "https://pickasso.spotifycdn.com/image/ab67c0de0000deef/dt/v1/img/radio/artist/6CGGvCBHWqQ4HXtn5aLhbh/en-GB",
+                                  "width": null
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        "name": "SOOBIN Radio",
+                        "ownerV2": {
+                          "data": {
+                            "__typename": "User",
+                            "name": "Spotify",
+                            "uri": "spotify:user:spotify"
+                          }
+                        },
+                        "uri": "spotify:playlist:37i9dQZF1E4uNfZ5k0gw5M"
+                      }
+                    },
+                    "data": null,
+                    "uri": "spotify:playlist:37i9dQZF1E4uNfZ5k0gw5M"
+                  },
+                  {
+                    "content": {
+                      "__typename": "PlaylistResponseWrapper",
+                      "data": {
+                        "__typename": "Playlist",
+                        "attributes": [
+                          {
+                            "key": "request_id",
+                            "value": "ssp~063f48936970997909cf84b71f1e51ab2882"
+                          },
+                          {
+                            "key": "should_show_promo_disclosure",
+                            "value": "true"
+                          },
+                          {
+                            "key": "send-impression-for-rows",
+                            "value": "true"
+                          },
+                          {
+                            "key": "correlation-id",
+                            "value": "ssp~063f48936970997909cf84b71f1e51ab2882"
+                          }
+                        ],
+                        "description": "With Da LAB, HIEUTHUHAI, AMEE and more",
+                        "format": "inspiredby-mix",
+                        "images": {
+                          "items": [
+                            {
+                              "extractedColors": {
+                                "colorDark": {
+                                  "hex": "#A3694F",
+                                  "isFallback": false
+                                }
+                              },
+                              "sources": [
+                                {
+                                  "height": null,
+                                  "url": "https://pickasso.spotifycdn.com/image/ab67c0de0000deef/dt/v1/img/radio/artist/5dfZ5uSmzR7VQK0udbAVpf/en-GB",
+                                  "width": null
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        "name": "Sơn Tùng M-TP Radio",
+                        "ownerV2": {
+                          "data": {
+                            "__typename": "User",
+                            "name": "Spotify",
+                            "uri": "spotify:user:spotify"
+                          }
+                        },
+                        "uri": "spotify:playlist:37i9dQZF1E4s2rxfOKtG1a"
+                      }
+                    },
+                    "data": null,
+                    "uri": "spotify:playlist:37i9dQZF1E4s2rxfOKtG1a"
+                  },
+                  {
+                    "content": {
+                      "__typename": "PlaylistResponseWrapper",
+                      "data": {
+                        "__typename": "Playlist",
+                        "attributes": [
+                          {
+                            "key": "request_id",
+                            "value": "ssp~063f48936970997909cf84b71f1e51ab2882"
+                          },
+                          {
+                            "key": "should_show_promo_disclosure",
+                            "value": "true"
+                          },
+                          {
+                            "key": "send-impression-for-rows",
+                            "value": "true"
+                          },
+                          {
+                            "key": "correlation-id",
+                            "value": "ssp~063f48936970997909cf84b71f1e51ab2882"
+                          }
+                        ],
+                        "description": "With Wxrdie, TeuYungBoy, RPT MCK and more",
+                        "format": "inspiredby-mix",
+                        "images": {
+                          "items": [
+                            {
+                              "extractedColors": {
+                                "colorDark": {
+                                  "hex": "#6F74A4",
+                                  "isFallback": false
+                                }
+                              },
+                              "sources": [
+                                {
+                                  "height": null,
+                                  "url": "https://pickasso.spotifycdn.com/image/ab67c0de0000deef/dt/v1/img/radio/artist/5xY6E5PMZNtz9jDvxTRiGI/en-GB",
+                                  "width": null
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        "name": "Dangrangto Radio",
+                        "ownerV2": {
+                          "data": {
+                            "__typename": "User",
+                            "name": "Spotify",
+                            "uri": "spotify:user:spotify"
+                          }
+                        },
+                        "uri": "spotify:playlist:37i9dQZF1E4vJnCypODcEw"
+                      }
+                    },
+                    "data": null,
+                    "uri": "spotify:playlist:37i9dQZF1E4vJnCypODcEw"
+                  },
+                  {
+                    "content": {
+                      "__typename": "PlaylistResponseWrapper",
+                      "data": {
+                        "__typename": "Playlist",
+                        "attributes": [
+                          {
+                            "key": "request_id",
+                            "value": "ssp~063f48936970997909cf84b71f1e51ab2882"
+                          },
+                          {
+                            "key": "should_show_promo_disclosure",
+                            "value": "true"
+                          },
+                          {
+                            "key": "send-impression-for-rows",
+                            "value": "true"
+                          },
+                          {
+                            "key": "correlation-id",
+                            "value": "ssp~063f48936970997909cf84b71f1e51ab2882"
+                          }
+                        ],
+                        "description": "With W/N, T.R.I, Ronboogz and more",
+                        "format": "inspiredby-mix",
+                        "images": {
+                          "items": [
+                            {
+                              "extractedColors": {
+                                "colorDark": {
+                                  "hex": "#4F7F77",
+                                  "isFallback": false
+                                }
+                              },
+                              "sources": [
+                                {
+                                  "height": null,
+                                  "url": "https://pickasso.spotifycdn.com/image/ab67c0de0000deef/dt/v1/img/radio/artist/7Cp2hGcriAaDUAWpXnSEwm/en-GB",
+                                  "width": null
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        "name": "buitruonglinh Radio",
+                        "ownerV2": {
+                          "data": {
+                            "__typename": "User",
+                            "name": "Spotify",
+                            "uri": "spotify:user:spotify"
+                          }
+                        },
+                        "uri": "spotify:playlist:37i9dQZF1E4BOisPQhvWuz"
+                      }
+                    },
+                    "data": null,
+                    "uri": "spotify:playlist:37i9dQZF1E4BOisPQhvWuz"
+                  },
+                  {
+                    "content": {
+                      "__typename": "PlaylistResponseWrapper",
+                      "data": {
+                        "__typename": "Playlist",
+                        "attributes": [
+                          {
+                            "key": "request_id",
+                            "value": "ssp~063f48936970997909cf84b71f1e51ab2882"
+                          },
+                          {
+                            "key": "should_show_promo_disclosure",
+                            "value": "true"
+                          },
+                          {
+                            "key": "send-impression-for-rows",
+                            "value": "true"
+                          },
+                          {
+                            "key": "correlation-id",
+                            "value": "ssp~063f48936970997909cf84b71f1e51ab2882"
+                          }
+                        ],
+                        "description": "With MANBO, ANH TRAI \"SAY HI\", HURRYKNG and more",
+                        "format": "inspiredby-mix",
+                        "images": {
+                          "items": [
+                            {
+                              "extractedColors": {
+                                "colorDark": {
+                                  "hex": "#C0574A",
+                                  "isFallback": false
+                                }
+                              },
+                              "sources": [
+                                {
+                                  "height": null,
+                                  "url": "https://pickasso.spotifycdn.com/image/ab67c0de0000deef/dt/v1/img/radio/artist/5HZtdKfC4xU0wvhEyYDWiY/en-GB",
+                                  "width": null
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        "name": "HIEUTHUHAI Radio",
+                        "ownerV2": {
+                          "data": {
+                            "__typename": "User",
+                            "name": "Spotify",
+                            "uri": "spotify:user:spotify"
+                          }
+                        },
+                        "uri": "spotify:playlist:37i9dQZF1E4EaeOQFKEeSY"
+                      }
+                    },
+                    "data": null,
+                    "uri": "spotify:playlist:37i9dQZF1E4EaeOQFKEeSY"
+                  },
+                  {
+                    "content": {
+                      "__typename": "PlaylistResponseWrapper",
+                      "data": {
+                        "__typename": "Playlist",
+                        "attributes": [
+                          {
+                            "key": "request_id",
+                            "value": "ssp~063f48936970997909cf84b71f1e51ab2882"
+                          },
+                          {
+                            "key": "should_show_promo_disclosure",
+                            "value": "true"
+                          },
+                          {
+                            "key": "send-impression-for-rows",
+                            "value": "true"
+                          },
+                          {
+                            "key": "correlation-id",
+                            "value": "ssp~063f48936970997909cf84b71f1e51ab2882"
+                          }
+                        ],
+                        "description": "With RPT MCK, AMEE, TGSN and more",
+                        "format": "inspiredby-mix",
+                        "images": {
+                          "items": [
+                            {
+                              "extractedColors": {
+                                "colorDark": {
+                                  "hex": "#6F74A4",
+                                  "isFallback": false
+                                }
+                              },
+                              "sources": [
+                                {
+                                  "height": null,
+                                  "url": "https://pickasso.spotifycdn.com/image/ab67c0de0000deef/dt/v1/img/radio/artist/3diftVOq7aEIebXKkC34oR/en-GB",
+                                  "width": null
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        "name": "tlinh Radio",
+                        "ownerV2": {
+                          "data": {
+                            "__typename": "User",
+                            "name": "Spotify",
+                            "uri": "spotify:user:spotify"
+                          }
+                        },
+                        "uri": "spotify:playlist:37i9dQZF1E4wgm3fkhaMTx"
+                      }
+                    },
+                    "data": null,
+                    "uri": "spotify:playlist:37i9dQZF1E4wgm3fkhaMTx"
+                  },
+                  {
+                    "content": {
+                      "__typename": "PlaylistResponseWrapper",
+                      "data": {
+                        "__typename": "Playlist",
+                        "attributes": [
+                          {
+                            "key": "request_id",
+                            "value": "ssp~063f48936970997909cf84b71f1e51ab2882"
+                          },
+                          {
+                            "key": "should_show_promo_disclosure",
+                            "value": "true"
+                          },
+                          {
+                            "key": "send-impression-for-rows",
+                            "value": "true"
+                          },
+                          {
+                            "key": "correlation-id",
+                            "value": "ssp~063f48936970997909cf84b71f1e51ab2882"
+                          }
+                        ],
+                        "description": "With Dangrangto, Andree Right Hand, RPT MCK and more",
+                        "format": "inspiredby-mix",
+                        "images": {
+                          "items": [
+                            {
+                              "extractedColors": {
+                                "colorDark": {
+                                  "hex": "#581810",
+                                  "isFallback": false
+                                }
+                              },
+                              "sources": [
+                                {
+                                  "height": null,
+                                  "url": "https://pickasso.spotifycdn.com/image/ab67c0de0000deef/dt/v1/img/radio/artist/1Jmkhzve9TuXHUUWGmpANw/en-GB",
+                                  "width": null
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        "name": "Wxrdie Radio",
+                        "ownerV2": {
+                          "data": {
+                            "__typename": "User",
+                            "name": "Spotify",
+                            "uri": "spotify:user:spotify"
+                          }
+                        },
+                        "uri": "spotify:playlist:37i9dQZF1E4BOGQnNqOGuT"
+                      }
+                    },
+                    "data": null,
+                    "uri": "spotify:playlist:37i9dQZF1E4BOGQnNqOGuT"
+                  },
+                  {
+                    "content": {
+                      "__typename": "PlaylistResponseWrapper",
+                      "data": {
+                        "__typename": "Playlist",
+                        "attributes": [
+                          {
+                            "key": "request_id",
+                            "value": "ssp~063f48936970997909cf84b71f1e51ab2882"
+                          },
+                          {
+                            "key": "should_show_promo_disclosure",
+                            "value": "true"
+                          },
+                          {
+                            "key": "send-impression-for-rows",
+                            "value": "true"
+                          },
+                          {
+                            "key": "correlation-id",
+                            "value": "ssp~063f48936970997909cf84b71f1e51ab2882"
+                          }
+                        ],
+                        "description": "With RPT MCK, Low G, HIEUTHUHAI and more",
+                        "format": "inspiredby-mix",
+                        "images": {
+                          "items": [
+                            {
+                              "extractedColors": {
+                                "colorDark": {
+                                  "hex": "#8E69A3",
+                                  "isFallback": false
+                                }
+                              },
+                              "sources": [
+                                {
+                                  "height": null,
+                                  "url": "https://pickasso.spotifycdn.com/image/ab67c0de0000deef/dt/v1/img/radio/artist/0ZbgKh0FgPYeFP38nVaEGp/en-GB",
+                                  "width": null
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        "name": "Obito Radio",
+                        "ownerV2": {
+                          "data": {
+                            "__typename": "User",
+                            "name": "Spotify",
+                            "uri": "spotify:user:spotify"
+                          }
+                        },
+                        "uri": "spotify:playlist:37i9dQZF1E4tTrQNy1V2N4"
+                      }
+                    },
+                    "data": null,
+                    "uri": "spotify:playlist:37i9dQZF1E4tTrQNy1V2N4"
+                  }
+                ],
+                "pagingInfo": {
+                  "nextOffset": 10
+                },
+                "totalCount": 50
+              },
+              "uri": "spotify:section:0JQ5DAnM3wGh0gz1MXnu4h"
+            },
+            {
+              "data": {
+                "__typename": "HomeGenericSectionData",
+                "headerEntity": {
+                  "__typename": "UnknownType"
+                },
+                "subtitle": {
+                  "transformedLabel": "",
+                  "translatedBaseText": null
+                },
+                "title": {
+                  "transformedLabel": "Featured Charts",
+                  "translatedBaseText": "Featured Charts"
+                }
+              },
+              "sectionItems": {
+                "items": [
+                  {
+                    "content": {
+                      "__typename": "PlaylistResponseWrapper",
+                      "data": {
+                        "__typename": "Playlist",
+                        "attributes": [
+                          {
+                            "key": "last_updated",
+                            "value": "2025-09-19T13:31:07Z"
+                          },
+                          {
+                            "key": "rank_type",
+                            "value": "plays"
+                          },
+                          {
+                            "key": "new_entries_count",
+                            "value": "5"
+                          },
+                          {
+                            "key": "chart_entity_type",
+                            "value": "track"
+                          }
+                        ],
+                        "description": "Your weekly update of the most played tracks right now - Global.",
+                        "format": "chart",
+                        "images": {
+                          "items": [
+                            {
+                              "extractedColors": {
+                                "colorDark": {
+                                  "hex": "#703090",
+                                  "isFallback": false
+                                }
+                              },
+                              "sources": [
+                                {
+                                  "height": null,
+                                  "url": "https://charts-images.scdn.co/assets/locale_en/regional/weekly/region_global_default.jpg",
+                                  "width": null
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        "name": "Top Songs - Global",
+                        "ownerV2": {
+                          "data": {
+                            "__typename": "User",
+                            "name": "Spotify",
+                            "uri": "spotify:user:spotify"
+                          }
+                        },
+                        "uri": "spotify:playlist:37i9dQZEVXbNG2KDcFcKOF"
+                      }
+                    },
+                    "data": null,
+                    "uri": "spotify:playlist:37i9dQZEVXbNG2KDcFcKOF"
+                  },
+                  {
+                    "content": {
+                      "__typename": "PlaylistResponseWrapper",
+                      "data": {
+                        "__typename": "Playlist",
+                        "attributes": [
+                          {
+                            "key": "last_updated",
+                            "value": "2025-09-19T13:31:05Z"
+                          },
+                          {
+                            "key": "rank_type",
+                            "value": "plays"
+                          },
+                          {
+                            "key": "new_entries_count",
+                            "value": "6"
+                          },
+                          {
+                            "key": "chart_entity_type",
+                            "value": "track"
+                          }
+                        ],
+                        "description": "Your weekly update of the most played tracks right now - Vietnam.",
+                        "format": "chart",
+                        "images": {
+                          "items": [
+                            {
+                              "extractedColors": {
+                                "colorDark": {
+                                  "hex": "#3F78BD",
+                                  "isFallback": false
+                                }
+                              },
+                              "sources": [
+                                {
+                                  "height": null,
+                                  "url": "https://charts-images.scdn.co/assets/locale_en/regional/weekly/region_vn_default.jpg",
+                                  "width": null
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        "name": "Top Songs - Vietnam",
+                        "ownerV2": {
+                          "data": {
+                            "__typename": "User",
+                            "name": "Spotify",
+                            "uri": "spotify:user:spotify"
+                          }
+                        },
+                        "uri": "spotify:playlist:37i9dQZEVXbKZyn1mKjmIl"
+                      }
+                    },
+                    "data": null,
+                    "uri": "spotify:playlist:37i9dQZEVXbKZyn1mKjmIl"
+                  },
+                  {
+                    "content": {
+                      "__typename": "PlaylistResponseWrapper",
+                      "data": {
+                        "__typename": "Playlist",
+                        "attributes": [
+                          {
+                            "key": "last_updated",
+                            "value": "2025-09-20T13:17:41Z"
+                          },
+                          {
+                            "key": "rank_type",
+                            "value": "plays"
+                          },
+                          {
+                            "key": "new_entries_count",
+                            "value": "3"
+                          },
+                          {
+                            "key": "chart_entity_type",
+                            "value": "track"
+                          }
+                        ],
+                        "description": "Your daily update of the most played tracks right now - Global.",
+                        "format": "chart",
+                        "images": {
+                          "items": [
+                            {
+                              "extractedColors": {
+                                "colorDark": {
+                                  "hex": "#183860",
+                                  "isFallback": false
+                                }
+                              },
+                              "sources": [
+                                {
+                                  "height": null,
+                                  "url": "https://charts-images.scdn.co/assets/locale_en/regional/daily/region_global_default.jpg",
+                                  "width": null
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        "name": "Top 50 - Global",
+                        "ownerV2": {
+                          "data": {
+                            "__typename": "User",
+                            "name": "Spotify",
+                            "uri": "spotify:user:spotify"
+                          }
+                        },
+                        "uri": "spotify:playlist:37i9dQZEVXbMDoHDwVN2tF"
+                      }
+                    },
+                    "data": null,
+                    "uri": "spotify:playlist:37i9dQZEVXbMDoHDwVN2tF"
+                  },
+                  {
+                    "content": {
+                      "__typename": "PlaylistResponseWrapper",
+                      "data": {
+                        "__typename": "Playlist",
+                        "attributes": [
+                          {
+                            "key": "last_updated",
+                            "value": "2025-09-20T13:17:43Z"
+                          },
+                          {
+                            "key": "rank_type",
+                            "value": "plays"
+                          },
+                          {
+                            "key": "new_entries_count",
+                            "value": "4"
+                          },
+                          {
+                            "key": "chart_entity_type",
+                            "value": "track"
+                          }
+                        ],
+                        "description": "Your daily update of the most played tracks right now - Vietnam.",
+                        "format": "chart",
+                        "images": {
+                          "items": [
+                            {
+                              "extractedColors": {
+                                "colorDark": {
+                                  "hex": "#E82038",
+                                  "isFallback": false
+                                }
+                              },
+                              "sources": [
+                                {
+                                  "height": null,
+                                  "url": "https://charts-images.scdn.co/assets/locale_en/regional/daily/region_vn_default.jpg",
+                                  "width": null
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        "name": "Top 50 - Vietnam",
+                        "ownerV2": {
+                          "data": {
+                            "__typename": "User",
+                            "name": "Spotify",
+                            "uri": "spotify:user:spotify"
+                          }
+                        },
+                        "uri": "spotify:playlist:37i9dQZEVXbLdGSmz6xilI"
+                      }
+                    },
+                    "data": null,
+                    "uri": "spotify:playlist:37i9dQZEVXbLdGSmz6xilI"
+                  },
+                  {
+                    "content": {
+                      "__typename": "PlaylistResponseWrapper",
+                      "data": {
+                        "__typename": "Playlist",
+                        "attributes": [
+                          {
+                            "key": "last_updated",
+                            "value": "2025-09-20T19:07:09Z"
+                          },
+                          {
+                            "key": "rank_type",
+                            "value": "virality"
+                          },
+                          {
+                            "key": "new_entries_count",
+                            "value": "3"
+                          },
+                          {
+                            "key": "chart_entity_type",
+                            "value": "track"
+                          }
+                        ],
+                        "description": "Your daily update of the most viral tracks right now - Global.",
+                        "format": "chart",
+                        "images": {
+                          "items": [
+                            {
+                              "extractedColors": {
+                                "colorDark": {
+                                  "hex": "#1B8857",
+                                  "isFallback": false
+                                }
+                              },
+                              "sources": [
+                                {
+                                  "height": null,
+                                  "url": "https://charts-images.scdn.co/assets/locale_en/viral/daily/region_global_default.jpg",
+                                  "width": null
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        "name": "Viral 50 - Global",
+                        "ownerV2": {
+                          "data": {
+                            "__typename": "User",
+                            "name": "Spotify",
+                            "uri": "spotify:user:spotify"
+                          }
+                        },
+                        "uri": "spotify:playlist:37i9dQZEVXbLiRSasKsNU9"
+                      }
+                    },
+                    "data": null,
+                    "uri": "spotify:playlist:37i9dQZEVXbLiRSasKsNU9"
+                  },
+                  {
+                    "content": {
+                      "__typename": "PlaylistResponseWrapper",
+                      "data": {
+                        "__typename": "Playlist",
+                        "attributes": [
+                          {
+                            "key": "last_updated",
+                            "value": "2025-09-20T19:07:12Z"
+                          },
+                          {
+                            "key": "rank_type",
+                            "value": "virality"
+                          },
+                          {
+                            "key": "new_entries_count",
+                            "value": "5"
+                          },
+                          {
+                            "key": "chart_entity_type",
+                            "value": "track"
+                          }
+                        ],
+                        "description": "Your daily update of the most viral tracks right now - Vietnam.",
+                        "format": "chart",
+                        "images": {
+                          "items": [
+                            {
+                              "extractedColors": {
+                                "colorDark": {
+                                  "hex": "#D82838",
+                                  "isFallback": false
+                                }
+                              },
+                              "sources": [
+                                {
+                                  "height": null,
+                                  "url": "https://charts-images.scdn.co/assets/locale_en/viral/daily/region_vn_default.jpg",
+                                  "width": null
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        "name": "Viral 50 - Vietnam",
+                        "ownerV2": {
+                          "data": {
+                            "__typename": "User",
+                            "name": "Spotify",
+                            "uri": "spotify:user:spotify"
+                          }
+                        },
+                        "uri": "spotify:playlist:37i9dQZEVXbL1G1MbPav3j"
+                      }
+                    },
+                    "data": null,
+                    "uri": "spotify:playlist:37i9dQZEVXbL1G1MbPav3j"
+                  }
+                ],
+                "pagingInfo": {
+                  "nextOffset": null
+                },
+                "totalCount": 6
+              },
+              "uri": "spotify:section:0JQ5DAzQHECxDlYNI6xD1g"
+            }
+          ],
+          "totalCount": 5
+        },
+        "uri": "spotify:page:0JQ5DAozXW0GUBAKjHsifF"
+      },
+      "homeChips": []
+    }
+  },
+  "extensions": {
+    "responseIds": {
+      "/home": {
+        "continuum": "94f68b2c-97b0-dc70-e6f2-166e460b98a0"
+      }
+    }
+  }
+}
