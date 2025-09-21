@@ -41,55 +41,96 @@ export default function Home() {
                           const track = item.content.data as any;
                           const imageUrl = track.albumOfTrack?.coverArt?.sources?.[0]?.url;
                           return (
-                            <Card 
-                              key={itemIndex} 
-                              title={track.name || 'Unknown Track'}
-                              subtitle={track.artists?.items?.[0]?.profile?.name || 'Unknown Artist'}
-                              variant="default"
-                              size="md"
-                              imageUrl={imageUrl}
-                              showPlayButton={true}
-                              onPlayClick={() => console.log(`Playing ${track.name}`)}
-                            >
-                              {imageUrl && <img src={imageUrl} alt={track.name} className="w-full h-full object-cover rounded" />}
-                            </Card>
+                            <div key={itemIndex} className="group cursor-pointer">
+                              {imageUrl && (
+                                <div className="aspect-square mb-4 relative overflow-hidden rounded-lg">
+                                  <img 
+                                    src={imageUrl} 
+                                    alt={track.name} 
+                                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" 
+                                  />
+                                  <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-30 transition-all duration-300 flex items-center justify-center">
+                                    <button className="opacity-0 group-hover:opacity-100 bg-spotify-green text-white rounded-full p-3 hover:scale-110 transition-all duration-300">
+                                      <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                                        <path d="M8 5v14l11-7z"/>
+                                      </svg>
+                                    </button>
+                                  </div>
+                                </div>
+                              )}
+                              <Card 
+                                title={track.name || 'Unknown Track'}
+                                subtitle={track.artists?.items?.[0]?.profile?.name || 'Unknown Artist'}
+                                variant="default"
+                                size="md"
+                                showPlayButton={false}
+                                onPlayClick={() => console.log(`Playing ${track.name}`)}
+                              />
+                            </div>
                           );
                         } else if (item.content.__typename === 'ArtistResponseWrapper') {
                           const artist = item.content.data as any;
                           const imageUrl = artist.visuals?.avatarImage?.sources?.[0]?.url;
                           return (
-                            <Card 
-                              key={itemIndex} 
-                              title={artist.profile?.name || 'Unknown Artist'}
-                              subtitle="Artist"
-                              variant="artist"
-                              size="md"
-                              imageUrl={imageUrl}
-                              showPlayButton={true}
-                              onPlayClick={() => console.log(`Playing ${artist.profile?.name}`)}
-                            >
-                              {imageUrl && <img src={imageUrl} alt={artist.profile?.name} className="w-full h-full object-cover rounded-full" />}
-                            </Card>
+                            <div key={itemIndex} className="group cursor-pointer">
+                              {imageUrl && (
+                                <div className="aspect-square mb-4 relative overflow-hidden rounded-full">
+                                  <img 
+                                    src={imageUrl} 
+                                    alt={artist.profile?.name} 
+                                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" 
+                                  />
+                                  <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-30 transition-all duration-300 flex items-center justify-center">
+                                    <button className="opacity-0 group-hover:opacity-100 bg-spotify-green text-white rounded-full p-3 hover:scale-110 transition-all duration-300">
+                                      <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                                        <path d="M8 5v14l11-7z"/>
+                                      </svg>
+                                    </button>
+                                  </div>
+                                </div>
+                              )}
+                              <Card 
+                                title={artist.profile?.name || 'Unknown Artist'}
+                                subtitle="Artist"
+                                variant="artist"
+                                size="md"
+                                showPlayButton={false}
+                                onPlayClick={() => console.log(`Playing ${artist.profile?.name}`)}
+                              />
+                            </div>
                           );
                         } else if (item.content.__typename === 'AlbumResponseWrapper') {
                           const album = item.content.data as any;
                           const imageUrl = album.coverArt?.sources?.[0]?.url;
                           return (
-                            <Card 
-                              key={itemIndex} 
-                              title={album.name || 'Unknown Album'}
-                              subtitle={album.artists?.items?.[0]?.profile?.name || 'Unknown Artist'}
-                              variant="default"
-                              size="md"
-                              imageUrl={imageUrl}
-                              showPlayButton={true}
-                              onPlayClick={() => console.log(`Playing ${album.name}`)}
-                            >
-                              {imageUrl && <img src={imageUrl} alt={album.name} className="w-full h-full object-cover rounded" />}
-                            </Card>
+                            <div key={itemIndex} className="group cursor-pointer">
+                              {imageUrl && (
+                                <div className="aspect-square mb-4 relative overflow-hidden rounded-lg">
+                                  <img 
+                                    src={imageUrl} 
+                                    alt={album.name} 
+                                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" 
+                                  />
+                                  <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-30 transition-all duration-300 flex items-center justify-center">
+                                    <button className="opacity-0 group-hover:opacity-100 bg-spotify-green text-white rounded-full p-3 hover:scale-110 transition-all duration-300">
+                                      <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                                        <path d="M8 5v14l11-7z"/>
+                                      </svg>
+                                    </button>
+                                  </div>
+                                </div>
+                              )}
+                              <Card 
+                                title={album.name || 'Unknown Album'}
+                                subtitle={album.artists?.items?.[0]?.profile?.name || 'Unknown Artist'}
+                                variant="default"
+                                size="md"
+                                showPlayButton={false}
+                                onPlayClick={() => console.log(`Playing ${album.name}`)}
+                              />
+                            </div>
                           );
                         }
-                        return null;
                       })}
                     </div>
                   </Stack>
