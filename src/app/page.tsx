@@ -27,7 +27,7 @@ export default function Home() {
             <div className="flex-1 overflow-y-auto p-6">
               {/* Welcome Section */}
               <div className="mb-8">
-                <Typography variant="heading">
+                <Typography variant="title" size="2xl">
                   Good afternoon
                 </Typography>
                 <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4">
@@ -48,7 +48,7 @@ export default function Home() {
               
               {/* Recently Played */}
               <div className="mb-8">
-                <Typography variant="heading">
+                <Typography variant="heading" size="xl">
                   Recently played
                 </Typography>
                 <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4">
@@ -68,7 +68,7 @@ export default function Home() {
               
               {/* Made for You */}
               <div className="mb-8">
-                <Typography variant="heading">
+                <Typography variant="body" size={'2xl'}>
                   Made for you
                 </Typography>
                 <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4">
@@ -96,10 +96,10 @@ export default function Home() {
                   </svg>
                 </div>
                 <div>
-                  <Typography variant="body">
+                  <Typography variant="body" size="md" weight="medium">
                     Song Title
                   </Typography>
-                  <Typography variant="body" color="muted">
+                  <Typography variant="body" size="sm" color="secondary">
                     Artist Name
                   </Typography>
                 </div>
@@ -129,13 +129,13 @@ export default function Home() {
                   </button>
                 </div>
                 <div className="flex items-center space-x-2 w-full max-w-md">
-                  <Typography variant="caption" color="muted">
+                  <Typography variant="caption" size="sm" color="secondary">
                     0:00
                   </Typography>
                   <div className="flex-1 bg-gray-600 rounded-full h-1">
                     <div className="bg-white rounded-full h-1 w-1/3"></div>
                   </div>
-                  <Typography variant="caption" color="muted">
+                  <Typography variant="caption" size="sm" color="secondary">
                     3:45
                   </Typography>
                 </div>
