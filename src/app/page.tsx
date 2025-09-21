@@ -1,6 +1,6 @@
 'use client'
 
-import { ThemeProvider, AppHeader, Sidebar } from 'spotify-design-system'
+import { ThemeProvider, AppHeader, Sidebar, Card } from 'spotify-design-system'
 import React from 'react';
 
 export default function Home() {
@@ -31,19 +31,13 @@ export default function Home() {
                 <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4">
                   {/* Playlist Cards */}
                   {Array.from({ length: 6 }).map((_, i) => (
-                    <div key={i} className="bg-spotify-surface rounded-lg p-4 hover:bg-gray-700 transition-colors cursor-pointer group">
+                    <Card key={i} title={`Playlist ${i + 1}`} subtitle="By User">
                       <div className="aspect-square bg-gradient-to-br from-purple-500 to-pink-500 rounded-lg mb-4 flex items-center justify-center">
                         <svg className="w-12 h-12 text-white" fill="currentColor" viewBox="0 0 24 24">
                           <path d="M8 5v14l11-7z"/>
                         </svg>
                       </div>
-                      <h3 className="font-semibold text-white group-hover:text-spotify-green transition-colors">
-                        Playlist {i + 1}
-                      </h3>
-                      <p className="text-gray-400 text-sm mt-1">
-                        By User
-                      </p>
-                    </div>
+                    </Card>
                   ))}
                 </div>
               </div>
@@ -53,19 +47,13 @@ export default function Home() {
                 <h2 className="text-2xl font-bold mb-6">Recently played</h2>
                 <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4">
                   {Array.from({ length: 6 }).map((_, i) => (
-                    <div key={i} className="bg-spotify-surface rounded-lg p-4 hover:bg-gray-700 transition-colors cursor-pointer group">
+                    <Card key={i} title={`Recently Played ${i + 1}`} subtitle="Playlist">
                       <div className="aspect-square bg-gradient-to-br from-blue-500 to-green-500 rounded-lg mb-4 flex items-center justify-center">
                         <svg className="w-12 h-12 text-white" fill="currentColor" viewBox="0 0 24 24">
                           <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
                         </svg>
                       </div>
-                      <h3 className="font-semibold text-white group-hover:text-spotify-green transition-colors">
-                        Recently Played {i + 1}
-                      </h3>
-                      <p className="text-gray-400 text-sm mt-1">
-                        Playlist
-                      </p>
-                    </div>
+                    </Card>
                   ))}
                 </div>
               </div>
@@ -75,19 +63,13 @@ export default function Home() {
                 <h2 className="text-2xl font-bold mb-6">Made for you</h2>
                 <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4">
                   {Array.from({ length: 6 }).map((_, i) => (
-                    <div key={i} className="bg-spotify-surface rounded-lg p-4 hover:bg-gray-700 transition-colors cursor-pointer group">
+                    <Card key={i} title={`Made for You ${i + 1}`} subtitle="Made for you">
                       <div className="aspect-square bg-gradient-to-br from-red-500 to-orange-500 rounded-lg mb-4 flex items-center justify-center">
                         <svg className="w-12 h-12 text-white" fill="currentColor" viewBox="0 0 24 24">
                           <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
                         </svg>
                       </div>
-                      <h3 className="font-semibold text-white group-hover:text-spotify-green transition-colors">
-                        Made for You {i + 1}
-                      </h3>
-                      <p className="text-gray-400 text-sm mt-1">
-                        Made for you
-                      </p>
-                    </div>
+                    </Card>
                   ))}
                 </div>
               </div>
