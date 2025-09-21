@@ -27,7 +27,7 @@ export default function Home() {
             <div className="flex-1 overflow-y-auto p-6">
               {/* Welcome Section */}
               <div className="mb-8">
-                <Typography variant="heading" className="text-3xl font-bold mb-6">
+                <Typography variant="heading">
                   Good afternoon
                 </Typography>
                 <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4">
@@ -41,7 +41,6 @@ export default function Home() {
                       size="md"
                       showPlayButton={true}
                       onPlayClick={() => console.log(`Playing Playlist ${i + 1}`)}
-                      className="hover:scale-105 transition-transform cursor-pointer"
                     />
                   ))}
                 </div>
@@ -49,7 +48,7 @@ export default function Home() {
               
               {/* Recently Played */}
               <div className="mb-8">
-                <Typography variant="heading" className="text-2xl font-bold mb-6">
+                <Typography variant="heading">
                   Recently played
                 </Typography>
                 <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4">
@@ -62,7 +61,6 @@ export default function Home() {
                       size="md"
                       showPlayButton={true}
                       onPlayClick={() => console.log(`Playing Recently Played ${i + 1}`)}
-                      className="hover:scale-105 transition-transform cursor-pointer"
                     />
                   ))}
                 </div>
@@ -70,7 +68,7 @@ export default function Home() {
               
               {/* Made for You */}
               <div className="mb-8">
-                <Typography variant="heading" className="text-2xl font-bold mb-6">
+                <Typography variant="heading">
                   Made for you
                 </Typography>
                 <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4">
@@ -83,7 +81,6 @@ export default function Home() {
                       size="md"
                       showPlayButton={true}
                       onPlayClick={() => console.log(`Playing Made for You ${i + 1}`)}
-                      className="hover:scale-105 transition-transform cursor-pointer"
                     />
                   ))}
                 </div>
@@ -99,10 +96,10 @@ export default function Home() {
                   </svg>
                 </div>
                 <div>
-                  <Typography variant="body" className="text-white font-medium">
+                  <Typography variant="body">
                     Song Title
                   </Typography>
-                  <Typography variant="body" color="muted" className="text-sm">
+                  <Typography variant="body" color="muted">
                     Artist Name
                   </Typography>
                 </div>
@@ -132,13 +129,13 @@ export default function Home() {
                   </button>
                 </div>
                 <div className="flex items-center space-x-2 w-full max-w-md">
-                  <Typography variant="caption" color="muted" className="text-xs">
+                  <Typography variant="caption" color="muted">
                     0:00
                   </Typography>
                   <div className="flex-1 bg-gray-600 rounded-full h-1">
                     <div className="bg-white rounded-full h-1 w-1/3"></div>
                   </div>
-                  <Typography variant="caption" color="muted" className="text-xs">
+                  <Typography variant="caption" color="muted">
                     3:45
                   </Typography>
                 </div>
