@@ -1,6 +1,6 @@
 'use client'
 
-import { ThemeProvider, AppHeader, Sidebar, Card } from 'spotify-design-system'
+import { ThemeProvider, AppHeader, Sidebar, Card, Typography } from 'spotify-design-system'
 import React from 'react';
 
 export default function Home() {
@@ -27,7 +27,9 @@ export default function Home() {
             <div className="flex-1 overflow-y-auto p-6">
               {/* Welcome Section */}
               <div className="mb-8">
-                <h1 className="text-3xl font-bold mb-6">Good afternoon</h1>
+                <Typography variant="heading" className="text-3xl font-bold mb-6">
+                  Good afternoon
+                </Typography>
                 <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4">
                   {/* Playlist Cards */}
                   {Array.from({ length: 6 }).map((_, i) => (
@@ -40,20 +42,16 @@ export default function Home() {
                       showPlayButton={true}
                       onPlayClick={() => console.log(`Playing Playlist ${i + 1}`)}
                       className="hover:scale-105 transition-transform cursor-pointer"
-                    >
-                      <div className="aspect-square bg-gradient-to-br from-purple-500 to-pink-500 rounded-lg mb-4 flex items-center justify-center">
-                        <svg className="w-12 h-12 text-white" fill="currentColor" viewBox="0 0 24 24">
-                          <path d="M8 5v14l11-7z"/>
-                        </svg>
-                      </div>
-                    </Card>
+                    />
                   ))}
                 </div>
               </div>
               
               {/* Recently Played */}
               <div className="mb-8">
-                <h2 className="text-2xl font-bold mb-6">Recently played</h2>
+                <Typography variant="heading" className="text-2xl font-bold mb-6">
+                  Recently played
+                </Typography>
                 <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4">
                   {Array.from({ length: 6 }).map((_, i) => (
                     <Card 
@@ -65,20 +63,16 @@ export default function Home() {
                       showPlayButton={true}
                       onPlayClick={() => console.log(`Playing Recently Played ${i + 1}`)}
                       className="hover:scale-105 transition-transform cursor-pointer"
-                    >
-                      <div className="aspect-square bg-gradient-to-br from-blue-500 to-green-500 rounded-lg mb-4 flex items-center justify-center">
-                        <svg className="w-12 h-12 text-white" fill="currentColor" viewBox="0 0 24 24">
-                          <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
-                        </svg>
-                      </div>
-                    </Card>
+                    />
                   ))}
                 </div>
               </div>
               
               {/* Made for You */}
               <div className="mb-8">
-                <h2 className="text-2xl font-bold mb-6">Made for you</h2>
+                <Typography variant="heading" className="text-2xl font-bold mb-6">
+                  Made for you
+                </Typography>
                 <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4">
                   {Array.from({ length: 6 }).map((_, i) => (
                     <Card 
@@ -90,13 +84,7 @@ export default function Home() {
                       showPlayButton={true}
                       onPlayClick={() => console.log(`Playing Made for You ${i + 1}`)}
                       className="hover:scale-105 transition-transform cursor-pointer"
-                    >
-                      <div className="aspect-square bg-gradient-to-br from-red-500 to-orange-500 rounded-lg mb-4 flex items-center justify-center">
-                        <svg className="w-12 h-12 text-white" fill="currentColor" viewBox="0 0 24 24">
-                          <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
-                        </svg>
-                      </div>
-                    </Card>
+                    />
                   ))}
                 </div>
               </div>
@@ -111,8 +99,12 @@ export default function Home() {
                   </svg>
                 </div>
                 <div>
-                  <h4 className="text-white font-medium">Song Title</h4>
-                  <p className="text-gray-400 text-sm">Artist Name</p>
+                  <Typography variant="body" className="text-white font-medium">
+                    Song Title
+                  </Typography>
+                  <Typography variant="body" color="muted" className="text-sm">
+                    Artist Name
+                  </Typography>
                 </div>
                 <button className="text-gray-400 hover:text-white">
                   <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
@@ -140,11 +132,15 @@ export default function Home() {
                   </button>
                 </div>
                 <div className="flex items-center space-x-2 w-full max-w-md">
-                  <span className="text-xs text-gray-400">0:00</span>
+                  <Typography variant="caption" color="muted" className="text-xs">
+                    0:00
+                  </Typography>
                   <div className="flex-1 bg-gray-600 rounded-full h-1">
                     <div className="bg-white rounded-full h-1 w-1/3"></div>
                   </div>
-                  <span className="text-xs text-gray-400">3:45</span>
+                  <Typography variant="caption" color="muted" className="text-xs">
+                    3:45
+                  </Typography>
                 </div>
               </div>
               
