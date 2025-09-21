@@ -61,6 +61,7 @@ export default function Home() {
                         // Handle different content types
                         if (item.content.__typename === 'TrackResponseWrapper') {
                           const track = item.content.data as any;
+                          const imageUrl = track.albumOfTrack?.coverArt?.sources?.[0]?.url;
                           return (
                             <Card 
                               key={itemIndex} 
@@ -68,12 +69,14 @@ export default function Home() {
                               subtitle={track.artists?.items?.[0]?.profile?.name || 'Unknown Artist'}
                               variant="default"
                               size="md"
+                              imageUrl={imageUrl}
                               showPlayButton={true}
                               onPlayClick={() => console.log(`Playing ${track.name}`)}
                             />
                           );
                         } else if (item.content.__typename === 'ArtistResponseWrapper') {
                           const artist = item.content.data as any;
+                          const imageUrl = artist.visuals?.avatarImage?.sources?.[0]?.url;
                           return (
                             <Card 
                               key={itemIndex} 
@@ -81,12 +84,14 @@ export default function Home() {
                               subtitle="Artist"
                               variant="artist"
                               size="md"
+                              imageUrl={imageUrl}
                               showPlayButton={true}
                               onPlayClick={() => console.log(`Playing ${artist.profile?.name}`)}
                             />
                           );
                         } else if (item.content.__typename === 'AlbumResponseWrapper') {
                           const album = item.content.data as any;
+                          const imageUrl = album.coverArt?.sources?.[0]?.url;
                           return (
                             <Card 
                               key={itemIndex} 
@@ -94,6 +99,7 @@ export default function Home() {
                               subtitle={album.artists?.items?.[0]?.profile?.name || 'Unknown Artist'}
                               variant="default"
                               size="md"
+                              imageUrl={imageUrl}
                               showPlayButton={true}
                               onPlayClick={() => console.log(`Playing ${album.name}`)}
                             />
