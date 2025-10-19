@@ -1,145 +1,178 @@
-'use client'
+'use client';
 
-import { ThemeProvider, AppHeader, Sidebar, Card, Typography, Stack } from 'spotify-design-system'
-import React from 'react';
+import {
+  ThemeProvider,
+  AppHeader,
+  Card,
+  Typography,
+  Stack,
+  Footer,
+  Button,
+  ButtonVariant,
+  ButtonSize,
+} from 'spotify-design-system';
+import React, { useState } from 'react';
 import homepageData from './data/homepageData.json';
+import {
+  UnauthenticatedSideBar,
+  CookieBanner,
+  SignupBanner,
+  CreatePlaylistDialog,
+} from '@/components';
+import { useSpotify } from '@/hooks/useSpotify';
+
+// Helper: Extract best quality image URL from sources
+const getBestImageUrl = (sources: any[] = []) => {
+  return (
+    sources.find((source) => source.width >= 300)?.url ||
+    sources.find((source) => source.width >= 64)?.url ||
+    sources[0]?.url
+  );
+};
+
+// Helper: Extract card props from different content types
+const getCardProps = (item: any) => {
+  const { __typename, data } = item.content;
+
+  const cardPropsMap = {
+    TrackResponseWrapper: {
+      title: data.name || 'Unknown Track',
+      subtitle: data.artists?.items?.[0]?.profile?.name || 'Unknown Artist',
+      variant: 'default' as const,
+      imageUrl: getBestImageUrl(data.albumOfTrack?.coverArt?.sources),
+    },
+    ArtistResponseWrapper: {
+      title: data.profile?.name || 'Unknown Artist',
+      subtitle: undefined,
+      variant: 'artist' as const,
+      imageUrl: getBestImageUrl(data.visuals?.avatarImage?.sources),
+    },
+    AlbumResponseWrapper: {
+      title: data.name || 'Unknown Album',
+      subtitle: data.artists?.items?.[0]?.profile?.name || 'Unknown Artist',
+      variant: 'default' as const,
+      imageUrl: getBestImageUrl(data.coverArt?.sources),
+    },
+    PlaylistResponseWrapper: {
+      title: data.name || 'Unknown Playlist',
+      subtitle: data.ownerV2?.data?.name || data.description || 'Playlist',
+      variant: 'default' as const,
+      imageUrl: getBestImageUrl(data.images?.items?.[0]?.sources),
+    },
+  };
+
+  return cardPropsMap[__typename as keyof typeof cardPropsMap];
+};
 
 export default function Home() {
+  const [showCookieBanner, setShowCookieBanner] = useState(true);
+  const [showCreatePlaylistDialog, setShowCreatePlaylistDialog] = useState(false);
+  const { user, isAuthenticated, login, logout } = useSpotify();
+
+  const sections = homepageData.data.home.sectionContainer.sections.items.filter(
+    (section) => section.data.title.transformedLabel
+  );
+
+  const handleCloseCookieBanner = () => {
+    setShowCookieBanner(false);
+  };
+
+  const handleCreatePlaylist = () => {
+    setShowCreatePlaylistDialog(true);
+  };
+
+  const handleCloseDialog = () => {
+    setShowCreatePlaylistDialog(false);
+  };
+
+  const handleLogin = () => {
+    login();
+    setShowCreatePlaylistDialog(false);
+  };
+
   return (
     <ThemeProvider>
-      <div className="min-h-screen bg-spotify-dark text-white">
-        {/* Header */}
-        <AppHeader 
-          isAuthenticated={false}
+      <Stack direction="column" className="min-h-screen bg-spotify-dark text-white">
+        <AppHeader
+          isAuthenticated={isAuthenticated}
           onSearch={() => console.log('Search clicked')}
-          onLogin={() => console.log('Login clicked')}
-          onSignUp={() => console.log('Sign up clicked')}
+          onLogin={login}
+          onSignUp={login}
           onInstallApp={() => console.log('Install app clicked')}
         />
-        
-        {/* Main Layout */}
+
         <Stack direction="row" className="h-screen">
-          {/* Sidebar */}
-          <Sidebar />
-          
-          {/* Main Content */}
+          <UnauthenticatedSideBar onCreatePlaylist={handleCreatePlaylist} />
           <Stack direction="column" className="flex-1">
-            {/* Content Area */}
-            <div className="flex-1 overflow-y-auto p-6">
-              {/* Dynamic Sections from Data */}
-              {homepageData.data.home.sectionContainer.sections.items.map((section, sectionIndex) => {
-                if (!section.data.title.transformedLabel) return null;
-                return (
-                  <Stack key={sectionIndex} direction="column" spacing="lg" className="mb-8">
-                    <Typography variant="title" size={'xl'}>
-                      {section.data.title.transformedLabel}
-                    </Typography>
-                    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4">
-                      {section.sectionItems.items.slice(0, 6).map((item, itemIndex) => {
-                        // Handle different content types
-                        if (item.content.__typename === 'TrackResponseWrapper') {
-                          const track = item.content.data as any;
-                          const imageUrl = track.albumOfTrack?.coverArt?.sources?.[0]?.url;
-                          return (
-                            <div key={itemIndex} className="group cursor-pointer">
-                              {imageUrl && (
-                                <div className="aspect-square mb-4 relative overflow-hidden rounded-lg">
-                                  <img 
-                                    src={imageUrl} 
-                                    alt={track.name} 
-                                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" 
-                                  />
-                                  <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-30 transition-all duration-300 flex items-center justify-center">
-                                    <button className="opacity-0 group-hover:opacity-100 bg-spotify-green text-white rounded-full p-3 hover:scale-110 transition-all duration-300">
-                                      <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
-                                        <path d="M8 5v14l11-7z"/>
-                                      </svg>
-                                    </button>
-                                  </div>
-                                </div>
-                              )}
-                              <Card 
-                                title={track.name || 'Unknown Track'}
-                                subtitle={track.artists?.items?.[0]?.profile?.name || 'Unknown Artist'}
-                                variant="default"
-                                size="md"
-                                showPlayButton={false}
-                                onPlayClick={() => console.log(`Playing ${track.name}`)}
-                              />
-                            </div>
-                          );
-                        } else if (item.content.__typename === 'ArtistResponseWrapper') {
-                          const artist = item.content.data as any;
-                          const imageUrl = artist.visuals?.avatarImage?.sources?.[0]?.url;
-                          return (
-                            <div key={itemIndex} className="group cursor-pointer">
-                              {imageUrl && (
-                                <div className="aspect-square mb-4 relative overflow-hidden rounded-full">
-                                  <img 
-                                    src={imageUrl} 
-                                    alt={artist.profile?.name} 
-                                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" 
-                                  />
-                                  <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-30 transition-all duration-300 flex items-center justify-center">
-                                    <button className="opacity-0 group-hover:opacity-100 bg-spotify-green text-white rounded-full p-3 hover:scale-110 transition-all duration-300">
-                                      <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
-                                        <path d="M8 5v14l11-7z"/>
-                                      </svg>
-                                    </button>
-                                  </div>
-                                </div>
-                              )}
-                              <Card 
-                                title={artist.profile?.name || 'Unknown Artist'}
-                                subtitle="Artist"
-                                variant="artist"
-                                size="md"
-                                showPlayButton={false}
-                                onPlayClick={() => console.log(`Playing ${artist.profile?.name}`)}
-                              />
-                            </div>
-                          );
-                        } else if (item.content.__typename === 'AlbumResponseWrapper') {
-                          const album = item.content.data as any;
-                          const imageUrl = album.coverArt?.sources?.[0]?.url;
-                          return (
-                            <div key={itemIndex} className="group cursor-pointer">
-                              {imageUrl && (
-                                <div className="aspect-square mb-4 relative overflow-hidden rounded-lg">
-                                  <img 
-                                    src={imageUrl} 
-                                    alt={album.name} 
-                                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" 
-                                  />
-                                  <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-30 transition-all duration-300 flex items-center justify-center">
-                                    <button className="opacity-0 group-hover:opacity-100 bg-spotify-green text-white rounded-full p-3 hover:scale-110 transition-all duration-300">
-                                      <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
-                                        <path d="M8 5v14l11-7z"/>
-                                      </svg>
-                                    </button>
-                                  </div>
-                                </div>
-                              )}
-                              <Card 
-                                title={album.name || 'Unknown Album'}
-                                subtitle={album.artists?.items?.[0]?.profile?.name || 'Unknown Artist'}
-                                variant="default"
-                                size="md"
-                                showPlayButton={false}
-                                onPlayClick={() => console.log(`Playing ${album.name}`)}
-                              />
-                            </div>
-                          );
+            <Stack direction="column" className="flex-1 overflow-y-auto">
+              {/* Content Sections */}
+              <div className="p-6">
+                {sections.map((section, sectionIndex) => (
+                  <Stack key={sectionIndex} direction="column" spacing="sm" className="mb-8">
+                    {/* Section Header with Show all */}
+                    <Stack direction="row" align="center" justify="space-between" className="mb-2">
+                      <Typography variant="title" size="xl">
+                        {section.data.title.transformedLabel}
+                      </Typography>
+                      <Button
+                        text="Show all"
+                        variant={ButtonVariant.Text}
+                        size={ButtonSize.Small}
+                        onClick={() =>
+                          console.log(`Show all ${section.data.title.transformedLabel}`)
                         }
-                      })}
+                      />
+                    </Stack>
+
+                    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4">
+                      {section.sectionItems.items
+                        .filter((item) => item.content?.data)
+                        .slice(0, 6)
+                        .map((item, itemIndex) => {
+                          const cardProps = getCardProps(item);
+                          if (!cardProps) return null;
+
+                          return (
+                            <Card
+                              key={itemIndex}
+                              {...cardProps}
+                              size="md"
+                              showPlayButton
+                              onPlayClick={() => console.log(`Playing ${cardProps.title}`)}
+                            />
+                          );
+                        })}
                     </div>
                   </Stack>
-                );
-              })}
-            </div>
+                ))}
+              </div>
+
+              {/* Footer */}
+              <Footer />
+
+              {/* Copyright Watermark */}
+              <Stack direction="column" className="bg-spotify-black px-6 py-8">
+                <Typography variant="caption" color="secondary" className="text-gray-400 text-xs">
+                  © {new Date().getFullYear()} Spotify AB
+                </Typography>
+              </Stack>
+            </Stack>
           </Stack>
         </Stack>
-      </div>
+      </Stack>
+
+      {/* Cookie Banner - shows first */}
+      {showCookieBanner && <CookieBanner onClose={handleCloseCookieBanner} />}
+
+      {/* Signup Banner - shows after cookie banner is closed */}
+      {!showCookieBanner && <SignupBanner onSignUp={() => console.log('Sign up clicked')} />}
+
+      {/* Create Playlist Dialog */}
+      <CreatePlaylistDialog
+        isOpen={showCreatePlaylistDialog}
+        onClose={handleCloseDialog}
+        onLogin={handleLogin}
+      />
     </ThemeProvider>
-  )
-} 
+  );
+}
