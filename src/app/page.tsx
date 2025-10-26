@@ -1,25 +1,18 @@
 'use client';
 
-import {
-  ThemeProvider,
-  AppHeader,
-  Card,
-  Typography,
-  Stack,
-  Footer,
-  Button,
-  ButtonVariant,
-  ButtonSize,
-} from 'spotify-design-system';
+import { ThemeProvider, AppHeader, Stack } from 'spotify-design-system';
 import React, { useState } from 'react';
 import homepageData from './data/homepageData.json';
 import {
   UnauthenticatedSideBar,
   CookieBanner,
   SignupBanner,
-  CreatePlaylistDialog,
+  ContentSections,
+  AuthModals,
 } from '@/components';
 import { useSpotify } from '@/hooks/useSpotify';
+import { useCardModal } from '@/hooks/useCardModal';
+import { useRouter } from 'next/navigation';
 
 // Helper: Extract best quality image URL from sources
 const getBestImageUrl = (sources: any[] = []) => {
@@ -68,6 +61,8 @@ export default function Home() {
   const [showCookieBanner, setShowCookieBanner] = useState(true);
   const [showCreatePlaylistDialog, setShowCreatePlaylistDialog] = useState(false);
   const { user, isAuthenticated, login, logout } = useSpotify();
+  const { showCardModal, selectedCard, openCardModal, closeCardModal } = useCardModal();
+  const router = useRouter();
 
   const sections = homepageData.data.home.sectionContainer.sections.items.filter(
     (section) => section.data.title.transformedLabel
@@ -81,6 +76,10 @@ export default function Home() {
     setShowCreatePlaylistDialog(true);
   };
 
+  const handleBrowsePodcasts = () => {
+    router.push('/podcasts');
+  };
+
   const handleCloseDialog = () => {
     setShowCreatePlaylistDialog(false);
   };
@@ -88,6 +87,12 @@ export default function Home() {
   const handleLogin = () => {
     login();
     setShowCreatePlaylistDialog(false);
+    closeCardModal();
+  };
+
+  const handleSignUpFree = () => {
+    login();
+    closeCardModal();
   };
 
   return (
@@ -99,63 +104,22 @@ export default function Home() {
           onLogin={login}
           onSignUp={login}
           onInstallApp={() => console.log('Install app clicked')}
+          onHomeClick={() => router.push('/')}
         />
 
         <Stack direction="row" className="h-screen">
-          <UnauthenticatedSideBar onCreatePlaylist={handleCreatePlaylist} />
+          <UnauthenticatedSideBar
+            onCreatePlaylist={handleCreatePlaylist}
+            onBrowsePodcasts={handleBrowsePodcasts}
+          />
           <Stack direction="column" className="flex-1">
             <Stack direction="column" className="flex-1 overflow-y-auto">
-              {/* Content Sections */}
-              <div className="p-6">
-                {sections.map((section, sectionIndex) => (
-                  <Stack key={sectionIndex} direction="column" spacing="sm" className="mb-8">
-                    {/* Section Header with Show all */}
-                    <Stack direction="row" align="center" justify="space-between" className="mb-2">
-                      <Typography variant="title" size="xl">
-                        {section.data.title.transformedLabel}
-                      </Typography>
-                      <Button
-                        text="Show all"
-                        variant={ButtonVariant.Text}
-                        size={ButtonSize.Small}
-                        onClick={() =>
-                          console.log(`Show all ${section.data.title.transformedLabel}`)
-                        }
-                      />
-                    </Stack>
-
-                    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4">
-                      {section.sectionItems.items
-                        .filter((item) => item.content?.data)
-                        .slice(0, 6)
-                        .map((item, itemIndex) => {
-                          const cardProps = getCardProps(item);
-                          if (!cardProps) return null;
-
-                          return (
-                            <Card
-                              key={itemIndex}
-                              {...cardProps}
-                              size="md"
-                              showPlayButton
-                              onPlayClick={() => console.log(`Playing ${cardProps.title}`)}
-                            />
-                          );
-                        })}
-                    </div>
-                  </Stack>
-                ))}
-              </div>
-
-              {/* Footer */}
-              <Footer />
-
-              {/* Copyright Watermark */}
-              <Stack direction="column" className="bg-spotify-black px-6 py-8">
-                <Typography variant="caption" color="secondary" className="text-gray-400 text-xs">
-                  © {new Date().getFullYear()} Spotify AB
-                </Typography>
-              </Stack>
+              <ContentSections
+                sections={sections}
+                onCardClick={openCardModal}
+                onShowAll={openCardModal}
+                getCardProps={getCardProps}
+              />
             </Stack>
           </Stack>
         </Stack>
@@ -167,11 +131,15 @@ export default function Home() {
       {/* Signup Banner - shows after cookie banner is closed */}
       {!showCookieBanner && <SignupBanner onSignUp={() => console.log('Sign up clicked')} />}
 
-      {/* Create Playlist Dialog */}
-      <CreatePlaylistDialog
-        isOpen={showCreatePlaylistDialog}
-        onClose={handleCloseDialog}
+      {/* All Authentication Modals */}
+      <AuthModals
+        showCreatePlaylistDialog={showCreatePlaylistDialog}
+        onCloseCreatePlaylist={handleCloseDialog}
         onLogin={handleLogin}
+        showCardModal={showCardModal}
+        selectedCard={selectedCard}
+        onCloseCardModal={closeCardModal}
+        onSignUpFree={handleSignUpFree}
       />
     </ThemeProvider>
   );

@@ -55,3 +55,4 @@ export const createSpotifyApi = (accessToken: string) => {
   api.setAccessToken(accessToken);
   return api;
 };
+

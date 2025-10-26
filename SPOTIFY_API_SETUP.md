@@ -75,3 +75,8 @@ The app requests these Spotify permissions:
 2. Click "Log in" button
 3. Authorize the app on Spotify
 4. You'll be redirected back with access to your Spotify data
+
+
+
+
+

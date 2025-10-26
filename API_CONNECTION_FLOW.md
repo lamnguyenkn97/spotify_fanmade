@@ -322,3 +322,8 @@ useSpotify Hook (Client)  ←──HTTP──→  Next.js API Routes (Server)
 ```
 
 The `fetch()` calls in `useSpotify` are the **bridge** that connects the client-side React code to the server-side Next.js API routes!
+
+
+
+
+

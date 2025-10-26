@@ -7,3 +7,4 @@ import '@fortawesome/fontawesome-svg-core/styles.css';
 config.autoAddCss = false;
 
 export default config;
+

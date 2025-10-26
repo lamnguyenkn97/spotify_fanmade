@@ -10,10 +10,10 @@ import {
   TextLink,
   Typography,
 } from 'spotify-design-system';
-import { faGlobe, faPlus } from '@fortawesome/free-solid-svg-icons';
+import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { CallToActionCard } from './components';
 import { noop } from 'lodash';
-import { SIDEBAR_CONFIG, CONTENT_CONFIG } from './unauthenticatedSideBar.config';
+import { SIDEBAR_CONFIG, CONTENT_CONFIG } from './UnauthenticatedSideBar.config';
 
 interface UnauthenticatedLibraryProps {
   onCreatePlaylist?: () => void;
@@ -75,29 +75,6 @@ const FooterLinks: React.FC = () => (
   </div>
 );
 
-const SidebarFooter: React.FC = () => (
-  <Stack direction="column" spacing="sm" className={SIDEBAR_CONFIG.spacing.footer}>
-    <FooterLinks />
-    <Typography
-      variant="body"
-      weight="bold"
-      color="primary"
-      className={CONTENT_CONFIG.footer.cookiesNoticeSize}
-    >
-      {CONTENT_CONFIG.footer.cookiesNotice}
-    </Typography>
-    <div className="mt-4">
-      <Button
-        icon={<Icon icon={faGlobe} size="sm" />}
-        text={CONTENT_CONFIG.footer.language.label}
-        variant={ButtonVariant.Secondary}
-        size={ButtonSize.Small}
-        aria-label={CONTENT_CONFIG.footer.language.ariaLabel}
-      />
-    </div>
-  </Stack>
-);
-
 export const UnauthenticatedSideBar: React.FC<UnauthenticatedLibraryProps> = ({
   onCreatePlaylist = noop,
   onBrowsePodcasts = noop,
@@ -117,7 +94,6 @@ export const UnauthenticatedSideBar: React.FC<UnauthenticatedLibraryProps> = ({
     <Stack direction="column" className={containerClasses}>
       <SidebarHeader onAddClick={onAddClick} />
       <SidebarContent onCreatePlaylist={onCreatePlaylist} onBrowsePodcasts={onBrowsePodcasts} />
-      <SidebarFooter />
     </Stack>
   );
 };

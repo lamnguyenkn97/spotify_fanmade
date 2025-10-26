@@ -35,16 +35,12 @@ export const CONTENT_CONFIG = {
   ],
   footer: {
     links: [
-      { label: 'Legal', href: '#' },
-      { label: 'Safety & Privacy Center', href: '#' },
-      { label: 'Privacy Policy', href: '#' },
-      { label: 'Cookies', href: '#' },
-      { label: 'About Ads', href: '#' },
-      { label: 'Accessibility', href: '#' },
+      { label: 'About This Project', href: '/about' },
+      { label: 'GitHub', href: 'https://github.com/languyen/spotify-fanmade' },
     ],
     linkSize: 'text-[11px]', // Very small footer links (matching Spotify)
-    cookiesNotice: 'Cookies',
-    cookiesNoticeSize: 'xs', // Cookies notice size - smaller
+    projectNotice: 'Spotify By Lam • Educational Project',
+    projectNoticeSize: 'text-[10px]',
     language: {
       label: 'English',
       ariaLabel: 'Select language',
