@@ -1,0 +1,358 @@
+{
+  "data": {
+    "browse": {
+      "__typename": "BrowseSectionContainer",
+      "header": {
+        "backgroundImage": null,
+        "color": {
+          "hex": "#27856A"
+        },
+        "subtitle": null,
+        "title": {
+          "transformedLabel": "Podcasts"
+        }
+      },
+      "sections": {
+        "items": [
+          {
+            "__typename": "BrowseSection",
+            "data": {
+              "__typename": "BrowseGridSectionData",
+              "subtitle": null,
+              "title": {
+                "transformedLabel": "Categories"
+              }
+            },
+            "sectionItems": {
+              "items": [
+                {
+                  "content": {
+                    "__typename": "BrowseSectionContainerWrapper",
+                    "data": {
+                      "__typename": "BrowseSectionContainer",
+                      "data": {
+                        "cardRepresentation": {
+                          "artwork": {
+                            "sources": [
+                              {
+                                "height": 300,
+                                "url": "https://t.scdn.co/images/7262179db37c498480ef06bfacb60310.jpeg",
+                                "width": 300
+                              }
+                            ]
+                          },
+                          "backgroundColor": {
+                            "hex": "#0d73ec"
+                          },
+                          "title": {
+                            "transformedLabel": "Podcast Charts"
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "uri": "spotify:page:0JQ5DAB3zgCauRwnvdEQjJ"
+                },
+                {
+                  "content": {
+                    "__typename": "BrowseSectionContainerWrapper",
+                    "data": {
+                      "__typename": "BrowseSectionContainer",
+                      "data": {
+                        "cardRepresentation": {
+                          "artwork": {
+                            "sources": [
+                              {
+                                "height": 300,
+                                "url": "https://i.scdn.co/image/ab67656300005f1fd464f18a416c86ede3a235a7",
+                                "width": 300
+                              }
+                            ]
+                          },
+                          "backgroundColor": {
+                            "hex": "#477d95"
+                          },
+                          "title": {
+                            "transformedLabel": "Educational"
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "uri": "spotify:page:0JQ5IMCbQBLl5gxKLgufp8"
+                },
+                {
+                  "content": {
+                    "__typename": "BrowseSectionContainerWrapper",
+                    "data": {
+                      "__typename": "BrowseSectionContainer",
+                      "data": {
+                        "cardRepresentation": {
+                          "artwork": {
+                            "sources": [
+                              {
+                                "height": 300,
+                                "url": "https://i.scdn.co/image/ab6765630000ba8a2f514cde3ee9501e7ada4cf4",
+                                "width": 300
+                              }
+                            ]
+                          },
+                          "backgroundColor": {
+                            "hex": "#503750"
+                          },
+                          "title": {
+                            "transformedLabel": "Documentary"
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "uri": "spotify:page:0JQ5IMCbQBLjfX9OdDrA5X"
+                },
+                {
+                  "content": {
+                    "__typename": "BrowseSectionContainerWrapper",
+                    "data": {
+                      "__typename": "BrowseSectionContainer",
+                      "data": {
+                        "cardRepresentation": {
+                          "artwork": {
+                            "sources": [
+                              {
+                                "height": 300,
+                                "url": "https://i.scdn.co/image/ab6765630000ba8a77d267a5accb8911a92668e1",
+                                "width": 300
+                              }
+                            ]
+                          },
+                          "backgroundColor": {
+                            "hex": "#af2896"
+                          },
+                          "title": {
+                            "transformedLabel": "Comedy"
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "uri": "spotify:page:0JQ5IMCbQBLyUJhSxhaPc6"
+                },
+                {
+                  "content": {
+                    "__typename": "BrowseSectionContainerWrapper",
+                    "data": {
+                      "__typename": "BrowseSectionContainer",
+                      "data": {
+                        "cardRepresentation": {
+                          "artwork": {
+                            "sources": [
+                              {
+                                "height": 300,
+                                "url": "https://i.scdn.co/image/ab6765630000ba8a4dea4f05ebdb302fadd2c857",
+                                "width": 300
+                              }
+                            ]
+                          },
+                          "backgroundColor": {
+                            "hex": "#dc148c"
+                          },
+                          "title": {
+                            "transformedLabel": "Pop Culture"
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "uri": "spotify:page:0JQ5IMCbQBLm1xnyRGiyzw"
+                },
+                {
+                  "content": {
+                    "__typename": "BrowseSectionContainerWrapper",
+                    "data": {
+                      "__typename": "BrowseSectionContainer",
+                      "data": {
+                        "cardRepresentation": {
+                          "artwork": null,
+                          "backgroundColor": {
+                            "hex": "#27856a"
+                          },
+                          "title": {
+                            "transformedLabel": "Fitness & Nutrition"
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "uri": "spotify:page:0JQ5IMCbQBLrPWbMv8sBH5"
+                },
+                {
+                  "content": {
+                    "__typename": "BrowseSectionContainerWrapper",
+                    "data": {
+                      "__typename": "BrowseSectionContainer",
+                      "data": {
+                        "cardRepresentation": {
+                          "artwork": null,
+                          "backgroundColor": {
+                            "hex": "#777777"
+                          },
+                          "title": {
+                            "transformedLabel": "Celebrities"
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "uri": "spotify:page:0JQ5IMCbQBLwyf3yahCa0M"
+                },
+                {
+                  "content": {
+                    "__typename": "BrowseSectionContainerWrapper",
+                    "data": {
+                      "__typename": "BrowseSectionContainer",
+                      "data": {
+                        "cardRepresentation": {
+                          "artwork": null,
+                          "backgroundColor": {
+                            "hex": "#8d67ab"
+                          },
+                          "title": {
+                            "transformedLabel": "TV"
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "uri": "spotify:page:0JQ5IMCbQBLo64OouK01L3"
+                },
+                {
+                  "content": {
+                    "__typename": "BrowseSectionContainerWrapper",
+                    "data": {
+                      "__typename": "BrowseSectionContainer",
+                      "data": {
+                        "cardRepresentation": {
+                          "artwork": null,
+                          "backgroundColor": {
+                            "hex": "#a56752"
+                          },
+                          "title": {
+                            "transformedLabel": "Beauty"
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "uri": "spotify:page:0JQ5IMCbQBLlXemwiylToM"
+                },
+                {
+                  "content": {
+                    "__typename": "BrowseSectionContainerWrapper",
+                    "data": {
+                      "__typename": "BrowseSectionContainer",
+                      "data": {
+                        "cardRepresentation": {
+                          "artwork": null,
+                          "backgroundColor": {
+                            "hex": "#0d73ec"
+                          },
+                          "title": {
+                            "transformedLabel": "Video games"
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "uri": "spotify:page:0JQ5IMCbQBLtqWiaa5oQu8"
+                },
+                {
+                  "content": {
+                    "__typename": "BrowseSectionContainerWrapper",
+                    "data": {
+                      "__typename": "BrowseSectionContainer",
+                      "data": {
+                        "cardRepresentation": {
+                          "artwork": null,
+                          "backgroundColor": {
+                            "hex": "#1e3264"
+                          },
+                          "title": {
+                            "transformedLabel": "Film"
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "uri": "spotify:page:0JQ5IMCbQBLBylyI0RX5u8"
+                },
+                {
+                  "content": {
+                    "__typename": "BrowseSectionContainerWrapper",
+                    "data": {
+                      "__typename": "BrowseSectionContainer",
+                      "data": {
+                        "cardRepresentation": {
+                          "artwork": null,
+                          "backgroundColor": {
+                            "hex": "#503750"
+                          },
+                          "title": {
+                            "transformedLabel": "Books"
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "uri": "spotify:page:0JQ5IMCbQBLylMa3DSQsEu"
+                }
+              ],
+              "totalCount": 12
+            },
+            "targetLocation": "",
+            "uri": "spotify:section:0JQ5DAwD41iTh6T8ay5IzN"
+          },
+          {
+            "__typename": "BrowseSection",
+            "data": {
+              "__typename": "BrowseRelatedSectionData",
+              "subtitle": null,
+              "title": null
+            },
+            "sectionItems": {
+              "items": [
+                {
+                  "content": {
+                    "__typename": "BrowseSectionContainerWrapper",
+                    "data": {
+                      "__typename": "BrowseSectionContainer",
+                      "data": {
+                        "cardRepresentation": {
+                          "artwork": null,
+                          "backgroundColor": {
+                            "hex": "#8d67ab"
+                          },
+                          "title": {
+                            "transformedLabel": "See all categories"
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "uri": "spotify:page:0JQ5DArNBzkmxXHCqFLx2U"
+                }
+              ],
+              "totalCount": 1
+            },
+            "targetLocation": "",
+            "uri": "spotify:section:0JQ5DAwD41iRZZRVB8eoey"
+          }
+        ],
+        "pagingInfo": {
+          "nextOffset": null
+        },
+        "totalCount": 3
+      },
+      "uri": "spotify:page:0JQ5DArNBzkmxXHCqFLx2J"
+    }
+  }
+}

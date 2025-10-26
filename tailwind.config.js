@@ -17,6 +17,8 @@ module.exports = {
           dark: '#121212',
           surface: '#282828',
           gray: '#535353',
+          grey2: '#232323',
+          grey3: '#2A2A2A',
         },
       },
     },
