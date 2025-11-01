@@ -1,7 +1,8 @@
 'use client';
 
 import { ThemeProvider, AppHeader, Stack } from 'spotify-design-system';
-import React, { useState } from 'react';
+import type { AppHeaderProps } from 'spotify-design-system';
+import React, { useState, useEffect } from 'react';
 import homepageData from './data/homepageData.json';
 import {
   UnauthenticatedSideBar,
@@ -12,7 +13,7 @@ import {
 } from '@/components';
 import { useSpotify } from '@/hooks/useSpotify';
 import { useCardModal } from '@/hooks/useCardModal';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 
 // Helper: Extract best quality image URL from sources
 const getBestImageUrl = (sources: any[] = []) => {
@@ -60,13 +61,32 @@ const getCardProps = (item: any) => {
 export default function Home() {
   const [showCookieBanner, setShowCookieBanner] = useState(true);
   const [showCreatePlaylistDialog, setShowCreatePlaylistDialog] = useState(false);
-  const { user, isAuthenticated, login, logout } = useSpotify();
+  const { user, isAuthenticated, login, logout, loading } = useSpotify();
   const { showCardModal, selectedCard, openCardModal, closeCardModal } = useCardModal();
   const router = useRouter();
+  const searchParams = useSearchParams();
 
   const sections = homepageData.data.home.sectionContainer.sections.items.filter(
     (section) => section.data.title.transformedLabel
   );
+
+  // Handle login errors from URL params
+  useEffect(() => {
+    const error = searchParams.get('error');
+    if (error) {
+      const errorMessages: Record<string, string> = {
+        access_denied: 'Login cancelled. Please try again.',
+        auth_failed: 'Authentication failed. Please try again.',
+        missing_code: 'Authentication error. Please try again.',
+      };
+      const message = errorMessages[error] || 'An error occurred during login.';
+      console.error('Login error:', message);
+      // You can show a toast notification here if you have a toast system
+      
+      // Clean up URL
+      router.replace('/');
+    }
+  }, [searchParams, router]);
 
   const handleCloseCookieBanner = () => {
     setShowCookieBanner(false);
@@ -100,11 +120,36 @@ export default function Home() {
       <Stack direction="column" className="min-h-screen bg-spotify-dark text-white">
         <AppHeader
           isAuthenticated={isAuthenticated}
+          user={
+            user
+              ? {
+                  name: user.displayName || user.email,
+                  avatar: user.images?.[0]?.url || '',
+                }
+              : undefined
+          }
           onSearch={() => console.log('Search clicked')}
           onLogin={login}
           onSignUp={login}
-          onInstallApp={() => console.log('Install app clicked')}
+          onInstallApp={() => {}}
           onHomeClick={() => router.push('/')}
+          showInstallApp={false}
+          showAuthButtons={true}
+          showCustomLinks={false}
+          customLinks={[]}
+          customActions={
+            isAuthenticated
+              ? [
+                  {
+                    id: 'logout',
+                    label: 'Log out',
+                    onClick: logout,
+                    variant: 'text' as const,
+                    type: 'button' as const,
+                  },
+                ]
+              : []
+          }
         />
 
         <Stack direction="row" className="h-screen">

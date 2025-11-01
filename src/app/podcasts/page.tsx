@@ -66,11 +66,36 @@ export default function PodcastsPage() {
       <Stack direction="column" className="min-h-screen bg-spotify-dark text-white">
         <AppHeader
           isAuthenticated={isAuthenticated}
+          user={
+            user
+              ? {
+                  name: user.displayName || user.email,
+                  avatar: user.images?.[0]?.url || '',
+                }
+              : undefined
+          }
           onSearch={() => console.log('Search clicked')}
           onLogin={login}
           onSignUp={login}
-          onInstallApp={() => console.log('Install app clicked')}
+          onInstallApp={() => {}}
           onHomeClick={() => router.push('/')}
+          showInstallApp={false}
+          showAuthButtons={true}
+          showCustomLinks={false}
+          customLinks={[]}
+          customActions={
+            isAuthenticated
+              ? [
+                  {
+                    id: 'logout',
+                    label: 'Log out',
+                    onClick: logout,
+                    variant: 'text' as const,
+                    type: 'button' as const,
+                  },
+                ]
+              : []
+          }
         />
 
         <Stack direction="row" className="h-screen">
