@@ -1,6 +1,7 @@
 'use client';
 
 import { ThemeProvider, AppHeader, Stack } from 'spotify-design-system';
+import type { AppHeaderProps } from 'spotify-design-system';
 import React, { useState, useEffect } from 'react';
 import homepageData from './data/homepageData.json';
 import {
@@ -130,8 +131,25 @@ export default function Home() {
           onSearch={() => console.log('Search clicked')}
           onLogin={login}
           onSignUp={login}
-          onInstallApp={() => console.log('Install app clicked')}
+          onInstallApp={() => {}}
           onHomeClick={() => router.push('/')}
+          showInstallApp={false}
+          showAuthButtons={true}
+          showCustomLinks={false}
+          customLinks={[]}
+          customActions={
+            isAuthenticated
+              ? [
+                  {
+                    id: 'logout',
+                    label: 'Log out',
+                    onClick: logout,
+                    variant: 'text' as const,
+                    type: 'button' as const,
+                  },
+                ]
+              : []
+          }
         />
 
         <Stack direction="row" className="h-screen">
