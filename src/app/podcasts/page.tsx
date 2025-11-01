@@ -66,6 +66,14 @@ export default function PodcastsPage() {
       <Stack direction="column" className="min-h-screen bg-spotify-dark text-white">
         <AppHeader
           isAuthenticated={isAuthenticated}
+          user={
+            user
+              ? {
+                  name: user.displayName || user.email,
+                  avatar: user.images?.[0]?.url || '',
+                }
+              : undefined
+          }
           onSearch={() => console.log('Search clicked')}
           onLogin={login}
           onSignUp={login}
