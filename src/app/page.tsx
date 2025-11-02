@@ -8,7 +8,8 @@ import {
   UnauthenticatedSideBar,
   CookieBanner,
   SignupBanner,
-  ContentSections,
+  UnauthenticatedHomePage,
+  AuthenticatedHomePage,
   AuthModals,
 } from '@/components';
 import { useSpotify } from '@/hooks/useSpotify';
@@ -82,7 +83,7 @@ export default function Home() {
       const message = errorMessages[error] || 'An error occurred during login.';
       console.error('Login error:', message);
       // You can show a toast notification here if you have a toast system
-      
+
       // Clean up URL
       router.replace('/');
     }
@@ -159,22 +160,26 @@ export default function Home() {
           />
           <Stack direction="column" className="flex-1">
             <Stack direction="column" className="flex-1 overflow-y-auto">
-              <ContentSections
-                sections={sections}
-                onCardClick={openCardModal}
-                onShowAll={openCardModal}
-                getCardProps={getCardProps}
-              />
+              {isAuthenticated && user ? (
+                <AuthenticatedHomePage user={user} />
+              ) : (
+                <UnauthenticatedHomePage
+                  sections={sections}
+                  onCardClick={openCardModal}
+                  onShowAll={openCardModal}
+                  getCardProps={getCardProps}
+                />
+              )}
             </Stack>
           </Stack>
         </Stack>
       </Stack>
 
       {/* Cookie Banner - shows first */}
-      {showCookieBanner && <CookieBanner onClose={handleCloseCookieBanner} />}
+      {showCookieBanner && !isAuthenticated && <CookieBanner onClose={handleCloseCookieBanner} />}
 
       {/* Signup Banner - shows after cookie banner is closed */}
-      {!showCookieBanner && <SignupBanner onSignUp={() => console.log('Sign up clicked')} />}
+      {!showCookieBanner && !isAuthenticated && <SignupBanner onSignUp={() => console.log('Sign up clicked')} />}
 
       {/* All Authentication Modals */}
       <AuthModals
