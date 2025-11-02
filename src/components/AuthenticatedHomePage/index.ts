@@ -1,0 +1,2 @@
+export { AuthenticatedHomePage } from './AuthenticatedHomePage';
+
