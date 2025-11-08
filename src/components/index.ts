@@ -5,3 +5,6 @@ export { ContentSections } from './ContentSections';
 export { AuthModals } from './AuthModals';
 export { UnauthenticatedHomePage } from './UnauthenticatedHomePage';
 export { AuthenticatedHomePage } from './AuthenticatedHomePage';
+export { PlaylistHeader } from './PlaylistHeader';
+export { TrackTable } from './TrackTable';
+export { AppLayout } from './AppLayout';

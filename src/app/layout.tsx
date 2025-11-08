@@ -3,6 +3,7 @@ import './globals.css';
 import React from 'react';
 import StyledComponentsRegistry from '@/lib/registry';
 import '@/lib/fontawesome';
+import { AppLayout } from '@/components';
 
 export const metadata: Metadata = {
   title: 'Spotify Fanmade',
@@ -14,7 +15,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en">
       <body>
         <StyledComponentsRegistry>
-          <div className="min-h-screen bg-spotify-dark text-white">{children}</div>
+          <AppLayout>{children}</AppLayout>
         </StyledComponentsRegistry>
       </body>
     </html>

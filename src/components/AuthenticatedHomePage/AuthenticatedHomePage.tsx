@@ -1,5 +1,7 @@
+'use client';
+
 import React, { useEffect, useState } from 'react';
-import { Button, ButtonSize, ButtonVariant, Card, Stack, Typography } from 'spotify-design-system';
+import { Button, ButtonSize, ButtonVariant, Card, Stack, Typography, HorizontalTileCard } from 'spotify-design-system';
 import { useRouter } from 'next/navigation';
 
 interface User {
@@ -38,6 +40,14 @@ interface Artist {
   images: Array<{ url: string; height: number; width: number }>;
 }
 
+interface Album {
+  id: string;
+  name: string;
+  images: Array<{ url: string; height: number; width: number }>;
+  artist_name?: string;
+  artists?: Array<{ name: string }>;
+}
+
 interface AuthenticatedHomePageProps {
   user: User;
 }
@@ -49,6 +59,7 @@ export const AuthenticatedHomePage: React.FC<AuthenticatedHomePageProps> = ({ us
   const [recentTracks, setRecentTracks] = useState<Track[]>([]);
   const [userPlaylists, setUserPlaylists] = useState<Playlist[]>([]);
   const [topArtists, setTopArtists] = useState<Artist[]>([]);
+  const [topAlbums, setTopAlbums] = useState<Album[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -62,25 +73,28 @@ export const AuthenticatedHomePage: React.FC<AuthenticatedHomePageProps> = ({ us
 
     try {
       // Fetch all data in parallel for better performance
-      const [recentResponse, playlistsResponse, artistsResponse] = await Promise.all([
+      const [recentResponse, playlistsResponse, artistsResponse, albumsResponse] = await Promise.all([
         fetch('/api/spotify/recently-played'),
         fetch('/api/spotify/my-playlists'),
         fetch('/api/spotify/top-artists?time_range=short_term'),
+        fetch('/api/spotify/top-albums?time_range=short_term'),
       ]);
 
-      if (!recentResponse.ok || !playlistsResponse.ok || !artistsResponse.ok) {
+      if (!recentResponse.ok || !playlistsResponse.ok || !artistsResponse.ok || !albumsResponse.ok) {
         throw new Error('Failed to fetch data');
       }
 
-      const [recentData, playlistsData, artistsData] = await Promise.all([
+      const [recentData, playlistsData, artistsData, albumsData] = await Promise.all([
         recentResponse.json(),
         playlistsResponse.json(),
         artistsResponse.json(),
+        albumsResponse.json(),
       ]);
 
       setRecentTracks(recentData.items || []);
       setUserPlaylists(playlistsData.items || []);
       setTopArtists(artistsData.items || []);
+      setTopAlbums(albumsData.items || []);
     } catch (err: any) {
       console.error('Error fetching personalized data:', err);
       setError(err.message || 'Failed to load your data');
@@ -117,6 +131,10 @@ export const AuthenticatedHomePage: React.FC<AuthenticatedHomePageProps> = ({ us
 
   const handleArtistClick = (artistId: string) => {
     router.push(`/artist/${artistId}`);
+  };
+
+  const handleAlbumClick = (albumId: string) => {
+    router.push(`/playlist/${albumId}`);
   };
 
   if (loading) {
@@ -156,45 +174,49 @@ export const AuthenticatedHomePage: React.FC<AuthenticatedHomePageProps> = ({ us
         {getGreeting()}, {user.displayName || 'there'}
       </Typography>
 
-      {/* Recently Played Section */}
-      {recentTracks.length > 0 && (
-        <Stack direction="column" spacing="md">
-          <Typography variant="heading" size="xl" weight="bold" color="primary">
-            Recently Played
-          </Typography>
-          <Stack direction="row" spacing="lg" className="flex-wrap">
-            {recentTracks.slice(0, NUMBER_OF_DISPLAYED_ITEMS).map((item, index) => (
-              <Card
-                key={item.track.id}
-                title={item.track.name}
-                subtitle={item.track.artists[0]?.name || 'Unknown Artist'}
-                imageUrl={getBestImageUrl(item.track.album.images)}
-                variant="default"
-                onClick={() => handleTrackClick(item.track)}
-              />
-            ))}
-          </Stack>
-        </Stack>
-      )}
-
       {/* Your Playlists Section */}
       {userPlaylists.length > 0 && (
         <Stack direction="column" spacing="md">
           <Typography variant="heading" size="xl" weight="bold" color="primary">
             Your Playlists
           </Typography>
-          <Stack direction="row" spacing="lg">
-            {userPlaylists.slice(0, NUMBER_OF_DISPLAYED_ITEMS).map((playlist) => (
-              <Card
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {userPlaylists.map((playlist) => (
+              <HorizontalTileCard
                 key={playlist.id}
                 title={playlist.name}
-                subtitle={`${playlist.tracks.total} songs`}
-                imageUrl={getBestImageUrl(playlist.images)}
-                variant="default"
+                image={getBestImageUrl(playlist.images)}
+                subtitle={`Playlist • ${playlist.tracks.total} songs`}
+                size="large"
+                width="100%"
                 onClick={() => handlePlaylistClick(playlist.id)}
               />
             ))}
-          </Stack>
+          </div>
+        </Stack>
+      )}
+
+      {/* Recently Played Section */}
+      {recentTracks.length > 0 && (
+        <Stack direction="column" spacing="md">
+          <Typography variant="heading" size="xl" weight="bold" color="primary">
+            Recently Played
+          </Typography>
+          <div className="overflow-x-auto overflow-y-visible pb-4 -mx-6 px-6 scrollbar-hide">
+            <div className="flex gap-4 min-w-max">
+              {recentTracks.slice(0, NUMBER_OF_DISPLAYED_ITEMS).map((item, index) => (
+                <div key={item.track.id} className="flex-shrink-0" style={{ width: '180px' }}>
+                  <Card
+                    title={item.track.name}
+                    subtitle={item.track.artists[0]?.name || 'Unknown Artist'}
+                    imageUrl={getBestImageUrl(item.track.album.images)}
+                    variant="default"
+                    onClick={() => handleTrackClick(item.track)}
+                  />
+                </div>
+              ))}
+            </div>
+          </div>
         </Stack>
       )}
 
@@ -204,24 +226,50 @@ export const AuthenticatedHomePage: React.FC<AuthenticatedHomePageProps> = ({ us
           <Typography variant="heading" size="xl" weight="bold" color="primary">
             Your Top Artists This Month
           </Typography>
-          <Stack direction="row" spacing="lg">
-            {topArtists.slice(0, NUMBER_OF_DISPLAYED_ITEMS).map((artist) => (
-              <Card
-                key={artist.id}
-                style={{ marginRight: '5rem' }}
-                title={artist.name}
-                subtitle="Artist"
-                imageUrl={getBestImageUrl(artist.images)}
-                variant="artist"
-                onClick={() => handleArtistClick(artist.id)}
-              />
-            ))}
-          </Stack>
+          <div className="overflow-x-auto overflow-y-visible pb-4 -mx-6 px-6 scrollbar-hide">
+            <div className="flex gap-4 min-w-max">
+              {topArtists.slice(0, NUMBER_OF_DISPLAYED_ITEMS).map((artist) => (
+                <div key={artist.id} className="flex-shrink-0" style={{ width: '180px' }}>
+                  <Card
+                    title={artist.name}
+                    subtitle="Artist"
+                    imageUrl={getBestImageUrl(artist.images)}
+                    variant="artist"
+                    onClick={() => handleArtistClick(artist.id)}
+                  />
+                </div>
+              ))}
+            </div>
+          </div>
+        </Stack>
+      )}
+
+      {/* Top Albums Section */}
+      {topAlbums.length > 0 && (
+        <Stack direction="column" spacing="lg">
+          <Typography variant="heading" size="xl" weight="bold" color="primary">
+            Top Albums This Month
+          </Typography>
+          <div className="overflow-x-auto overflow-y-visible pb-4 -mx-6 px-6 scrollbar-hide">
+            <div className="flex gap-4 min-w-max">
+              {topAlbums.slice(0, NUMBER_OF_DISPLAYED_ITEMS).map((album) => (
+                <div key={album.id} className="flex-shrink-0" style={{ width: '180px' }}>
+                  <Card
+                    title={album.name}
+                    subtitle={album.artist_name || album.artists?.[0]?.name || 'Unknown Artist'}
+                    imageUrl={getBestImageUrl(album.images)}
+                    variant="default"
+                    onClick={() => handleAlbumClick(album.id)}
+                  />
+                </div>
+              ))}
+            </div>
+          </div>
         </Stack>
       )}
 
       {/* Empty state if no data */}
-      {recentTracks.length === 0 && userPlaylists.length === 0 && topArtists.length === 0 && (
+      {recentTracks.length === 0 && userPlaylists.length === 0 && topArtists.length === 0 && topAlbums.length === 0 && (
         <Stack direction="column" spacing="md" justify={'center'}>
           <Typography variant="heading" className="text-white text-2xl">
             Start exploring music!

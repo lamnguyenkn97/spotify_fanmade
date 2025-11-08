@@ -1,11 +1,8 @@
 'use client';
 
-import { ThemeProvider, AppHeader, Stack } from 'spotify-design-system';
-import type { AppHeaderProps } from 'spotify-design-system';
 import React, { useState, useEffect } from 'react';
 import homepageData from './data/homepageData.json';
 import {
-  UnauthenticatedSideBar,
   CookieBanner,
   SignupBanner,
   UnauthenticatedHomePage,
@@ -18,11 +15,21 @@ import { useRouter, useSearchParams } from 'next/navigation';
 
 // Helper: Extract best quality image URL from sources
 const getBestImageUrl = (sources: any[] = []) => {
-  return (
-    sources.find((source) => source.width >= 300)?.url ||
-    sources.find((source) => source.width >= 64)?.url ||
-    sources[0]?.url
-  );
+  if (!sources || sources.length === 0) return '';
+
+  // Handle sources with width/height properties
+  const hasWidth = sources.some((s) => s.width != null);
+  if (hasWidth) {
+    return (
+      sources.find((source) => source.width && source.width >= 300)?.url ||
+      sources.find((source) => source.width && source.width >= 64)?.url ||
+      sources[0]?.url ||
+      ''
+    );
+  }
+
+  // Handle sources without width (e.g., radio/chart images with null width)
+  return sources[0]?.url || '';
 };
 
 // Helper: Extract card props from different content types
@@ -50,64 +57,59 @@ const getCardProps = (item: any) => {
     },
     PlaylistResponseWrapper: {
       title: data.name || 'Unknown Playlist',
-      subtitle: data.ownerV2?.data?.name || data.description || 'Playlist',
+      subtitle: data.description || 'Playlist',
       variant: 'default' as const,
-      imageUrl: getBestImageUrl(data.images?.items?.[0]?.sources),
+      imageUrl: getBestImageUrl(data.images?.items?.[0]?.sources || data.images?.items),
     },
   };
 
-  return cardPropsMap[__typename as keyof typeof cardPropsMap];
+  return cardPropsMap[__typename as keyof typeof cardPropsMap] || null;
 };
 
 export default function Home() {
-  const [showCookieBanner, setShowCookieBanner] = useState(true);
-  const [showCreatePlaylistDialog, setShowCreatePlaylistDialog] = useState(false);
-  const { user, isAuthenticated, login, logout, loading } = useSpotify();
-  const { showCardModal, selectedCard, openCardModal, closeCardModal } = useCardModal();
   const router = useRouter();
   const searchParams = useSearchParams();
+  const { user, isAuthenticated, login } = useSpotify();
+  const { showCardModal, selectedCard, openCardModal, closeCardModal } = useCardModal();
+  const [showCookieBanner, setShowCookieBanner] = useState(true);
+  const [showCreatePlaylistDialog, setShowCreatePlaylistDialog] = useState(false);
 
-  const sections = homepageData.data.home.sectionContainer.sections.items.filter(
-    (section) => section.data.title.transformedLabel
-  );
-
-  // Handle login errors from URL params
+  const sections = homepageData.data.home.sectionContainer.sections.items.filter((section: any) => {
+    const items = section.sectionItems?.items || [];
+    const firstItem = items.find((item: any) => item.content?.data);
+    return firstItem !== undefined && items.length > 0;
+  });
+  // Handle error from URL parameters (OAuth callback errors)
   useEffect(() => {
     const error = searchParams.get('error');
-    if (error) {
-      const errorMessages: Record<string, string> = {
-        access_denied: 'Login cancelled. Please try again.',
-        auth_failed: 'Authentication failed. Please try again.',
-        missing_code: 'Authentication error. Please try again.',
-      };
-      const message = errorMessages[error] || 'An error occurred during login.';
-      console.error('Login error:', message);
-      // You can show a toast notification here if you have a toast system
+    const errorDescription = searchParams.get('error_description');
 
+    if (error === 'access_denied') {
+      console.error('User denied authorization');
+      alert('You need to authorize the app to use Spotify features');
       // Clean up URL
-      router.replace('/');
+      window.history.replaceState({}, '', '/');
+    } else if (error === 'auth_failed' || errorDescription) {
+      console.error('Authentication failed:', errorDescription);
+      alert('Authentication failed. Please try again.');
+      window.history.replaceState({}, '', '/');
     }
-  }, [searchParams, router]);
+
+    // Handle missing code (shouldn't happen but just in case)
+    const code = searchParams.get('code');
+    if (searchParams.get('missing_code') === 'true' || (code && !code.trim())) {
+      console.error('Authorization code was missing');
+      alert('Authentication error. Please try logging in again.');
+      window.history.replaceState({}, '', '/');
+    }
+  }, [searchParams]);
 
   const handleCloseCookieBanner = () => {
     setShowCookieBanner(false);
   };
 
-  const handleCreatePlaylist = () => {
-    setShowCreatePlaylistDialog(true);
-  };
-
-  const handleBrowsePodcasts = () => {
-    router.push('/podcasts');
-  };
-
-  const handleCloseDialog = () => {
-    setShowCreatePlaylistDialog(false);
-  };
-
   const handleLogin = () => {
     login();
-    setShowCreatePlaylistDialog(false);
     closeCardModal();
   };
 
@@ -117,80 +119,27 @@ export default function Home() {
   };
 
   return (
-    <ThemeProvider>
-      <Stack direction="column" className="min-h-screen bg-spotify-dark text-white">
-        <AppHeader
-          isAuthenticated={isAuthenticated}
-          user={
-            user
-              ? {
-                  name: user.displayName || user.email,
-                  avatar: user.images?.[0]?.url || '',
-                }
-              : undefined
-          }
-          onSearch={() => console.log('Search clicked')}
-          onLogin={login}
-          onSignUp={login}
-          onInstallApp={() => {}}
-          onHomeClick={() => router.push('/')}
-          showInstallApp={false}
-          showAuthButtons={true}
-          showCustomLinks={false}
-          customLinks={[]}
-          customActions={
-            isAuthenticated
-              ? [
-                  {
-                    id: 'logout',
-                    label: 'Log out',
-                    onClick: logout,
-                    variant: 'text' as const,
-                    type: 'button' as const,
-                  },
-                ]
-              : []
-          }
+    <>
+      {isAuthenticated && user ? (
+        <AuthenticatedHomePage user={user} />
+      ) : (
+        <UnauthenticatedHomePage
+          sections={sections}
+          onCardClick={openCardModal}
+          onShowAll={openCardModal}
+          getCardProps={getCardProps}
         />
-
-        <Stack direction="row" className="h-screen">
-          <UnauthenticatedSideBar
-            onCreatePlaylist={handleCreatePlaylist}
-            onBrowsePodcasts={handleBrowsePodcasts}
-          />
-          <Stack direction="column" className="flex-1">
-            <Stack direction="column" className="flex-1 overflow-y-auto">
-              {isAuthenticated && user ? (
-                <AuthenticatedHomePage user={user} />
-              ) : (
-                <UnauthenticatedHomePage
-                  sections={sections}
-                  onCardClick={openCardModal}
-                  onShowAll={openCardModal}
-                  getCardProps={getCardProps}
-                />
-              )}
-            </Stack>
-          </Stack>
-        </Stack>
-      </Stack>
-
-      {/* Cookie Banner - shows first */}
-      {showCookieBanner && !isAuthenticated && <CookieBanner onClose={handleCloseCookieBanner} />}
-
-      {/* Signup Banner - shows after cookie banner is closed */}
-      {!showCookieBanner && !isAuthenticated && <SignupBanner onSignUp={() => console.log('Sign up clicked')} />}
-
+      )}
       {/* All Authentication Modals */}
       <AuthModals
         showCreatePlaylistDialog={showCreatePlaylistDialog}
-        onCloseCreatePlaylist={handleCloseDialog}
+        onCloseCreatePlaylist={() => setShowCreatePlaylistDialog(false)}
         onLogin={handleLogin}
         showCardModal={showCardModal}
         selectedCard={selectedCard}
         onCloseCardModal={closeCardModal}
         onSignUpFree={handleSignUpFree}
       />
-    </ThemeProvider>
+    </>
   );
 }
