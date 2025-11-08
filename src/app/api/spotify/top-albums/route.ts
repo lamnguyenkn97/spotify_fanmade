@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
 import SpotifyWebApi from 'spotify-web-api-node';
+import { TimeRange } from '@/types';
 
 export async function GET(request: NextRequest) {
   try {
@@ -15,7 +16,10 @@ export async function GET(request: NextRequest) {
     }
 
     const { searchParams } = new URL(request.url);
-    const timeRange = (searchParams.get('time_range') || 'short_term') as 'short_term' | 'medium_term' | 'long_term';
+    const timeRange = (searchParams.get('time_range') || TimeRange.SHORT_TERM) as
+      | TimeRange.SHORT_TERM
+      | TimeRange.MEDIUM_TERM
+      | TimeRange.LONG_TERM;
 
     const spotifyApi = new SpotifyWebApi({
       clientId: process.env.SPOTIFY_CLIENT_ID,

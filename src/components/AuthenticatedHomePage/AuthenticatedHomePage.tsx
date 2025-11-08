@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import { Button, ButtonSize, ButtonVariant, Card, Stack, Typography, HorizontalTileCard } from 'spotify-design-system';
 import { useRouter } from 'next/navigation';
+import { TimeRange, NUMBER_OF_DISPLAYED_ITEMS } from '@/types';
 
 interface User {
   displayName: string;
@@ -52,7 +53,6 @@ interface AuthenticatedHomePageProps {
   user: User;
 }
 
-export const NUMBER_OF_DISPLAYED_ITEMS = 5;
 
 export const AuthenticatedHomePage: React.FC<AuthenticatedHomePageProps> = ({ user }) => {
   const router = useRouter();
@@ -76,8 +76,8 @@ export const AuthenticatedHomePage: React.FC<AuthenticatedHomePageProps> = ({ us
       const [recentResponse, playlistsResponse, artistsResponse, albumsResponse] = await Promise.all([
         fetch('/api/spotify/recently-played'),
         fetch('/api/spotify/my-playlists'),
-        fetch('/api/spotify/top-artists?time_range=short_term'),
-        fetch('/api/spotify/top-albums?time_range=short_term'),
+        fetch(`/api/spotify/top-artists?time_range=${TimeRange.SHORT_TERM}`),
+        fetch(`/api/spotify/top-albums?time_range=${TimeRange.SHORT_TERM}`),
       ]);
 
       if (!recentResponse.ok || !playlistsResponse.ok || !artistsResponse.ok || !albumsResponse.ok) {
