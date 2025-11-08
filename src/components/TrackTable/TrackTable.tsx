@@ -141,33 +141,28 @@ export const TrackTable: React.FC<TrackTableProps> = ({ tracks, onTrackClick }) 
                   </Typography>
                   {/* Explicit indicator */}
                   {item.track.explicit && (
-                    <div
-                      className="flex-shrink-0 w-4 h-4 bg-gray-700 rounded flex items-center justify-center"
+                    <span
+                      className="flex-shrink-0 w-4 h-4 bg-gray-700 rounded flex items-center justify-center text-[10px] font-bold text-white"
                       title="Explicit"
                     >
-                      <Typography
-                        variant="caption"
-                        size="xs"
-                        weight="bold"
-                        color="primary"
-                        className="text-[10px] leading-none"
-                      >
-                        E
-                      </Typography>
-                    </div>
+                      E
+                    </span>
                   )}
                   {/* Music video indicator - check if track has video (heuristic: if it has external_urls and preview_url) */}
                   {item.track.external_urls?.spotify && item.track.preview_url && (
                     <Stack direction="row" spacing="xs" align="center" className="flex-shrink-0">
-                      <div
-                        className="flex-shrink-0 w-4 h-4 bg-gray-700 rounded flex items-center justify-center"
+                      <Stack
+                        direction="row"
+                        align="center"
+                        justify="center"
+                        className="flex-shrink-0 w-4 h-4 bg-gray-700 rounded"
                         title="Music video"
                       >
-                        <Icon icon={faPlay} size="xs" color="primary" />
-                      </div>
+                        <Icon icon={faPlay} size="sm" color="primary" />
+                      </Stack>
                       <Typography
                         variant="caption"
-                        size="xs"
+                        size="sm"
                         color="muted"
                         className="whitespace-nowrap"
                       >

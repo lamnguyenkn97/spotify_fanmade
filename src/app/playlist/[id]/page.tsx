@@ -121,7 +121,7 @@ export default function PlaylistPage() {
   }
 
   return (
-    <div className="w-full min-w-0">
+    <Stack direction="column" className="w-full min-w-0">
       {/* Playlist Header */}
       <PlaylistHeader
         playlist={playlist}
@@ -131,6 +131,6 @@ export default function PlaylistPage() {
 
       {/* Track List */}
       <TrackTable tracks={playlist.tracks.items} onTrackClick={handleTrackClick} />
-    </div>
+    </Stack>
   );
 }

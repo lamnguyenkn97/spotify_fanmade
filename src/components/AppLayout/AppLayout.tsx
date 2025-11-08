@@ -63,9 +63,9 @@ export const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
             onCreatePlaylist={handleCreatePlaylist}
             onBrowsePodcasts={handleBrowsePodcasts}
           />
-          <div className="flex-1 min-w-0 overflow-y-auto">
+          <Stack direction="column" className="flex-1 min-w-0 overflow-y-auto">
             {children}
-          </div>
+          </Stack>
         </Stack>
       </Stack>
     </ThemeProvider>

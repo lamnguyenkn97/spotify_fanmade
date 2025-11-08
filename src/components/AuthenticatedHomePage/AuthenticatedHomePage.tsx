@@ -180,7 +180,11 @@ export const AuthenticatedHomePage: React.FC<AuthenticatedHomePageProps> = ({ us
           <Typography variant="heading" size="xl" weight="bold" color="primary">
             Your Playlists
           </Typography>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <Stack
+            direction="row"
+            spacing="md"
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3"
+          >
             {userPlaylists.map((playlist) => (
               <HorizontalTileCard
                 key={playlist.id}
@@ -192,7 +196,7 @@ export const AuthenticatedHomePage: React.FC<AuthenticatedHomePageProps> = ({ us
                 onClick={() => handlePlaylistClick(playlist.id)}
               />
             ))}
-          </div>
+          </Stack>
         </Stack>
       )}
 
@@ -202,10 +206,18 @@ export const AuthenticatedHomePage: React.FC<AuthenticatedHomePageProps> = ({ us
           <Typography variant="heading" size="xl" weight="bold" color="primary">
             Recently Played
           </Typography>
-          <div className="overflow-x-auto overflow-y-visible pb-4 -mx-6 px-6 scrollbar-hide">
-            <div className="flex gap-4 min-w-max">
+          <Stack
+            direction="row"
+            className="overflow-x-auto overflow-y-visible pb-4 -mx-6 px-6 scrollbar-hide"
+          >
+            <Stack direction="row" spacing="md" className="min-w-max">
               {recentTracks.slice(0, NUMBER_OF_DISPLAYED_ITEMS).map((item, index) => (
-                <div key={item.track.id} className="flex-shrink-0" style={{ width: '180px' }}>
+                <Stack
+                  key={item.track.id}
+                  direction="column"
+                  className="flex-shrink-0"
+                  style={{ width: '180px' }}
+                >
                   <Card
                     title={item.track.name}
                     subtitle={item.track.artists[0]?.name || 'Unknown Artist'}
@@ -213,10 +225,10 @@ export const AuthenticatedHomePage: React.FC<AuthenticatedHomePageProps> = ({ us
                     variant="default"
                     onClick={() => handleTrackClick(item.track)}
                   />
-                </div>
+                </Stack>
               ))}
-            </div>
-          </div>
+            </Stack>
+          </Stack>
         </Stack>
       )}
 
@@ -226,10 +238,18 @@ export const AuthenticatedHomePage: React.FC<AuthenticatedHomePageProps> = ({ us
           <Typography variant="heading" size="xl" weight="bold" color="primary">
             Your Top Artists This Month
           </Typography>
-          <div className="overflow-x-auto overflow-y-visible pb-4 -mx-6 px-6 scrollbar-hide">
-            <div className="flex gap-4 min-w-max">
+          <Stack
+            direction="row"
+            className="overflow-x-auto overflow-y-visible pb-4 -mx-6 px-6 scrollbar-hide"
+          >
+            <Stack direction="row" spacing="md" className="min-w-max">
               {topArtists.slice(0, NUMBER_OF_DISPLAYED_ITEMS).map((artist) => (
-                <div key={artist.id} className="flex-shrink-0" style={{ width: '180px' }}>
+                <Stack
+                  key={artist.id}
+                  direction="column"
+                  className="flex-shrink-0"
+                  style={{ width: '180px' }}
+                >
                   <Card
                     title={artist.name}
                     subtitle="Artist"
@@ -237,10 +257,10 @@ export const AuthenticatedHomePage: React.FC<AuthenticatedHomePageProps> = ({ us
                     variant="artist"
                     onClick={() => handleArtistClick(artist.id)}
                   />
-                </div>
+                </Stack>
               ))}
-            </div>
-          </div>
+            </Stack>
+          </Stack>
         </Stack>
       )}
 
@@ -250,10 +270,18 @@ export const AuthenticatedHomePage: React.FC<AuthenticatedHomePageProps> = ({ us
           <Typography variant="heading" size="xl" weight="bold" color="primary">
             Top Albums This Month
           </Typography>
-          <div className="overflow-x-auto overflow-y-visible pb-4 -mx-6 px-6 scrollbar-hide">
-            <div className="flex gap-4 min-w-max">
+          <Stack
+            direction="row"
+            className="overflow-x-auto overflow-y-visible pb-4 -mx-6 px-6 scrollbar-hide"
+          >
+            <Stack direction="row" spacing="md" className="min-w-max">
               {topAlbums.slice(0, NUMBER_OF_DISPLAYED_ITEMS).map((album) => (
-                <div key={album.id} className="flex-shrink-0" style={{ width: '180px' }}>
+                <Stack
+                  key={album.id}
+                  direction="column"
+                  className="flex-shrink-0"
+                  style={{ width: '180px' }}
+                >
                   <Card
                     title={album.name}
                     subtitle={album.artist_name || album.artists?.[0]?.name || 'Unknown Artist'}
@@ -261,10 +289,10 @@ export const AuthenticatedHomePage: React.FC<AuthenticatedHomePageProps> = ({ us
                     variant="default"
                     onClick={() => handleAlbumClick(album.id)}
                   />
-                </div>
+                </Stack>
               ))}
-            </div>
-          </div>
+            </Stack>
+          </Stack>
         </Stack>
       )}
 
