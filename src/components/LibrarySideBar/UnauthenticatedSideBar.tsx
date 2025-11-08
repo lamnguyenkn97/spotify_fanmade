@@ -65,16 +65,6 @@ const SidebarContent: React.FC<
   );
 };
 
-const FooterLinks: React.FC = () => (
-  <div className="flex flex-wrap gap-x-4 gap-y-2">
-    {CONTENT_CONFIG.footer.links.map((link) => (
-      <TextLink key={link.label} href={link.href} className={`${CONTENT_CONFIG.footer.linkSize}`}>
-        {link.label}
-      </TextLink>
-    ))}
-  </div>
-);
-
 export const UnauthenticatedSideBar: React.FC<UnauthenticatedLibraryProps> = ({
   onCreatePlaylist = noop,
   onBrowsePodcasts = noop,
@@ -82,7 +72,10 @@ export const UnauthenticatedSideBar: React.FC<UnauthenticatedLibraryProps> = ({
 }) => {
   const containerClasses = `
         ${SIDEBAR_CONFIG.width}
-        h-screen
+        flex-shrink-0
+        h-full
+        min-w-[280px]
+        max-w-[280px]
         ${SIDEBAR_CONFIG.colors.background}
         ${SIDEBAR_CONFIG.colors.text}
         ${SIDEBAR_CONFIG.colors.border}
@@ -91,7 +84,7 @@ export const UnauthenticatedSideBar: React.FC<UnauthenticatedLibraryProps> = ({
     .replace(/\s+/g, ' ');
 
   return (
-    <Stack direction="column" className={containerClasses}>
+    <Stack direction="column" className={containerClasses} style={{ width: '280px', flexShrink: 0 }}>
       <SidebarHeader onAddClick={onAddClick} />
       <SidebarContent onCreatePlaylist={onCreatePlaylist} onBrowsePodcasts={onBrowsePodcasts} />
     </Stack>

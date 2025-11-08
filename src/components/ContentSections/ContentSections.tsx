@@ -17,7 +17,7 @@ export const ContentSections: React.FC<ContentSectionsProps> = ({
   getCardProps,
 }) => {
   return (
-    <div className="p-6">
+    <Stack direction="column" className="p-6">
       {sections.map((section, sectionIndex) => {
         const firstItem = section.sectionItems.items.filter((item: any) => item.content?.data)[0];
         const firstCardProps = firstItem ? getCardProps(firstItem) : null;
@@ -41,30 +41,31 @@ export const ContentSections: React.FC<ContentSectionsProps> = ({
               />
             </Stack>
 
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4">
-              {section.sectionItems.items
-                .filter((item: any) => item.content?.data)
-                .slice(0, 6)
-                .map((item: any, itemIndex: number) => {
-                  const cardProps = getCardProps(item);
-                  if (!cardProps) return null;
+            <div className="overflow-x-auto overflow-y-visible pb-4 -mx-6 px-6 scrollbar-hide">
+              <div className="flex gap-4 min-w-max">
+                {section.sectionItems.items
+                  .filter((item: any) => item.content?.data)
+                  .map((item: any, itemIndex: number) => {
+                    const cardProps = getCardProps(item);
+                    if (!cardProps) return null;
 
-                  return (
-                    <Card
-                      key={itemIndex}
-                      {...cardProps}
-                      size="md"
-                      showPlayButton
-                      onPlayClick={() => console.log(`Playing ${cardProps.title}`)}
-                      onClick={() => onCardClick(cardProps.title, cardProps.imageUrl)}
-                    />
-                  );
-                })}
+                    return (
+                      <div key={itemIndex} className="flex-shrink-0" style={{ width: '180px' }}>
+                        <Card
+                          {...cardProps}
+                          size="md"
+                          showPlayButton
+                          onPlayClick={() => console.log(`Playing ${cardProps.title}`)}
+                          onClick={() => onCardClick(cardProps.title, cardProps.imageUrl)}
+                        />
+                      </div>
+                    );
+                  })}
+              </div>
             </div>
           </Stack>
         );
       })}
-    </div>
+    </Stack>
   );
 };
-
