@@ -2,9 +2,19 @@
 
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
-import { Stack, Typography, Banner, Icon, colors, Card, Pill } from 'spotify-design-system';
-import { TrackTable } from '@/components';
-import { faPlay, faShuffle, faEllipsis, faCheckCircle } from '@fortawesome/free-solid-svg-icons';
+import {
+  Stack,
+  Typography,
+  Banner,
+  Icon,
+  colors,
+  Card,
+  Pill,
+  Table,
+  Image,
+} from 'spotify-design-system';
+import { faPlay, faShuffle, faEllipsis } from '@fortawesome/free-solid-svg-icons';
+import { faClock } from '@fortawesome/free-regular-svg-icons';
 import { useRouter } from 'next/navigation';
 import { DiscographyFilterType, AlbumType } from '@/types';
 
@@ -56,6 +66,7 @@ export default function ArtistPage() {
   const [selectedFilter, setSelectedFilter] = useState<DiscographyFilterType>(
     DiscographyFilterType.POPULAR_RELEASES
   );
+  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
 
   useEffect(() => {
     if (!params.id) return;
@@ -167,19 +178,40 @@ export default function ArtistPage() {
     );
   }
 
-  // Transform top tracks to match TrackTable format
-  const trackTableData = artist.topTracks.map((track, index) => ({
-    track: {
-      id: track.id,
-      name: track.name,
-      artists: track.artists,
-      album: track.album,
-      duration_ms: track.duration_ms,
-      explicit: track.explicit,
-      external_urls: track.external_urls,
-      preview_url: track.preview_url,
-    },
-    added_at: new Date().toISOString(),
+  const formatDuration = (ms: number): string => {
+    const seconds = Math.floor(ms / 1000);
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins}:${secs.toString().padStart(2, '0')}`;
+  };
+
+  interface TrackTableRow {
+    id: string;
+    index: number;
+    trackNumber: number;
+    title: string;
+    artists: string;
+    album: string;
+    albumImage?: string;
+    duration: string;
+    explicit?: boolean;
+    hasVideo?: boolean;
+    track: ArtistData['topTracks'][0];
+  }
+
+  // Transform top tracks to match Table format
+  const trackTableData: TrackTableRow[] = artist.topTracks.map((track, index) => ({
+    id: track.id,
+    index: index,
+    trackNumber: index + 1,
+    title: track.name,
+    artists: track.artists.map((a) => a.name).join(', '),
+    album: track.album.name,
+    albumImage: track.album.images?.[2]?.url || track.album.images?.[0]?.url || '',
+    duration: formatDuration(track.duration_ms),
+    explicit: track.explicit,
+    hasVideo: !!(track.external_urls?.spotify && track.preview_url),
+    track: track,
   }));
 
   return (
@@ -243,11 +275,130 @@ export default function ArtistPage() {
 
       {/* Popular Section */}
       {artist.topTracks.length > 0 && (
-        <Stack direction="column" spacing="md" className="px-8 pt-8">
+        <Stack direction="column" spacing="md">
           <Typography variant="heading" size="xl" weight="bold" color="primary">
             Popular
           </Typography>
-          <TrackTable tracks={trackTableData} onTrackClick={handleTrackClick} />
+          <Stack direction="column">
+            <Table<TrackTableRow>
+              columns={[
+                {
+                  align: 'left',
+                  key: 'trackNumber',
+                  label: '#',
+                  renderCell: (row: TrackTableRow) => (
+                    <Stack direction="row" align="center">
+                      {hoveredIndex === row.index ? (
+                        <Icon
+                          icon={faPlay}
+                          size="sm"
+                          color="primary"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleTrackClick(row.track);
+                          }}
+                        />
+                      ) : (
+                        <Typography variant="body" size="sm" color="muted">
+                          {row.trackNumber}
+                        </Typography>
+                      )}
+                    </Stack>
+                  ),
+                  width: '48px',
+                },
+                {
+                  align: 'left',
+                  key: 'title',
+                  label: 'Title',
+                  renderCell: (row: TrackTableRow) => (
+                    <Stack direction="row" spacing="md" align="center">
+                      <Image src={row.albumImage || ''} alt={row.album} size="sm" />
+                      <Stack direction="column" spacing="xs">
+                        <Stack direction="row" spacing="xs" align="center">
+                          <Typography variant="body" size="sm" weight="medium" color="primary">
+                            {row.title}
+                          </Typography>
+                          {/* Explicit indicator */}
+                          {row.explicit && (
+                            <Stack
+                              direction="row"
+                              align="center"
+                              justify="center"
+                              style={{
+                                width: '16px',
+                                height: '16px',
+                                backgroundColor: colors.grey.grey2,
+                                borderRadius: '2px',
+                              }}
+                              title="Explicit"
+                            >
+                              <Typography variant="caption" size="sm" color="primary" weight="bold">
+                                E
+                              </Typography>
+                            </Stack>
+                          )}
+                          {/* Music video indicator */}
+                          {row.hasVideo && (
+                            <Stack direction="row" spacing="xs" align="center">
+                              <Stack
+                                direction="row"
+                                align="center"
+                                justify="center"
+                                style={{
+                                  width: '16px',
+                                  height: '16px',
+                                  backgroundColor: colors.grey.grey2,
+                                  borderRadius: '2px',
+                                }}
+                                title="Music video"
+                              >
+                                <Icon icon={faPlay} size="sm" color="primary" />
+                              </Stack>
+                              <Typography variant="caption" size="sm" color="muted">
+                                Music video
+                              </Typography>
+                            </Stack>
+                          )}
+                        </Stack>
+                        <Typography variant="caption" size="sm" color="muted">
+                          {row.artists}
+                        </Typography>
+                      </Stack>
+                    </Stack>
+                  ),
+                  width: 'auto',
+                },
+                {
+                  align: 'left',
+                  key: 'album',
+                  label: 'Album',
+                  renderCell: (row: TrackTableRow) => (
+                    <Typography variant="body" size="sm" color="muted">
+                      {row.album}
+                    </Typography>
+                  ),
+                  width: 'auto',
+                },
+                {
+                  align: 'right',
+                  key: 'duration',
+                  label: <Icon icon={faClock} size="sm" color="muted" />,
+                  renderCell: (row: TrackTableRow) => (
+                    <Typography variant="body" size="sm" color="muted">
+                      {row.duration}
+                    </Typography>
+                  ),
+                  width: '100px',
+                },
+              ]}
+              data={trackTableData}
+              onRowClick={(row: TrackTableRow) => handleTrackClick(row.track)}
+              onRowHover={(row: TrackTableRow, index?: number) =>
+                setHoveredIndex(index ?? row.index)
+              }
+            />
+          </Stack>
         </Stack>
       )}
 

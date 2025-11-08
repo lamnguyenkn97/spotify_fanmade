@@ -7,4 +7,6 @@ export { UnauthenticatedHomePage } from './UnauthenticatedHomePage';
 export { AuthenticatedHomePage } from './AuthenticatedHomePage';
 export { PlaylistHeader } from './PlaylistHeader';
 export { TrackTable } from './TrackTable';
+export { PlaylistTable } from './PlaylistTable';
+export { ShowTable } from './ShowTable';
 export { AppLayout } from './AppLayout';
