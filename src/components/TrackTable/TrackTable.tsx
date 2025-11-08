@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Stack, Typography, Icon, Image, colors } from 'spotify-design-system';
+import { Stack, Typography, Icon, Image, colors, Table } from 'spotify-design-system';
 import { faPlay, faCheckCircle } from '@fortawesome/free-solid-svg-icons';
 import { faClock } from '@fortawesome/free-regular-svg-icons';
 
@@ -21,11 +21,19 @@ interface Track {
   preview_url?: string | null;
 }
 
-interface TrackItem {
-  track: Track;
-  added_at?: string;
-  index?: number;
+interface TrackTableRow {
+  id: string;
+  index: number;
+  trackNumber: number;
+  title: string;
+  artists: string;
+  album: string;
+  albumImage?: string;
+  duration: string;
+  explicit?: boolean;
+  hasVideo?: boolean;
   isLiked?: boolean;
+  track: Track;
 }
 
 interface TrackTableProps {
@@ -43,163 +51,147 @@ const formatDuration = (ms: number): string => {
 export const TrackTable: React.FC<TrackTableProps> = ({ tracks, onTrackClick }) => {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
 
-  // Transform tracks data to include index and mock liked status
-  const tableData: TrackItem[] = tracks.map((item, idx) => ({
-    ...item,
-    index: idx + 1,
-    // Mock: Mark some tracks as liked
-    isLiked: idx === 0 || idx === 1 || idx === 7,
+  // Transform tracks data to match Table format
+  const tableData: TrackTableRow[] = tracks.map((item, idx) => ({
+    id: item.track.id,
+    index: idx,
+    trackNumber: idx + 1,
+    title: item.track.name,
+    artists: item.track.artists.map((a) => a.name).join(', '),
+    album: item.track.album.name,
+    albumImage: item.track.album.images?.[2]?.url || item.track.album.images?.[0]?.url || '',
+    duration: formatDuration(item.track.duration_ms),
+    explicit: item.track.explicit,
+    hasVideo: !!(item.track.external_urls?.spotify && item.track.preview_url),
+    isLiked: idx === 0 || idx === 1 || idx === 7, // Mock: Mark some tracks as liked
+    track: item.track,
   }));
 
   return (
-    <Stack direction="column" className="px-8 pb-8 bg-spotify-dark">
-      {/* Custom Header Row matching Spotify style */}
-      <Stack
-        direction="row"
-        spacing="lg"
-        align="center"
-        className="px-2 py-2 border-b border-gray-800"
-        style={{ gridTemplateColumns: '40px 1fr 30% 100px', display: 'grid' }}
-      >
-        <Stack direction="row" align="center">
-          <Typography variant="caption" size="sm" color="muted" weight="bold">
-            #
-          </Typography>
-        </Stack>
-        <Stack direction="row" align="center">
-          <Typography variant="caption" size="sm" color="muted" weight="bold">
-            Title
-          </Typography>
-        </Stack>
-        <Stack direction="row" align="center">
-          <Typography variant="caption" size="sm" color="muted" weight="bold">
-            Album
-          </Typography>
-        </Stack>
-        <Stack direction="row" align="center" justify="end" className="pr-4">
-          <Icon icon={faClock} size="sm" color="muted" />
-        </Stack>
-      </Stack>
-
-      {/* Custom Table Rows matching header alignment */}
-      <Stack direction="column">
-        {tableData.map((item) => (
-          <Stack
-            key={item.track.id}
-            direction="row"
-            spacing="lg"
-            align="center"
-            className="px-2 py-2 hover:bg-gray-800/50 rounded group"
-            style={{ gridTemplateColumns: '40px 1fr 30% 100px', display: 'grid' }}
-            onMouseEnter={() => setHoveredIndex(item.index!)}
-            onMouseLeave={() => setHoveredIndex(null)}
-          >
-            {/* Track Number */}
-            <Stack direction="row" align="center">
-              {hoveredIndex === item.index ? (
-                <Icon
-                  icon={faPlay}
-                  size="sm"
-                  color="primary"
-                  onClick={() => onTrackClick?.(item.track)}
-                />
-              ) : (
-                <Typography
-                  variant="body"
-                  size="sm"
-                  color="muted"
-                  onClick={() => onTrackClick?.(item.track)}
-                >
-                  {item.index}
-                </Typography>
-              )}
-            </Stack>
-
-            {/* Title with Album Art */}
-            <Stack
-              direction="row"
-              spacing="md"
-              align="center"
-              className="min-w-0 cursor-pointer"
-              onClick={() => onTrackClick?.(item.track)}
-            >
-              <Image
-                src={item.track.album.images?.[2]?.url || item.track.album.images?.[0]?.url || ''}
-                alt={item.track.album.name}
-                size="sm"
-              />
-              <Stack direction="column" spacing="xs" className="min-w-0">
-                <Stack direction="row" spacing="xs" align="center" className="min-w-0">
-                  <Typography
-                    variant="body"
+    <Stack direction="column">
+      <Table<TrackTableRow>
+        columns={[
+          {
+            align: 'left',
+            key: 'trackNumber',
+            label: '#',
+            renderCell: (row: TrackTableRow) => (
+              <Stack direction="row" align="center">
+                {hoveredIndex === row.index ? (
+                  <Icon
+                    icon={faPlay}
                     size="sm"
-                    weight="medium"
                     color="primary"
-                    className="truncate"
-                  >
-                    {item.track.name}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onTrackClick?.(row.track);
+                    }}
+                  />
+                ) : (
+                  <Typography variant="body" size="sm" color="muted">
+                    {row.trackNumber}
                   </Typography>
-                  {/* Explicit indicator */}
-                  {item.track.explicit && (
-                    <span
-                      className="flex-shrink-0 w-4 h-4 bg-gray-700 rounded flex items-center justify-center text-[10px] font-bold text-white"
-                      title="Explicit"
-                    >
-                      E
-                    </span>
-                  )}
-                  {/* Music video indicator - check if track has video (heuristic: if it has external_urls and preview_url) */}
-                  {item.track.external_urls?.spotify && item.track.preview_url && (
-                    <Stack direction="row" spacing="xs" align="center" className="flex-shrink-0">
+                )}
+              </Stack>
+            ),
+            width: '48px',
+          },
+          {
+            align: 'left',
+            key: 'title',
+            label: 'Title',
+            renderCell: (row: TrackTableRow) => (
+              <Stack direction="row" spacing="md" align="center">
+                <Image src={row.albumImage || ''} alt={row.album} size="sm" />
+                <Stack direction="column" spacing="xs">
+                  <Stack direction="row" spacing="xs" align="center">
+                    <Typography variant="body" size="sm" weight="medium" color="primary">
+                      {row.title}
+                    </Typography>
+                    {/* Explicit indicator */}
+                    {row.explicit && (
                       <Stack
                         direction="row"
                         align="center"
                         justify="center"
-                        className="flex-shrink-0 w-4 h-4 bg-gray-700 rounded"
-                        title="Music video"
+                        style={{
+                          width: '16px',
+                          height: '16px',
+                          backgroundColor: colors.grey.grey2,
+                          borderRadius: '2px',
+                        }}
+                        title="Explicit"
                       >
-                        <Icon icon={faPlay} size="sm" color="primary" />
+                        <Typography variant="caption" size="sm" color="primary" weight="bold">
+                          E
+                        </Typography>
                       </Stack>
-                      <Typography
-                        variant="caption"
-                        size="sm"
-                        color="muted"
-                        className="whitespace-nowrap"
-                      >
-                        Music video
-                      </Typography>
-                    </Stack>
-                  )}
+                    )}
+                    {/* Music video indicator */}
+                    {row.hasVideo && (
+                      <Stack direction="row" spacing="xs" align="center">
+                        <Stack
+                          direction="row"
+                          align="center"
+                          justify="center"
+                          style={{
+                            width: '16px',
+                            height: '16px',
+                            backgroundColor: colors.grey.grey2,
+                            borderRadius: '2px',
+                          }}
+                          title="Music video"
+                        >
+                          <Icon icon={faPlay} size="sm" color="primary" />
+                        </Stack>
+                        <Typography variant="caption" size="sm" color="muted">
+                          Music video
+                        </Typography>
+                      </Stack>
+                    )}
+                  </Stack>
+                  <Typography variant="caption" size="sm" color="muted">
+                    {row.artists}
+                  </Typography>
                 </Stack>
-                <Typography variant="caption" size="sm" color="muted" className="truncate">
-                  {item.track.artists.map((a) => a.name).join(', ')}
+              </Stack>
+            ),
+            width: 'auto',
+          },
+          {
+            align: 'left',
+            key: 'album',
+            label: 'Album',
+            renderCell: (row: TrackTableRow) => (
+              <Typography variant="body" size="sm" color="muted">
+                {row.album}
+              </Typography>
+            ),
+            width: 'auto',
+          },
+          {
+            align: 'right',
+            key: 'duration',
+            label: <Icon icon={faClock} size="sm" color="muted" />,
+            renderCell: (row: TrackTableRow) => (
+              <Stack direction="row" align="center" spacing="sm" justify="end">
+                {row.isLiked && (
+                  <Icon icon={faCheckCircle} size="sm" color={colors.primary.brand} />
+                )}
+                <Typography variant="body" size="sm" color="muted">
+                  {row.duration}
                 </Typography>
               </Stack>
-            </Stack>
-
-            {/* Album */}
-            <Stack direction="row" align="center">
-              <Typography variant="body" size="sm" color="muted" className="truncate">
-                {item.track.album.name}
-              </Typography>
-            </Stack>
-
-            {/* Duration */}
-            <Stack direction="row" align="center" justify="end" spacing="sm" className="pr-4">
-              {item.isLiked && <Icon icon={faCheckCircle} size="sm" color={colors.primary.brand} />}
-              <Typography
-                variant="caption"
-                size="sm"
-                color="muted"
-                style={{ minWidth: '40px', textAlign: 'right' }}
-                className="tabular-nums"
-              >
-                {formatDuration(item.track.duration_ms)}
-              </Typography>
-            </Stack>
-          </Stack>
-        ))}
-      </Stack>
+            ),
+            width: '100px',
+          },
+        ]}
+        data={tableData}
+        onRowClick={(row: TrackTableRow) => onTrackClick?.(row.track)}
+        onRowHover={(row: TrackTableRow, index?: number) =>
+          setHoveredIndex(index ?? row.index)
+        }
+      />
     </Stack>
   );
 };
