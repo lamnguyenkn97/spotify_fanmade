@@ -139,7 +139,13 @@ export const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
                 }
               : undefined
           }
-          onSearch={() => console.log('Search clicked')}
+          onSearch={(query: string) => {
+            if (query.trim()) {
+              router.push(`/search?q=${encodeURIComponent(query)}`);
+            } else {
+              router.push('/search');
+            }
+          }}
           onLogin={login}
           onInstallApp={() => {}}
           onHomeClick={() => router.push('/')}
