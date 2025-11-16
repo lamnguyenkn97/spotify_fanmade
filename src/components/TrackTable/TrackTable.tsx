@@ -1,8 +1,8 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Stack, Typography, Icon, Image, colors, Table } from 'spotify-design-system';
-import { faPlay, faCheckCircle } from '@fortawesome/free-solid-svg-icons';
+import { Stack, Typography, Icon, Image, colors, Table, Equalizer } from 'spotify-design-system';
+import { faPlay, faPause, faCheckCircle } from '@fortawesome/free-solid-svg-icons';
 import { faClock } from '@fortawesome/free-regular-svg-icons';
 import { useMusicPlayerContext } from '@/contexts/MusicPlayerContext';
 import { convertTrackToCurrentTrack, convertTracksToQueue } from '@/utils/trackHelpers';
@@ -52,7 +52,7 @@ const formatDuration = (ms: number): string => {
 
 export const TrackTable: React.FC<TrackTableProps> = ({ tracks, onTrackClick }) => {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
-  const { playTrack, setQueue } = useMusicPlayerContext();
+  const { playTrack, pause, resume, setQueue, currentTrack, isPlaying } = useMusicPlayerContext();
 
   // Set up queue when tracks change
   React.useEffect(() => {
@@ -61,10 +61,22 @@ export const TrackTable: React.FC<TrackTableProps> = ({ tracks, onTrackClick }) 
     setQueue(queue);
   }, [tracks, setQueue]);
 
-  // Handle track click - play the track
-  const handleTrackClick = (track: Track) => {
-    const currentTrack = convertTrackToCurrentTrack(track);
-    playTrack(currentTrack);
+  // Handle track click - play the track, or pause if already playing
+  const handleTrackClick = async (track: Track) => {
+    const trackToPlay = convertTrackToCurrentTrack(track);
+    
+    // If clicking the same track that's currently playing, toggle play/pause
+    if (currentTrack?.id === trackToPlay.id) {
+      if (isPlaying) {
+        await pause();
+      } else {
+        await resume();
+      }
+    } else {
+      // Different track - play it
+      await playTrack(trackToPlay);
+    }
+    
     onTrackClick?.(track);
   };
 
@@ -92,39 +104,69 @@ export const TrackTable: React.FC<TrackTableProps> = ({ tracks, onTrackClick }) 
             align: 'left',
             key: 'trackNumber',
             label: '#',
-            renderCell: (row: TrackTableRow) => (
-              <Stack direction="row" align="center">
-                {hoveredIndex === row.index ? (
-                  <Icon
-                    icon={faPlay}
-                    size="sm"
-                    color="primary"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleTrackClick(row.track);
-                    }}
-                  />
-                ) : (
-                  <Typography variant="body" size="sm" color="muted">
-                    {row.trackNumber}
-                  </Typography>
-                )}
-              </Stack>
-            ),
+            renderCell: (row: TrackTableRow) => {
+              const isCurrentlyPlaying = currentTrack?.id === row.track.id && isPlaying;
+              const isHovered = hoveredIndex === row.index;
+              
+              return (
+                <Stack direction="row" align="center" justify="center" style={{ width: '48px' }}>
+                  {isCurrentlyPlaying && !isHovered ? (
+                    <Equalizer 
+                      size="sm" 
+                      isPlaying={isPlaying}
+                    />
+                  ) : isHovered && isCurrentlyPlaying ? (
+                    <Icon
+                      icon={faPause}
+                      size="sm"
+                      color="primary"
+                      onClick={async (e) => {
+                        e.stopPropagation();
+                        await pause();
+                      }}
+                    />
+                  ) : isHovered ? (
+                    <Icon
+                      icon={faPlay}
+                      size="sm"
+                      color="primary"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleTrackClick(row.track);
+                      }}
+                    />
+                  ) : (
+                    <Typography variant="body" size="sm" color="muted">
+                      {row.trackNumber}
+                    </Typography>
+                  )}
+                </Stack>
+              );
+            },
             width: '48px',
           },
           {
             align: 'left',
             key: 'title',
             label: 'Title',
-            renderCell: (row: TrackTableRow) => (
-              <Stack direction="row" spacing="md" align="center">
-                <Image src={row.albumImage || ''} alt={row.album} size="sm" />
-                <Stack direction="column" spacing="xs">
-                  <Stack direction="row" spacing="xs" align="center">
-                    <Typography variant="body" size="sm" weight="medium" color="primary">
-                      {row.title}
-                    </Typography>
+            renderCell: (row: TrackTableRow) => {
+              const isCurrentlyPlaying = currentTrack?.id === row.track.id && isPlaying;
+              const isHovered = hoveredIndex === row.index;
+              
+              return (
+                <Stack direction="row" spacing="sm" align="center">
+                  <Image src={row.albumImage || ''} alt={row.album} size="sm" />
+                  <Stack direction="column" spacing="xs">
+                    <Stack direction="row" spacing="xs" align="center">
+                      <Typography 
+                        variant="body" 
+                        size="sm" 
+                        weight="medium" 
+                        color={isCurrentlyPlaying ? "primary" : "primary"}
+                        style={isCurrentlyPlaying ? { color: colors.primary.brand } : undefined}
+                      >
+                        {row.title}
+                      </Typography>
                     {/* Explicit indicator */}
                     {row.explicit && (
                       <Stack
@@ -172,7 +214,8 @@ export const TrackTable: React.FC<TrackTableProps> = ({ tracks, onTrackClick }) 
                   </Typography>
                 </Stack>
               </Stack>
-            ),
+              );
+            },
             width: 'auto',
           },
           {
@@ -190,16 +233,22 @@ export const TrackTable: React.FC<TrackTableProps> = ({ tracks, onTrackClick }) 
             align: 'right',
             key: 'duration',
             label: <Icon icon={faClock} size="sm" color="muted" />,
-            renderCell: (row: TrackTableRow) => (
-              <Stack direction="row" align="center" spacing="sm" justify="end">
-                {row.isLiked && (
-                  <Icon icon={faCheckCircle} size="sm" color={colors.primary.brand} />
-                )}
-                <Typography variant="body" size="sm" color="muted">
-                  {row.duration}
-                </Typography>
-              </Stack>
-            ),
+            renderCell: (row: TrackTableRow) => {
+              const isCurrentlyPlaying = currentTrack?.id === row.track.id && isPlaying;
+              
+              return (
+                <Stack direction="row" align="center" spacing="sm" justify="end">
+                  {isCurrentlyPlaying ? (
+                    <Icon icon={faCheckCircle} size="sm" color={colors.primary.brand} />
+                  ) : row.isLiked ? (
+                    <Icon icon={faCheckCircle} size="sm" color={colors.primary.brand} />
+                  ) : null}
+                  <Typography variant="body" size="sm" color="muted">
+                    {row.duration}
+                  </Typography>
+                </Stack>
+              );
+            },
             width: '100px',
           },
         ]}
