@@ -22,6 +22,11 @@ export const MusicPlayer: React.FC<MusicPlayerProps> = ({ className }) => {
     previous,
   } = useMusicPlayerContext();
 
+  // Don't render if there's no track
+  if (!currentTrack) {
+    return null;
+  }
+
   // Convert duration from milliseconds to seconds for the design system component
   // The design system expects duration in seconds, but we store it in ms
   const durationInSeconds = Math.floor(duration / 1000);

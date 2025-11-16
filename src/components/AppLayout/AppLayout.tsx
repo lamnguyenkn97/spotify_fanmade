@@ -5,7 +5,7 @@ import { ThemeProvider, AppHeader, Stack } from 'spotify-design-system';
 import { useRouter } from 'next/navigation';
 import { UnauthenticatedSideBar, AuthenticatedSideBar, LibraryFilter } from '@/components/LibrarySideBar';
 import { useSpotify } from '@/hooks/useSpotify';
-import { MusicPlayerProvider } from '@/contexts/MusicPlayerContext';
+import { MusicPlayerProvider, useMusicPlayerContext } from '@/contexts/MusicPlayerContext';
 import { MusicPlayer } from '@/components/MusicPlayer';
 
 interface AppLayoutProps {
@@ -21,7 +21,6 @@ interface LibraryItem {
   pinned?: boolean;
   isPlaying?: boolean;
 }
-
 
 export const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
   const router = useRouter();
@@ -41,10 +40,28 @@ export const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
 
       switch (filter) {
         case LibraryFilter.PLAYLISTS:
+          // First, add "Liked Songs" as a special playlist
+          const likedTracksRes = await fetch('/api/spotify/my-saved-tracks?limit=1');
+          if (likedTracksRes.ok) {
+            const likedTracksData = await likedTracksRes.json();
+            if (likedTracksData.total > 0) {
+              const firstTrack = likedTracksData.items?.[0]?.track;
+              data.push({
+                id: 'liked-songs',
+                title: 'Liked Songs',
+                type: 'playlist' as const,
+                image: firstTrack?.album?.images?.[0]?.url || '',
+                subtitle: `Playlist • ${likedTracksData.total} songs`,
+                pinned: true, // Always pin Liked Songs at the top
+              });
+            }
+          }
+
+          // Then fetch regular playlists
           const playlistsRes = await fetch('/api/spotify/my-playlists');
           if (playlistsRes.ok) {
             const playlistsData = await playlistsRes.json();
-            data = playlistsData.items?.map((playlist: any) => ({
+            const playlists = playlistsData.items?.map((playlist: any) => ({
               id: playlist.id,
               title: playlist.name,
               type: 'playlist' as const,
@@ -54,6 +71,7 @@ export const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
               }`,
               pinned: Math.random() > 0.7,
             })) || [];
+            data = [...data, ...playlists];
           }
           break;
 
@@ -131,75 +149,121 @@ export const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
   return (
     <ThemeProvider>
       <MusicPlayerProvider>
-        <Stack direction="column" className="h-screen bg-spotify-dark text-white overflow-hidden">
-          <AppHeader
-            isAuthenticated={isAuthenticated}
-            user={
-              user
-                ? {
-                    name: user.displayName || user.email,
-                    avatar: user.images?.[0]?.url || '',
-                  }
-                : undefined
-            }
-            onSearch={(query: string) => {
-              if (query.trim()) {
-                router.push(`/search?q=${encodeURIComponent(query)}`);
-              } else {
-                router.push('/search');
-              }
-            }}
-            onLogin={login}
-            onInstallApp={() => {}}
-            onHomeClick={() => router.push('/')}
-            showInstallApp={false}
-            showAuthButtons={true}
-            showCustomLinks={false}
-            customLinks={[]}
-            customActions={
-              isAuthenticated
-                ? [
-                    {
-                      id: 'logout',
-                      label: 'Log out',
-                      onClick: logout,
-                      variant: 'text' as const,
-                      type: 'button' as const,
-                    },
-                  ]
-                : []
-            }
-          />
-
-          <Stack direction="row" className="flex-1 overflow-hidden min-w-0">
-            {isAuthenticated ? (
-              <AuthenticatedSideBar
-                currentView="list"
-                libraryItems={libraryItems}
-                onAddClick={handleCreatePlaylist}
-                onExpandClick={() => console.log('Expand')}
-                onFilterClick={handleFilterClick}
-                onLibraryItemClick={handleLibraryItemClick}
-                onSearch={() => console.log('Search')}
-                onViewToggle={() => console.log('View toggle')}
-              />
-            ) : (
-              <UnauthenticatedSideBar
-                onCreatePlaylist={handleCreatePlaylist}
-                onBrowsePodcasts={handleBrowsePodcasts}
-              />
-            )}
-            <Stack 
-              direction="column" 
-              className="flex-1 min-w-0 overflow-y-auto pb-[100px]"
-            >
-              {children}
-            </Stack>
-          </Stack>
-
-          <MusicPlayer />
-        </Stack>
+        <AppLayoutContent
+          isAuthenticated={isAuthenticated}
+          user={user}
+          libraryItems={libraryItems}
+          onLogin={login}
+          onLogout={logout}
+          onCreatePlaylist={handleCreatePlaylist}
+          onBrowsePodcasts={handleBrowsePodcasts}
+          onFilterClick={handleFilterClick}
+          onLibraryItemClick={handleLibraryItemClick}
+          router={router}
+        >
+          {children}
+        </AppLayoutContent>
       </MusicPlayerProvider>
     </ThemeProvider>
+  );
+};
+
+// Inner component that has access to MusicPlayerContext
+const AppLayoutContent: React.FC<{
+  isAuthenticated: boolean;
+  user: any;
+  libraryItems: LibraryItem[];
+  onLogin: () => void;
+  onLogout: () => void;
+  onCreatePlaylist: () => void;
+  onBrowsePodcasts: () => void;
+  onFilterClick: (filter: LibraryFilter) => void;
+  onLibraryItemClick: (item: LibraryItem) => void;
+  router: any;
+  children: React.ReactNode;
+}> = ({
+  isAuthenticated,
+  user,
+  libraryItems,
+  onLogin,
+  onLogout,
+  onCreatePlaylist,
+  onBrowsePodcasts,
+  onFilterClick,
+  onLibraryItemClick,
+  router,
+  children,
+}) => {
+  const { currentTrack } = useMusicPlayerContext();
+
+  return (
+    <Stack direction="column" className="h-screen bg-spotify-dark text-white overflow-hidden">
+      <AppHeader
+        isAuthenticated={isAuthenticated}
+        user={
+          user
+            ? {
+                name: user.displayName || user.email,
+                avatar: user.images?.[0]?.url || '',
+              }
+            : undefined
+        }
+        onSearch={(query: string) => {
+          if (query.trim()) {
+            router.push(`/search?q=${encodeURIComponent(query)}`);
+          } else {
+            router.push('/search');
+          }
+        }}
+        onLogin={onLogin}
+        onInstallApp={() => {}}
+        onHomeClick={() => router.push('/')}
+        showInstallApp={false}
+        showAuthButtons={true}
+        showCustomLinks={false}
+        customLinks={[]}
+        customActions={
+          isAuthenticated
+            ? [
+                {
+                  id: 'logout',
+                  label: 'Log out',
+                  onClick: onLogout,
+                  variant: 'text' as const,
+                  type: 'button' as const,
+                },
+              ]
+            : []
+        }
+      />
+
+      <Stack direction="row" className="flex-1 overflow-hidden min-w-0">
+        {isAuthenticated ? (
+          <AuthenticatedSideBar
+            currentView="list"
+            libraryItems={libraryItems}
+            onAddClick={onCreatePlaylist}
+            onExpandClick={() => console.log('Expand')}
+            onFilterClick={onFilterClick}
+            onLibraryItemClick={onLibraryItemClick}
+            onSearch={() => console.log('Search')}
+            onViewToggle={() => console.log('View toggle')}
+          />
+        ) : (
+          <UnauthenticatedSideBar
+            onCreatePlaylist={onCreatePlaylist}
+            onBrowsePodcasts={onBrowsePodcasts}
+          />
+        )}
+        <Stack 
+          direction="column" 
+          className={`flex-1 min-w-0 overflow-y-auto ${currentTrack ? 'pb-[100px]' : ''}`}
+        >
+          {children}
+        </Stack>
+      </Stack>
+
+      <MusicPlayer />
+    </Stack>
   );
 };

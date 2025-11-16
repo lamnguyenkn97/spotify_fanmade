@@ -2,10 +2,12 @@
 
 import React, { useState } from 'react';
 import { Stack, Typography, Icon, Image, colors, Table, Equalizer } from 'spotify-design-system';
-import { faPlay, faPause, faCheckCircle } from '@fortawesome/free-solid-svg-icons';
+import { faPlay, faPause, faCheckCircle, faEllipsis } from '@fortawesome/free-solid-svg-icons';
 import { faClock } from '@fortawesome/free-regular-svg-icons';
 import { useMusicPlayerContext } from '@/contexts/MusicPlayerContext';
 import { convertTrackToCurrentTrack, convertTracksToQueue } from '@/utils/trackHelpers';
+import { useLikedTracks } from '@/hooks/useLikedTracks';
+import { formatRelativeTime } from '@/utils/dateHelpers';
 
 interface Track {
   id: string;
@@ -35,6 +37,7 @@ interface TrackTableRow {
   explicit?: boolean;
   hasVideo?: boolean;
   isLiked?: boolean;
+  dateAdded?: string;
   track: Track;
 }
 
@@ -53,6 +56,10 @@ const formatDuration = (ms: number): string => {
 export const TrackTable: React.FC<TrackTableProps> = ({ tracks, onTrackClick }) => {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
   const { playTrack, pause, resume, setQueue, currentTrack, isPlaying } = useMusicPlayerContext();
+  
+  // Get track IDs for checking liked status (read-only, no toggle functionality)
+  const trackIds = React.useMemo(() => tracks.map((item) => item.track.id), [tracks]);
+  const { isLiked } = useLikedTracks(trackIds);
 
   // Set up queue when tracks change
   React.useEffect(() => {
@@ -92,7 +99,8 @@ export const TrackTable: React.FC<TrackTableProps> = ({ tracks, onTrackClick }) 
     duration: formatDuration(item.track.duration_ms),
     explicit: item.track.explicit,
     hasVideo: !!(item.track.external_urls?.spotify && item.track.preview_url),
-    isLiked: idx === 0 || idx === 1 || idx === 7, // Mock: Mark some tracks as liked
+    isLiked: isLiked(item.track.id),
+    dateAdded: item.added_at,
     track: item.track,
   }));
 
@@ -230,26 +238,55 @@ export const TrackTable: React.FC<TrackTableProps> = ({ tracks, onTrackClick }) 
             width: 'auto',
           },
           {
-            align: 'right',
-            key: 'duration',
-            label: <Icon icon={faClock} size="sm" color="muted" />,
+            align: 'left',
+            key: 'dateAdded',
+            label: 'Date added',
             renderCell: (row: TrackTableRow) => {
+              if (!row.dateAdded) return null;
+              return (
+                <Typography variant="body" size="sm" color="muted">
+                  {formatRelativeTime(row.dateAdded)}
+                </Typography>
+              );
+            },
+            width: 'auto',
+          },
+          {
+            align: 'right',
+            key: 'actions',
+            label: '',
+            renderCell: (row: TrackTableRow) => {
+              const isHovered = hoveredIndex === row.index;
               const isCurrentlyPlaying = currentTrack?.id === row.track.id && isPlaying;
+              
+              // Show check icon if track is currently playing OR if it's in liked songs
+              const showCheckIcon = isCurrentlyPlaying || row.isLiked;
               
               return (
                 <Stack direction="row" align="center" spacing="sm" justify="end">
-                  {isCurrentlyPlaying ? (
+                  {showCheckIcon && (
                     <Icon icon={faCheckCircle} size="sm" color={colors.primary.brand} />
-                  ) : row.isLiked ? (
-                    <Icon icon={faCheckCircle} size="sm" color={colors.primary.brand} />
-                  ) : null}
+                  )}
                   <Typography variant="body" size="sm" color="muted">
                     {row.duration}
                   </Typography>
+                  {isHovered && (
+                    <Icon
+                      icon={faEllipsis}
+                      size="sm"
+                      color="muted"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        // TODO: Open more options menu
+                        console.log('More options:', row.track.name);
+                      }}
+                      style={{ cursor: 'pointer' }}
+                    />
+                  )}
                 </Stack>
               );
             },
-            width: '100px',
+            width: '150px',
           },
         ]}
         data={tableData}
