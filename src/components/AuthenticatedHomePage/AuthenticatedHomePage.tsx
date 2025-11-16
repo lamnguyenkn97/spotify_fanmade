@@ -4,6 +4,8 @@ import React, { useEffect, useState } from 'react';
 import { Button, ButtonSize, ButtonVariant, Card, Stack, Typography, HorizontalTileCard } from 'spotify-design-system';
 import { useRouter } from 'next/navigation';
 import { TimeRange, NUMBER_OF_DISPLAYED_ITEMS } from '@/types';
+import { useMusicPlayerContext } from '@/contexts/MusicPlayerContext';
+import { convertTrackToCurrentTrack } from '@/utils/trackHelpers';
 
 interface User {
   displayName: string;
@@ -18,6 +20,11 @@ interface Track {
     album: {
       name: string;
       images: Array<{ url: string; height: number; width: number }>;
+    };
+    duration_ms?: number;
+    preview_url?: string | null;
+    external_urls?: {
+      spotify?: string;
     };
   };
   played_at: string;
@@ -63,6 +70,7 @@ interface AuthenticatedHomePageProps {
 
 export const AuthenticatedHomePage: React.FC<AuthenticatedHomePageProps> = ({ user }) => {
   const router = useRouter();
+  const { playTrack } = useMusicPlayerContext();
   const [recentTracks, setRecentTracks] = useState<Track[]>([]);
   const [userPlaylists, setUserPlaylists] = useState<Playlist[]>([]);
   const [topArtists, setTopArtists] = useState<Artist[]>([]);
@@ -70,6 +78,7 @@ export const AuthenticatedHomePage: React.FC<AuthenticatedHomePageProps> = ({ us
   const [userShows, setUserShows] = useState<Show[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [recentTracksPermissionError, setRecentTracksPermissionError] = useState(false);
 
   useEffect(() => {
     fetchPersonalizedData();
@@ -80,7 +89,6 @@ export const AuthenticatedHomePage: React.FC<AuthenticatedHomePageProps> = ({ us
     setError(null);
 
     try {
-      // Fetch all data in parallel for better performance
       const [recentResponse, playlistsResponse, artistsResponse, albumsResponse, showsResponse] = await Promise.all([
         fetch('/api/spotify/recently-played'),
         fetch('/api/spotify/my-playlists'),
@@ -89,29 +97,41 @@ export const AuthenticatedHomePage: React.FC<AuthenticatedHomePageProps> = ({ us
         fetch('/api/spotify/my-shows'),
       ]);
 
-      if (!recentResponse.ok || !playlistsResponse.ok || !artistsResponse.ok || !albumsResponse.ok || !showsResponse.ok) {
-        throw new Error('Failed to fetch data');
+      const handleResponse = async <T,>(
+        response: Response,
+        setter: (data: T[]) => void,
+        transform?: (data: any) => T[]
+      ) => {
+        if (response.ok) {
+          const data = await response.json();
+          const items = transform ? transform(data) : data?.items || [];
+          setter(items);
+        }
+      };
+
+      if (recentResponse.ok) {
+        const recentData = await recentResponse.json();
+        setRecentTracks(recentData?.items || []);
+        setRecentTracksPermissionError(false);
+      } else {
+        const errorData = await recentResponse.json().catch(() => ({ error: 'Unknown error' }));
+        if (errorData?.error?.status === 401 || errorData?.status === 401) {
+          setRecentTracksPermissionError(true);
+        }
       }
 
-      const [recentData, playlistsData, artistsData, albumsData, showsData] = await Promise.all([
-        recentResponse.json(),
-        playlistsResponse.json(),
-        artistsResponse.json(),
-        albumsResponse.json(),
-        showsResponse.json(),
-      ]);
+      await handleResponse(playlistsResponse, setUserPlaylists);
+      await handleResponse(artistsResponse, setTopArtists);
+      await handleResponse(albumsResponse, setTopAlbums);
+      await handleResponse(showsResponse, setUserShows, (data) => 
+        data?.items?.map((item: any) => item.show) || []
+      );
 
-      setRecentTracks(recentData.items || []);
-      setUserPlaylists(playlistsData.items || []);
-      setTopArtists(artistsData.items || []);
-      setTopAlbums(albumsData.items || []);
-      
-      // Spotify API returns items as [{ added_at, show: {...} }, ...]
-      const shows = showsData.items?.map((item: any) => item.show) || [];
-      console.log(`Processing ${shows.length} shows from API response`);
-      setUserShows(shows);
+      const allFailed = !recentResponse.ok && !playlistsResponse.ok && !artistsResponse.ok && !albumsResponse.ok && !showsResponse.ok;
+      if (allFailed) {
+        throw new Error('Failed to fetch all data');
+      }
     } catch (err: any) {
-      console.error('Error fetching personalized data:', err);
       setError(err.message || 'Failed to load your data');
     } finally {
       setLoading(false);
@@ -135,9 +155,21 @@ export const AuthenticatedHomePage: React.FC<AuthenticatedHomePageProps> = ({ us
     );
   };
 
-  const handleTrackClick = (track: Track['track']) => {
-    console.log('Play track:', track.name);
-    // TODO: Implement play functionality when music player is ready
+  const handleTrackClick = async (track: Track['track']) => {
+    // Convert the track to CurrentTrack format and play it
+    const currentTrack = convertTrackToCurrentTrack({
+      id: track.id,
+      name: track.name,
+      artists: track.artists,
+      album: {
+        name: track.album.name,
+        images: track.album.images,
+      },
+      duration_ms: track.duration_ms || 0,
+      preview_url: track.preview_url || null,
+      external_urls: track.external_urls,
+    });
+    await playTrack(currentTrack);
   };
 
   const handlePlaylistClick = (playlistId: string) => {
@@ -219,11 +251,11 @@ export const AuthenticatedHomePage: React.FC<AuthenticatedHomePageProps> = ({ us
       )}
 
       {/* Recently Played Section */}
-      {recentTracks.length > 0 && (
-        <Stack direction="column" spacing="md">
-          <Typography variant="heading" size="xl" weight="bold" color="primary">
-            Recently Played
-          </Typography>
+      <Stack direction="column" spacing="md">
+        <Typography variant="heading" size="xl" weight="bold" color="primary">
+          Recently Played
+        </Typography>
+        {recentTracks.length > 0 ? (
           <Stack
             direction="row"
             spacing="md"
@@ -241,8 +273,21 @@ export const AuthenticatedHomePage: React.FC<AuthenticatedHomePageProps> = ({ us
               </Stack>
             ))}
           </Stack>
-        </Stack>
-      )}
+        ) : (
+          <Stack direction="column" spacing="xs">
+            <Typography variant="body" size="sm" color="muted">
+              {recentTracksPermissionError
+                ? 'Permissions missing for recently played tracks'
+                : 'No recently played tracks available'}
+            </Typography>
+            {recentTracksPermissionError && (
+              <Typography variant="caption" size="sm" color="muted">
+                Please log out and log back in to grant access to your recently played tracks.
+              </Typography>
+            )}
+          </Stack>
+        )}
+      </Stack>
 
       {/* Your Top Artists Section */}
       {topArtists.length > 0 && (

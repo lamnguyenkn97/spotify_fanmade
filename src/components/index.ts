@@ -10,3 +10,4 @@ export { TrackTable } from './TrackTable';
 export { PlaylistTable } from './PlaylistTable';
 export { ShowTable } from './ShowTable';
 export { AppLayout } from './AppLayout';
+export { MusicPlayer } from './MusicPlayer';

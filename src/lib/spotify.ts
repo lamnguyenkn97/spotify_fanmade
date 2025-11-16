@@ -12,6 +12,9 @@ export const SPOTIFY_SCOPES = [
   'user-library-modify',
   'user-top-read',
   'user-read-recently-played',
+  'streaming', // Required for Web Playback SDK
+  'user-read-playback-state',
+  'user-modify-playback-state',
 ].join(' ');
 
 // Create Spotify API instance
