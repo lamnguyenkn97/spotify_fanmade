@@ -29,6 +29,8 @@ export interface UseMusicPlayerReturn {
   previous: () => Promise<void>;
   queue: CurrentTrack[];
   setQueue: (tracks: CurrentTrack[]) => void;
+  audioElement: HTMLAudioElement | null;
+  useWebPlayback: boolean;
 }
 
 export const useMusicPlayer = (): UseMusicPlayerReturn => {
@@ -338,5 +340,7 @@ export const useMusicPlayer = (): UseMusicPlayerReturn => {
     previous,
     queue,
     setQueue,
+    audioElement: audioRef.current,
+    useWebPlayback,
   };
 };
