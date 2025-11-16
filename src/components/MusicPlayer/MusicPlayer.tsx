@@ -1,14 +1,14 @@
 'use client';
 
 import React from 'react';
-import { MusicPlayer as DesignSystemMusicPlayer, colors } from 'spotify-design-system';
+import { MusicPlayer as DesignSystemMusicPlayer } from 'spotify-design-system';
 import { useMusicPlayerContext } from '@/contexts/MusicPlayerContext';
 
 interface MusicPlayerProps {
-  style?: React.CSSProperties;
+  className?: string;
 }
 
-export const MusicPlayer: React.FC<MusicPlayerProps> = ({ style }) => {
+export const MusicPlayer: React.FC<MusicPlayerProps> = ({ className }) => {
   const {
     currentTrack,
     isPlaying,
@@ -57,52 +57,46 @@ export const MusicPlayer: React.FC<MusicPlayerProps> = ({ style }) => {
   };
 
   return (
-    <DesignSystemMusicPlayer
-      currentTime={currentTimeInSeconds}
-      currentTrack={
-        currentTrack
-          ? {
-              album: currentTrack.album,
-              artist: currentTrack.artist,
-              coverUrl: currentTrack.coverUrl,
-              title: currentTrack.title,
-            }
-          : {
-              album: '',
-              artist: '',
-              coverUrl: '',
-              title: '',
-            }
-      }
-      duration={durationInSeconds}
-      isPlaying={isPlaying}
-      onAddToPlaylist={handleAddToPlaylist}
-      onCast={handleCast}
-      onFullscreen={handleFullscreen}
-      onLyrics={handleLyrics}
-      onNext={next}
-      onPlayPause={togglePlayPause}
-      onPrevious={previous}
-      onQueue={handleQueue}
-      onRepeat={handleRepeat}
-      onSeek={(timeInSeconds: number) => {
-        // Convert seconds to milliseconds for our hook
-        seek(timeInSeconds * 1000);
-      }}
-      onShuffle={handleShuffle}
-      onVolumeChange={setVolume}
-      volume={volume}
-      style={{
-        borderRadius: '8px',
-        bottom: 'auto',
-        boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3)',
-        left: 'auto',
-        position: 'relative',
-        right: 'auto',
-        width: '100%',
-        ...style,
-      }}
-    />
+    <div
+      className={`fixed bottom-0 left-0 right-0 z-[1000] flex items-center px-4 py-2 min-h-[90px] bg-spotify-black border-t border-spotify-grey2 ${className || ''}`}
+    >
+      <DesignSystemMusicPlayer
+        currentTime={currentTimeInSeconds}
+        currentTrack={
+          currentTrack
+            ? {
+                album: currentTrack.album,
+                artist: currentTrack.artist,
+                coverUrl: currentTrack.coverUrl,
+                title: currentTrack.title,
+              }
+            : {
+                album: '',
+                artist: '',
+                coverUrl: '',
+                title: '',
+              }
+        }
+        duration={durationInSeconds}
+        isPlaying={isPlaying}
+        onAddToPlaylist={handleAddToPlaylist}
+        onCast={handleCast}
+        onFullscreen={handleFullscreen}
+        onLyrics={handleLyrics}
+        onNext={next}
+        onPlayPause={togglePlayPause}
+        onPrevious={previous}
+        onQueue={handleQueue}
+        onRepeat={handleRepeat}
+        onSeek={(timeInSeconds: number) => {
+          seek(timeInSeconds * 1000);
+        }}
+        onShuffle={handleShuffle}
+        onVolumeChange={setVolume}
+        volume={volume}
+        className="rounded-lg w-full min-h-[74px] shadow-[0_8px_32px_rgba(0,0,0,0.3)]"
+      />
+    </div>
   );
 };
 

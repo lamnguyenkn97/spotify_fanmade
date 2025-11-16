@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { ThemeProvider, AppHeader, Stack, colors } from 'spotify-design-system';
+import { ThemeProvider, AppHeader, Stack } from 'spotify-design-system';
 import { useRouter } from 'next/navigation';
 import { UnauthenticatedSideBar, AuthenticatedSideBar, LibraryFilter } from '@/components/LibrarySideBar';
 import { useSpotify } from '@/hooks/useSpotify';
@@ -191,40 +191,13 @@ export const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
             )}
             <Stack 
               direction="column" 
-              className="flex-1 min-w-0 overflow-y-auto"
-              style={{
-                paddingBottom: '100px', // Add padding to prevent content from being hidden behind player
-              }}
+              className="flex-1 min-w-0 overflow-y-auto pb-[100px]"
             >
               {children}
             </Stack>
           </Stack>
 
-          {/* Music Player - Fixed at bottom */}
-          <div
-            style={{
-              position: 'fixed',
-              bottom: 0,
-              left: 0,
-              right: 0,
-              zIndex: 1000,
-              padding: '8px 16px',
-              backgroundColor: colors.primary.black,
-              borderTop: `1px solid ${colors.grey.grey2}`,
-              minHeight: '90px',
-              display: 'flex',
-              alignItems: 'center',
-            }}
-          >
-            <MusicPlayer
-              style={{
-                borderRadius: '8px',
-                boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3)',
-                width: '100%',
-                minHeight: '74px',
-              }}
-            />
-          </div>
+          <MusicPlayer />
         </Stack>
       </MusicPlayerProvider>
     </ThemeProvider>
