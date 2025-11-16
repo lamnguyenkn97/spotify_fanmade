@@ -89,7 +89,6 @@ export const AuthenticatedHomePage: React.FC<AuthenticatedHomePageProps> = ({ us
     setError(null);
 
     try {
-      // Fetch all data in parallel for better performance
       const [recentResponse, playlistsResponse, artistsResponse, albumsResponse, showsResponse] = await Promise.all([
         fetch('/api/spotify/recently-played'),
         fetch('/api/spotify/my-playlists'),
@@ -98,87 +97,41 @@ export const AuthenticatedHomePage: React.FC<AuthenticatedHomePageProps> = ({ us
         fetch('/api/spotify/my-shows'),
       ]);
 
-      // Check each response individually to handle errors better
-      let recentData = null;
-      let playlistsData = null;
-      let artistsData = null;
-      let albumsData = null;
-      let showsData = null;
+      const handleResponse = async <T,>(
+        response: Response,
+        setter: (data: T[]) => void,
+        transform?: (data: any) => T[]
+      ) => {
+        if (response.ok) {
+          const data = await response.json();
+          const items = transform ? transform(data) : data?.items || [];
+          setter(items);
+        }
+      };
 
-      // Parse responses individually to handle errors gracefully
       if (recentResponse.ok) {
-        recentData = await recentResponse.json();
+        const recentData = await recentResponse.json();
         setRecentTracks(recentData?.items || []);
         setRecentTracksPermissionError(false);
       } else {
         const errorData = await recentResponse.json().catch(() => ({ error: 'Unknown error' }));
-        console.error('Error fetching recently played:', errorData);
         if (errorData?.error?.status === 401 || errorData?.status === 401) {
           setRecentTracksPermissionError(true);
-          console.warn('Missing permissions for recently played. Please log out and log back in to grant permissions.');
         }
       }
 
-      if (playlistsResponse.ok) {
-        playlistsData = await playlistsResponse.json();
-        setUserPlaylists(playlistsData?.items || []);
-      } else {
-        console.error('Error fetching playlists');
-      }
+      await handleResponse(playlistsResponse, setUserPlaylists);
+      await handleResponse(artistsResponse, setTopArtists);
+      await handleResponse(albumsResponse, setTopAlbums);
+      await handleResponse(showsResponse, setUserShows, (data) => 
+        data?.items?.map((item: any) => item.show) || []
+      );
 
-      if (artistsResponse.ok) {
-        artistsData = await artistsResponse.json();
-        setTopArtists(artistsData?.items || []);
-      } else {
-        console.error('Error fetching top artists');
-      }
-
-      if (albumsResponse.ok) {
-        albumsData = await albumsResponse.json();
-        setTopAlbums(albumsData?.items || []);
-      } else {
-        console.error('Error fetching top albums');
-      }
-
-      if (showsResponse.ok) {
-        showsData = await showsResponse.json();
-        const shows = showsData?.items?.map((item: any) => item.show) || [];
-        setUserShows(shows);
-      } else {
-        console.error('Error fetching shows');
-      }
-
-      if (!playlistsResponse.ok) {
-        console.error('Error fetching playlists');
-      } else {
-        setUserPlaylists(playlistsData?.items || []);
-      }
-
-      if (!artistsResponse.ok) {
-        console.error('Error fetching top artists');
-      } else {
-        setTopArtists(artistsData?.items || []);
-      }
-
-      if (!albumsResponse.ok) {
-        console.error('Error fetching top albums');
-      } else {
-        setTopAlbums(albumsData?.items || []);
-      }
-
-      if (!showsResponse.ok) {
-        console.error('Error fetching shows');
-      } else {
-        const shows = showsData?.items?.map((item: any) => item.show) || [];
-        setUserShows(shows);
-      }
-
-      // Only throw if ALL requests failed
-      if (!recentResponse.ok && !playlistsResponse.ok && !artistsResponse.ok && !albumsResponse.ok && !showsResponse.ok) {
+      const allFailed = !recentResponse.ok && !playlistsResponse.ok && !artistsResponse.ok && !albumsResponse.ok && !showsResponse.ok;
+      if (allFailed) {
         throw new Error('Failed to fetch all data');
       }
     } catch (err: any) {
-      console.error('Error fetching personalized data:', err);
       setError(err.message || 'Failed to load your data');
     } finally {
       setLoading(false);
