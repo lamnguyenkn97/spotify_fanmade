@@ -4,6 +4,8 @@ import React, { useEffect, useState } from 'react';
 import { Button, ButtonSize, ButtonVariant, Card, Stack, Typography, HorizontalTileCard } from 'spotify-design-system';
 import { useRouter } from 'next/navigation';
 import { TimeRange, NUMBER_OF_DISPLAYED_ITEMS } from '@/types';
+import { useMusicPlayerContext } from '@/contexts/MusicPlayerContext';
+import { convertTrackToCurrentTrack } from '@/utils/trackHelpers';
 
 interface User {
   displayName: string;
@@ -18,6 +20,11 @@ interface Track {
     album: {
       name: string;
       images: Array<{ url: string; height: number; width: number }>;
+    };
+    duration_ms?: number;
+    preview_url?: string | null;
+    external_urls?: {
+      spotify?: string;
     };
   };
   played_at: string;
@@ -63,6 +70,7 @@ interface AuthenticatedHomePageProps {
 
 export const AuthenticatedHomePage: React.FC<AuthenticatedHomePageProps> = ({ user }) => {
   const router = useRouter();
+  const { playTrack } = useMusicPlayerContext();
   const [recentTracks, setRecentTracks] = useState<Track[]>([]);
   const [userPlaylists, setUserPlaylists] = useState<Playlist[]>([]);
   const [topArtists, setTopArtists] = useState<Artist[]>([]);
@@ -70,6 +78,7 @@ export const AuthenticatedHomePage: React.FC<AuthenticatedHomePageProps> = ({ us
   const [userShows, setUserShows] = useState<Show[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [recentTracksPermissionError, setRecentTracksPermissionError] = useState(false);
 
   useEffect(() => {
     fetchPersonalizedData();
@@ -89,27 +98,85 @@ export const AuthenticatedHomePage: React.FC<AuthenticatedHomePageProps> = ({ us
         fetch('/api/spotify/my-shows'),
       ]);
 
-      if (!recentResponse.ok || !playlistsResponse.ok || !artistsResponse.ok || !albumsResponse.ok || !showsResponse.ok) {
-        throw new Error('Failed to fetch data');
+      // Check each response individually to handle errors better
+      let recentData = null;
+      let playlistsData = null;
+      let artistsData = null;
+      let albumsData = null;
+      let showsData = null;
+
+      // Parse responses individually to handle errors gracefully
+      if (recentResponse.ok) {
+        recentData = await recentResponse.json();
+        setRecentTracks(recentData?.items || []);
+        setRecentTracksPermissionError(false);
+      } else {
+        const errorData = await recentResponse.json().catch(() => ({ error: 'Unknown error' }));
+        console.error('Error fetching recently played:', errorData);
+        if (errorData?.error?.status === 401 || errorData?.status === 401) {
+          setRecentTracksPermissionError(true);
+          console.warn('Missing permissions for recently played. Please log out and log back in to grant permissions.');
+        }
       }
 
-      const [recentData, playlistsData, artistsData, albumsData, showsData] = await Promise.all([
-        recentResponse.json(),
-        playlistsResponse.json(),
-        artistsResponse.json(),
-        albumsResponse.json(),
-        showsResponse.json(),
-      ]);
+      if (playlistsResponse.ok) {
+        playlistsData = await playlistsResponse.json();
+        setUserPlaylists(playlistsData?.items || []);
+      } else {
+        console.error('Error fetching playlists');
+      }
 
-      setRecentTracks(recentData.items || []);
-      setUserPlaylists(playlistsData.items || []);
-      setTopArtists(artistsData.items || []);
-      setTopAlbums(albumsData.items || []);
-      
-      // Spotify API returns items as [{ added_at, show: {...} }, ...]
-      const shows = showsData.items?.map((item: any) => item.show) || [];
-      console.log(`Processing ${shows.length} shows from API response`);
-      setUserShows(shows);
+      if (artistsResponse.ok) {
+        artistsData = await artistsResponse.json();
+        setTopArtists(artistsData?.items || []);
+      } else {
+        console.error('Error fetching top artists');
+      }
+
+      if (albumsResponse.ok) {
+        albumsData = await albumsResponse.json();
+        setTopAlbums(albumsData?.items || []);
+      } else {
+        console.error('Error fetching top albums');
+      }
+
+      if (showsResponse.ok) {
+        showsData = await showsResponse.json();
+        const shows = showsData?.items?.map((item: any) => item.show) || [];
+        setUserShows(shows);
+      } else {
+        console.error('Error fetching shows');
+      }
+
+      if (!playlistsResponse.ok) {
+        console.error('Error fetching playlists');
+      } else {
+        setUserPlaylists(playlistsData?.items || []);
+      }
+
+      if (!artistsResponse.ok) {
+        console.error('Error fetching top artists');
+      } else {
+        setTopArtists(artistsData?.items || []);
+      }
+
+      if (!albumsResponse.ok) {
+        console.error('Error fetching top albums');
+      } else {
+        setTopAlbums(albumsData?.items || []);
+      }
+
+      if (!showsResponse.ok) {
+        console.error('Error fetching shows');
+      } else {
+        const shows = showsData?.items?.map((item: any) => item.show) || [];
+        setUserShows(shows);
+      }
+
+      // Only throw if ALL requests failed
+      if (!recentResponse.ok && !playlistsResponse.ok && !artistsResponse.ok && !albumsResponse.ok && !showsResponse.ok) {
+        throw new Error('Failed to fetch all data');
+      }
     } catch (err: any) {
       console.error('Error fetching personalized data:', err);
       setError(err.message || 'Failed to load your data');
@@ -135,9 +202,21 @@ export const AuthenticatedHomePage: React.FC<AuthenticatedHomePageProps> = ({ us
     );
   };
 
-  const handleTrackClick = (track: Track['track']) => {
-    console.log('Play track:', track.name);
-    // TODO: Implement play functionality when music player is ready
+  const handleTrackClick = async (track: Track['track']) => {
+    // Convert the track to CurrentTrack format and play it
+    const currentTrack = convertTrackToCurrentTrack({
+      id: track.id,
+      name: track.name,
+      artists: track.artists,
+      album: {
+        name: track.album.name,
+        images: track.album.images,
+      },
+      duration_ms: track.duration_ms || 0,
+      preview_url: track.preview_url || null,
+      external_urls: track.external_urls,
+    });
+    await playTrack(currentTrack);
   };
 
   const handlePlaylistClick = (playlistId: string) => {
@@ -219,11 +298,11 @@ export const AuthenticatedHomePage: React.FC<AuthenticatedHomePageProps> = ({ us
       )}
 
       {/* Recently Played Section */}
-      {recentTracks.length > 0 && (
-        <Stack direction="column" spacing="md">
-          <Typography variant="heading" size="xl" weight="bold" color="primary">
-            Recently Played
-          </Typography>
+      <Stack direction="column" spacing="md">
+        <Typography variant="heading" size="xl" weight="bold" color="primary">
+          Recently Played
+        </Typography>
+        {recentTracks.length > 0 ? (
           <Stack
             direction="row"
             spacing="md"
@@ -241,8 +320,21 @@ export const AuthenticatedHomePage: React.FC<AuthenticatedHomePageProps> = ({ us
               </Stack>
             ))}
           </Stack>
-        </Stack>
-      )}
+        ) : (
+          <Stack direction="column" spacing="xs">
+            <Typography variant="body" size="sm" color="muted">
+              {recentTracksPermissionError
+                ? 'Permissions missing for recently played tracks'
+                : 'No recently played tracks available'}
+            </Typography>
+            {recentTracksPermissionError && (
+              <Typography variant="caption" size="sm" color="muted">
+                Please log out and log back in to grant access to your recently played tracks.
+              </Typography>
+            )}
+          </Stack>
+        )}
+      </Stack>
 
       {/* Your Top Artists Section */}
       {topArtists.length > 0 && (

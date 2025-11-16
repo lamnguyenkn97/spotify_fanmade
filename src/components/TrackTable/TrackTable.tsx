@@ -4,6 +4,8 @@ import React, { useState } from 'react';
 import { Stack, Typography, Icon, Image, colors, Table } from 'spotify-design-system';
 import { faPlay, faCheckCircle } from '@fortawesome/free-solid-svg-icons';
 import { faClock } from '@fortawesome/free-regular-svg-icons';
+import { useMusicPlayerContext } from '@/contexts/MusicPlayerContext';
+import { convertTrackToCurrentTrack, convertTracksToQueue } from '@/utils/trackHelpers';
 
 interface Track {
   id: string;
@@ -50,6 +52,21 @@ const formatDuration = (ms: number): string => {
 
 export const TrackTable: React.FC<TrackTableProps> = ({ tracks, onTrackClick }) => {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
+  const { playTrack, setQueue } = useMusicPlayerContext();
+
+  // Set up queue when tracks change
+  React.useEffect(() => {
+    const trackList = tracks.map((item) => item.track);
+    const queue = convertTracksToQueue(trackList);
+    setQueue(queue);
+  }, [tracks, setQueue]);
+
+  // Handle track click - play the track
+  const handleTrackClick = (track: Track) => {
+    const currentTrack = convertTrackToCurrentTrack(track);
+    playTrack(currentTrack);
+    onTrackClick?.(track);
+  };
 
   // Transform tracks data to match Table format
   const tableData: TrackTableRow[] = tracks.map((item, idx) => ({
@@ -84,7 +101,7 @@ export const TrackTable: React.FC<TrackTableProps> = ({ tracks, onTrackClick }) 
                     color="primary"
                     onClick={(e) => {
                       e.stopPropagation();
-                      onTrackClick?.(row.track);
+                      handleTrackClick(row.track);
                     }}
                   />
                 ) : (
@@ -187,7 +204,7 @@ export const TrackTable: React.FC<TrackTableProps> = ({ tracks, onTrackClick }) 
           },
         ]}
         data={tableData}
-        onRowClick={(row: TrackTableRow) => onTrackClick?.(row.track)}
+        onRowClick={(row: TrackTableRow) => handleTrackClick(row.track)}
         onRowHover={(row: TrackTableRow, index?: number) =>
           setHoveredIndex(index ?? row.index)
         }
