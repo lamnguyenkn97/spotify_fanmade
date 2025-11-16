@@ -72,6 +72,7 @@ export const AuthenticatedHomePage: React.FC<AuthenticatedHomePageProps> = ({ us
   const router = useRouter();
   const { playTrack } = useMusicPlayerContext();
   const [recentTracks, setRecentTracks] = useState<Track[]>([]);
+  const [likedTracks, setLikedTracks] = useState<Track[]>([]);
   const [userPlaylists, setUserPlaylists] = useState<Playlist[]>([]);
   const [topArtists, setTopArtists] = useState<Artist[]>([]);
   const [topAlbums, setTopAlbums] = useState<Album[]>([]);
@@ -89,8 +90,9 @@ export const AuthenticatedHomePage: React.FC<AuthenticatedHomePageProps> = ({ us
     setError(null);
 
     try {
-      const [recentResponse, playlistsResponse, artistsResponse, albumsResponse, showsResponse] = await Promise.all([
+      const [recentResponse, likedTracksResponse, playlistsResponse, artistsResponse, albumsResponse, showsResponse] = await Promise.all([
         fetch('/api/spotify/recently-played'),
+        fetch('/api/spotify/my-saved-tracks?limit=20'),
         fetch('/api/spotify/my-playlists'),
         fetch(`/api/spotify/top-artists?time_range=${TimeRange.SHORT_TERM}`),
         fetch(`/api/spotify/top-albums?time_range=${TimeRange.SHORT_TERM}`),
@@ -120,6 +122,16 @@ export const AuthenticatedHomePage: React.FC<AuthenticatedHomePageProps> = ({ us
         }
       }
 
+      if (likedTracksResponse.ok) {
+        const likedData = await likedTracksResponse.json();
+        // Transform saved tracks to match Track[] format
+        const transformedLikedTracks = (likedData?.items || []).map((item: any) => ({
+          track: item.track,
+          played_at: item.added_at || new Date().toISOString(),
+        }));
+        setLikedTracks(transformedLikedTracks);
+      }
+
       await handleResponse(playlistsResponse, setUserPlaylists);
       await handleResponse(artistsResponse, setTopArtists);
       await handleResponse(albumsResponse, setTopAlbums);
@@ -127,7 +139,7 @@ export const AuthenticatedHomePage: React.FC<AuthenticatedHomePageProps> = ({ us
         data?.items?.map((item: any) => item.show) || []
       );
 
-      const allFailed = !recentResponse.ok && !playlistsResponse.ok && !artistsResponse.ok && !albumsResponse.ok && !showsResponse.ok;
+      const allFailed = !recentResponse.ok && !likedTracksResponse.ok && !playlistsResponse.ok && !artistsResponse.ok && !albumsResponse.ok && !showsResponse.ok;
       if (allFailed) {
         throw new Error('Failed to fetch all data');
       }
@@ -226,6 +238,27 @@ export const AuthenticatedHomePage: React.FC<AuthenticatedHomePageProps> = ({ us
           {getGreeting()}, {user.displayName || 'there'}
         </Typography>
       </Stack>
+
+      {/* Liked Songs Playlist */}
+      {likedTracks.length > 0 && (
+        <Stack direction="column" spacing="md">
+          <Typography variant="heading" size="xl" weight="bold" color="primary">
+            Made for you
+          </Typography>
+          <Stack direction="row" spacing="md" className="flex-wrap">
+            <Stack style={{ width: '400px', flexShrink: 0 }}>
+              <HorizontalTileCard
+                title="Liked Songs"
+                image={likedTracks[0]?.track?.album?.images?.[0]?.url || ''}
+                subtitle={`Playlist • ${likedTracks.length}${likedTracks.length >= 20 ? '+' : ''} songs`}
+                size="large"
+                width="400px"
+                onClick={() => router.push('/playlist/liked-songs')}
+              />
+            </Stack>
+          </Stack>
+        </Stack>
+      )}
 
       {/* Your Playlists Section */}
       {userPlaylists.length > 0 && (
@@ -365,7 +398,7 @@ export const AuthenticatedHomePage: React.FC<AuthenticatedHomePageProps> = ({ us
       )}
 
       {/* Empty state if no data */}
-      {recentTracks.length === 0 && userPlaylists.length === 0 && topArtists.length === 0 && topAlbums.length === 0 && userShows.length === 0 && (
+      {likedTracks.length === 0 && recentTracks.length === 0 && userPlaylists.length === 0 && topArtists.length === 0 && topAlbums.length === 0 && userShows.length === 0 && (
         <Stack direction="column" spacing="md" justify="center">
           <Typography variant="heading" size="xl" color="primary">
             Start exploring music!

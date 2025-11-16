@@ -47,6 +47,49 @@ export default function PlaylistPage() {
       setError(null);
 
       try {
+        // Handle special "liked-songs" playlist
+        if (params.id === 'liked-songs') {
+          const response = await fetch('/api/spotify/my-saved-tracks?limit=50');
+          if (!response.ok) {
+            throw new Error('Failed to fetch liked songs');
+          }
+          const likedData = await response.json();
+          
+          // Transform liked tracks to playlist format
+          const likedPlaylist: PlaylistData = {
+            id: 'liked-songs',
+            name: 'Liked Songs',
+            description: 'Your liked songs',
+            images: likedData.items?.[0]?.track?.album?.images || [],
+            owner: {
+              display_name: 'You',
+            },
+            tracks: {
+              total: likedData.total || likedData.items?.length || 0,
+              items: (likedData.items || []).map((item: any) => ({
+                track: item.track,
+                added_at: item.added_at || new Date().toISOString(),
+              })),
+            },
+          };
+          setPlaylist(likedPlaylist);
+          
+          // Extract colors from first track's album art
+          if (likedData.items?.[0]?.track?.album?.images?.[0]?.url) {
+            try {
+              const colors = await extractColorsFromImage(likedData.items[0].track.album.images[0].url);
+              setGradientColors(colors);
+            } catch (colorError) {
+              console.error('Error extracting colors:', colorError);
+              setGradientColors({
+                color1: '#121212',
+                color2: '#1a1a1a',
+              });
+            }
+          }
+          return;
+        }
+
         // Try fetching as playlist first
         let response = await fetch(`/api/spotify/playlist/${params.id}`);
         
@@ -93,8 +136,7 @@ export default function PlaylistPage() {
   };
 
   const handleTrackClick = (track: any) => {
-    console.log('Play track:', track.name);
-    // TODO: Connect to music player when built
+    // TrackTable handles playing internally
   };
 
   if (loading) {
