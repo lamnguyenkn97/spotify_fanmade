@@ -240,14 +240,12 @@ const AppLayoutContent: React.FC<{
       <Stack direction="row" className="flex-1 overflow-hidden min-w-0">
         {isAuthenticated ? (
           <AuthenticatedSideBar
-            currentView="list"
             libraryItems={libraryItems}
             onAddClick={onCreatePlaylist}
             onExpandClick={() => console.log('Expand')}
             onFilterClick={onFilterClick}
             onLibraryItemClick={onLibraryItemClick}
             onSearch={() => console.log('Search')}
-            onViewToggle={() => console.log('View toggle')}
           />
         ) : (
           <UnauthenticatedSideBar
@@ -257,7 +255,7 @@ const AppLayoutContent: React.FC<{
         )}
         <Stack 
           direction="column" 
-          className={`flex-1 min-w-0 overflow-y-auto ${currentTrack ? 'pb-[100px]' : ''}`}
+          className={`flex-1 min-w-0 overflow-y-auto ${currentTrack ? 'pb-[120px]' : 'pb-4'}`}
         >
           {children}
         </Stack>

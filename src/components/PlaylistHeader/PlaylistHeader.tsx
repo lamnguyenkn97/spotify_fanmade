@@ -2,7 +2,8 @@
 
 import React from 'react';
 import { Banner, colors, Icon, Stack, Typography } from 'spotify-design-system';
-import { faBars, faHeart, faPlay, faShuffle } from '@fortawesome/free-solid-svg-icons';
+import { faBars, faPlay, faShuffle } from '@fortawesome/free-solid-svg-icons';
+import { useMusicPlayerContext } from '@/contexts/MusicPlayerContext';
 
 interface PlaylistHeaderProps {
   playlist: {
@@ -17,6 +18,7 @@ interface PlaylistHeaderProps {
     };
   };
   onPlay?: () => void;
+  onShuffle?: () => void;
   gradientColors?: {
     color1: string;
     color2: string;
@@ -26,8 +28,12 @@ interface PlaylistHeaderProps {
 export const PlaylistHeader: React.FC<PlaylistHeaderProps> = ({
   playlist,
   onPlay,
+  onShuffle,
   gradientColors,
 }) => {
+  // Get shuffle state from music player context
+  const { isShuffled } = useMusicPlayerContext();
+
   // Format subtitle with owner and track count
   const subtitle = `${playlist.owner.display_name} • ${playlist.tracks.total} songs`;
 
@@ -74,21 +80,17 @@ export const PlaylistHeader: React.FC<PlaylistHeaderProps> = ({
             circular
             backgroundColor={colors.primary.brand}
             onClick={onPlay}
-          />
-          <Icon
-            icon={faHeart}
-            aria-label="Add to library"
-            size="lg"
-            color={'white'}
-            circular
-            onClick={() => console.log('Add to library')}
+            clickable
           />
           <Icon
             icon={faShuffle}
-            onClick={() => console.log('Shuffle')}
+            onClick={onShuffle}
             aria-label="Shuffle"
-            color={'white'}
+            color={isShuffled ? colors.primary.brand : 'white'}
             size="lg"
+            clickable
+            className="hover:scale-110 hover:opacity-80 transition-all cursor-pointer"
+            style={{ cursor: 'pointer' }}
           />
         </Stack>
 

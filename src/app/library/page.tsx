@@ -148,7 +148,7 @@ export default function LibraryPage() {
   };
 
   return (
-    <Stack direction="column" spacing="lg">
+    <Stack direction="column" spacing="lg" className="pb-8">
       {/* Header */}
       <Stack direction="row" align="center" justify="space-between">
         <Typography variant="heading" size="2xl" weight="bold" color="primary">

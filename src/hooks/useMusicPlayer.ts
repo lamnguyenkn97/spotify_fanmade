@@ -1,6 +1,9 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { useSpotifyWebPlayback } from './useSpotifyWebPlayback';
 import { useAccessToken } from './useAccessToken';
+import { useQueue } from './useQueue';
+import { useRepeat, RepeatMode } from './useRepeat';
+import { usePlaybackStrategy } from './usePlaybackStrategy';
 
 export interface CurrentTrack {
   id: string;
@@ -12,6 +15,9 @@ export interface CurrentTrack {
   duration: number; // in milliseconds
   spotifyUri?: string; // For Web Playback SDK
 }
+
+// Re-export RepeatMode for backward compatibility
+export type { RepeatMode };
 
 export interface UseMusicPlayerReturn {
   currentTrack: CurrentTrack | null;
@@ -31,6 +37,10 @@ export interface UseMusicPlayerReturn {
   setQueue: (tracks: CurrentTrack[]) => void;
   audioElement: HTMLAudioElement | null;
   useWebPlayback: boolean;
+  isShuffled: boolean;
+  toggleShuffle: () => Promise<void>;
+  repeatMode: RepeatMode;
+  toggleRepeat: () => Promise<void>;
 }
 
 export const useMusicPlayer = (): UseMusicPlayerReturn => {
@@ -38,78 +48,115 @@ export const useMusicPlayer = (): UseMusicPlayerReturn => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [volume, setVolumeState] = useState(100);
-  const [queue, setQueue] = useState<CurrentTrack[]>([]);
-  const [currentIndex, setCurrentIndex] = useState<number>(-1);
   const [useWebPlayback, setUseWebPlayback] = useState(false);
 
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
+  // Use queue management hook
+  const {
+    queue,
+    currentIndex,
+    isShuffled: localIsShuffled,
+    setQueue,
+    toggleShuffle: localToggleShuffle,
+    getNextIndex,
+    getPreviousIndex,
+    setCurrentIndex,
+  } = useQueue(currentTrack);
+
+  // Use repeat management hook
+  const { repeatMode: localRepeatMode, toggleRepeat: localToggleRepeat } = useRepeat();
+
   // Get access token for Web Playback SDK
   const accessToken = useAccessToken();
 
-  // Initialize Web Playback SDK
+  // Initialize Web Playback SDK (only once!)
   const webPlayback = useSpotifyWebPlayback(accessToken);
 
-  // Play a track - defined early so it can be used in useEffect
+  // Initialize playback strategy (pass the webPlayback instance to avoid creating duplicate)
+  const strategy = usePlaybackStrategy(audioRef, setIsPlaying, setCurrentTime, webPlayback);
+
+  // Helper: Get current repeat mode (abstracts Web Playback SDK vs local)
+  const getCurrentRepeatMode = useCallback((): RepeatMode => {
+    if (strategy.isActive) {
+      return webPlayback.repeatMode === 0 ? 'off' : 'one';
+    }
+    return localRepeatMode;
+  }, [strategy.isActive, webPlayback.repeatMode, localRepeatMode]);
+
+  // Use Spotify's shuffle/repeat state when Web Playback SDK is active and ready
+  // Otherwise, use local state for preview URLs
+  // Spotify repeat modes: 0 = off, 1 = context (all), 2 = track (one)
+  // We only support 'off' and 'one' modes now
+  const isShuffled = strategy.isActive ? webPlayback.shuffle : localIsShuffled;
+  const repeatMode: RepeatMode = strategy.isActive
+    ? webPlayback.repeatMode === 0
+      ? 'off'
+      : 'one' // Map 0 to 'off', 1 or 2 to 'one'
+    : localRepeatMode;
+
+  // Store original queue before repeat one mode
+  const queueBeforeRepeatOne = useRef<CurrentTrack[]>([]);
+  const previousRepeatMode = useRef<RepeatMode>('off');
+
+  // Apply repeat one mode: set queue to [currentTrack] when enabled
+  // Only for preview URLs (not Web Playback SDK, which handles repeat natively)
+  useEffect(() => {
+    // Skip if using Web Playback SDK (Spotify handles repeat natively)
+    if (strategy.isActive) {
+      return;
+    }
+
+    // Use localRepeatMode for preview URLs
+    // Only act when repeat mode actually changes
+    if (previousRepeatMode.current === localRepeatMode) {
+      return;
+    }
+    previousRepeatMode.current = localRepeatMode;
+
+    if (localRepeatMode === 'one' && currentTrack) {
+      // Save current queue before setting to [currentTrack] (only if not already saved and queue has more than 1 track)
+      if (queueBeforeRepeatOne.current.length === 0 && queue.length > 1) {
+        queueBeforeRepeatOne.current = [...queue];
+      }
+      // Set queue to just the current track
+      setQueue([currentTrack]);
+      setCurrentIndex(0);
+    } else if (localRepeatMode !== 'one' && queueBeforeRepeatOne.current.length > 0) {
+      // Restore original queue when repeat one is turned off
+      setQueue(queueBeforeRepeatOne.current);
+      // Find current track in restored queue
+      const restoredIndex = queueBeforeRepeatOne.current.findIndex(
+        (t) => t.id === currentTrack?.id
+      );
+      if (restoredIndex >= 0) {
+        setCurrentIndex(restoredIndex);
+      }
+      queueBeforeRepeatOne.current = [];
+    }
+  }, [localRepeatMode, currentTrack, queue, setQueue, setCurrentIndex, strategy.isActive]);
+
   const playTrack = useCallback(
     async (track: CurrentTrack) => {
-      console.log('playTrack called with:', track.title, 'URI:', track.spotifyUri);
       setCurrentTrack(track);
       setCurrentTime(0);
 
-      // Prefer Web Playback SDK if available and track has Spotify URI
-      if (useWebPlayback && track.spotifyUri && webPlayback.isReady) {
-        console.log('Using Web Playback SDK to play track');
-        try {
-          await webPlayback.playTrack(track.spotifyUri);
-          setIsPlaying(true);
-          console.log('Web Playback SDK playTrack completed, currentTrack should be set');
-          return;
-        } catch (error) {
-          console.error('Error playing with Web Playback SDK, falling back to preview:', error);
-          // Fall through to preview URL
-        }
-      }
-
-      // Fallback to preview URL
-      if (!track.previewUrl) {
-        console.warn('No preview URL or Spotify URI available for this track');
-        return;
-      }
-
-      if (audioRef.current) {
-        // Pause current track if playing
-        audioRef.current.pause();
-
-        // Set new track
-        audioRef.current.src = track.previewUrl;
-        audioRef.current.currentTime = 0;
-        setCurrentTime(0);
-
-        // Play
-        audioRef.current
-          .play()
-          .then(() => {
-            setIsPlaying(true);
-          })
-          .catch((error) => {
-            console.error('Error playing track:', error);
-            setIsPlaying(false);
-          });
+      try {
+        await strategy.play(track);
+      } catch (error) {
+        console.error('Error playing track:', error);
+        setIsPlaying(false);
       }
     },
-    [useWebPlayback, webPlayback]
+    [strategy]
   );
 
-  // Prefer Web Playback SDK if available and ready
   useEffect(() => {
     if (webPlayback.isReady && accessToken) {
       setUseWebPlayback(true);
-      // Sync state from Web Playback SDK
       if (webPlayback.currentTrack) {
         setIsPlaying(webPlayback.isPlaying);
         setCurrentTime(webPlayback.position);
-        // Update current track from Web Playback SDK
         const track: CurrentTrack = {
           id: webPlayback.currentTrack.id,
           title: webPlayback.currentTrack.name,
@@ -124,105 +171,84 @@ export const useMusicPlayer = (): UseMusicPlayerReturn => {
     } else {
       setUseWebPlayback(false);
     }
-  }, [
-    webPlayback.isReady,
-    webPlayback.isPlaying,
-    webPlayback.position,
-    webPlayback.currentTrack,
-    accessToken,
-  ]);
+  }, [webPlayback.isReady, webPlayback.isPlaying, webPlayback.position, webPlayback.currentTrack, accessToken]);
 
-  // Initialize audio element
+  // Initialize audio element (only once on mount)
   useEffect(() => {
-    if (typeof window !== 'undefined') {
+    if (typeof window !== 'undefined' && !audioRef.current) {
       audioRef.current = new Audio();
       audioRef.current.volume = volume / 100;
+    }
 
-      // Update current time as audio plays
-      const updateTime = () => {
-        if (audioRef.current) {
-          setCurrentTime(audioRef.current.currentTime * 1000); // Convert to ms
+    return () => {
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current = null;
+      }
+    };
+  }, []); // Empty deps - only run on mount/unmount
+
+  useEffect(() => {
+    const audio = audioRef.current;
+    if (!audio) return;
+
+    const updateTime = () => {
+      if (audioRef.current) {
+        setCurrentTime(audioRef.current.currentTime * 1000);
+      }
+    };
+
+    const handleEnded = () => {
+      setIsPlaying(false);
+      setCurrentTime(0);
+
+      if (!strategy.isActive) {
+        if (localRepeatMode === 'one' && currentTrack) {
+          playTrack(currentTrack);
+          return;
         }
-      };
 
-      // Handle track end
-      const handleEnded = () => {
-        setIsPlaying(false);
-        setCurrentTime(0);
-        // Auto-play next track if available (only for preview URLs, Web Playback SDK handles this automatically)
-        if (!useWebPlayback && currentIndex >= 0 && currentIndex < queue.length - 1) {
-          const nextIndex = currentIndex + 1;
+        const nextIndex = getNextIndex();
+        if (nextIndex !== null) {
           setCurrentIndex(nextIndex);
           playTrack(queue[nextIndex]);
         }
-      };
+      }
+    };
 
-      // Handle errors (e.g., preview URL not available)
-      const handleError = () => {
-        console.error('Error playing audio');
-        setIsPlaying(false);
-        // You could show a toast/notification here
-      };
+    const handleError = () => {
+      console.error('Error playing audio');
+      setIsPlaying(false);
+    };
 
-      audioRef.current.addEventListener('timeupdate', updateTime);
-      audioRef.current.addEventListener('ended', handleEnded);
-      audioRef.current.addEventListener('error', handleError);
+    audio.addEventListener('timeupdate', updateTime);
+    audio.addEventListener('ended', handleEnded);
+    audio.addEventListener('error', handleError);
 
-      return () => {
-        if (audioRef.current) {
-          audioRef.current.removeEventListener('timeupdate', updateTime);
-          audioRef.current.removeEventListener('ended', handleEnded);
-          audioRef.current.removeEventListener('error', handleError);
-          audioRef.current.pause();
-          audioRef.current = null;
-        }
-      };
-    }
-  }, [useWebPlayback, currentIndex, queue, playTrack, volume]);
+    return () => {
+      audio.removeEventListener('timeupdate', updateTime);
+      audio.removeEventListener('ended', handleEnded);
+      audio.removeEventListener('error', handleError);
+    };
+  }, [strategy.isActive, currentIndex, queue, playTrack, localRepeatMode, getNextIndex, setCurrentIndex, currentTrack]);
 
-  // Update volume when it changes
-  useEffect(() => {
-    if (audioRef.current) {
-      audioRef.current.volume = volume / 100;
-    }
-  }, [volume]);
-
-  // Pause playback
   const pause = useCallback(async () => {
-    if (useWebPlayback && webPlayback.isReady) {
-      await webPlayback.pause();
-      setIsPlaying(false);
-      return;
+    try {
+      await strategy.pause();
+    } catch (error) {
+      console.error('Error pausing:', error);
     }
+  }, [strategy]);
 
-    if (audioRef.current) {
-      audioRef.current.pause();
-      setIsPlaying(false);
-    }
-  }, [useWebPlayback, webPlayback]);
-
-  // Resume playback
   const resume = useCallback(async () => {
-    if (useWebPlayback && webPlayback.isReady) {
-      await webPlayback.resume();
-      setIsPlaying(true);
-      return;
+    try {
+      await strategy.resume();
+    } catch (error) {
+      console.error('Error resuming:', error);
+      setIsPlaying(false);
     }
+  }, [strategy]);
 
-    if (audioRef.current && currentTrack) {
-      audioRef.current
-        .play()
-        .then(() => {
-          setIsPlaying(true);
-        })
-        .catch((error) => {
-          console.error('Error resuming track:', error);
-          setIsPlaying(false);
-        });
-    }
-  }, [useWebPlayback, webPlayback, currentTrack]);
-
-  // Toggle play/pause
   const togglePlayPause = useCallback(async () => {
     if (isPlaying) {
       await pause();
@@ -231,98 +257,103 @@ export const useMusicPlayer = (): UseMusicPlayerReturn => {
     }
   }, [isPlaying, pause, resume]);
 
-  // Seek to specific time
   const seek = useCallback(
     async (time: number) => {
-      if (useWebPlayback && webPlayback.isReady) {
-        await webPlayback.seek(time);
-        setCurrentTime(time);
-        return;
-      }
-
-      if (audioRef.current) {
-        audioRef.current.currentTime = time / 1000; // Convert ms to seconds
-        setCurrentTime(time);
+      try {
+        await strategy.seek(time);
+      } catch (error) {
+        console.error('Error seeking:', error);
       }
     },
-    [useWebPlayback, webPlayback]
+    [strategy]
   );
 
-  // Set volume (0-100)
   const setVolume = useCallback(
     async (newVolume: number) => {
       const clampedVolume = Math.max(0, Math.min(100, newVolume));
       setVolumeState(clampedVolume);
 
-      if (useWebPlayback && webPlayback.isReady) {
-        await webPlayback.setVolume(clampedVolume);
+      try {
+        await strategy.setVolume(clampedVolume);
+      } catch (error) {
+        console.error('Error setting volume:', error);
       }
     },
-    [useWebPlayback, webPlayback]
+    [strategy]
   );
 
-  // Play next track in queue
   const next = useCallback(async () => {
-    if (useWebPlayback && webPlayback.isReady) {
-      await webPlayback.nextTrack();
+    const currentRepeatMode = getCurrentRepeatMode();
+
+    if (currentRepeatMode === 'one' && currentTrack) {
+      await playTrack(currentTrack);
       return;
     }
 
-    if (currentIndex >= 0 && currentIndex < queue.length - 1) {
-      const nextIndex = currentIndex + 1;
+    const nextIndex = getNextIndex();
+
+    if (nextIndex !== null) {
       setCurrentIndex(nextIndex);
       await playTrack(queue[nextIndex]);
+    } else if (strategy.isActive) {
+      try {
+        await strategy.nextTrack();
+      } catch (error) {
+        console.error('Error going to next track:', error);
+      }
     }
-  }, [useWebPlayback, webPlayback, currentIndex, queue, playTrack]);
+  }, [strategy, queue, playTrack, getCurrentRepeatMode, getNextIndex, setCurrentIndex, currentTrack]);
 
-  // Play previous track in queue
   const previous = useCallback(async () => {
-    if (useWebPlayback && webPlayback.isReady) {
-      await webPlayback.previousTrack();
-      return;
-    }
+    const prevIndex = getPreviousIndex();
 
-    if (currentIndex > 0) {
-      const prevIndex = currentIndex - 1;
+    if (prevIndex !== null) {
       setCurrentIndex(prevIndex);
       await playTrack(queue[prevIndex]);
     } else if (currentIndex === 0) {
-      // Restart current track
       await seek(0);
-      if (audioRef.current) {
-        audioRef.current.currentTime = 0;
+    } else if (strategy.isActive) {
+      try {
+        await strategy.previousTrack();
+      } catch (error) {
+        console.error('Error going to previous track:', error);
       }
     }
-  }, [useWebPlayback, webPlayback, currentIndex, queue, playTrack, seek]);
+  }, [strategy, currentIndex, queue, playTrack, seek, getPreviousIndex, setCurrentIndex]);
 
-  // Update current index when track changes
   useEffect(() => {
-    if (currentTrack && queue.length > 0) {
-      const index = queue.findIndex((t) => t.id === currentTrack.id);
-      if (index >= 0) {
-        setCurrentIndex(index);
-      }
-    }
-  }, [currentTrack, queue]);
+    if (!strategy.isActive) return;
 
-  // Sync time from Web Playback SDK (throttled to reduce re-renders)
-  useEffect(() => {
-    if (!useWebPlayback || !webPlayback.isReady) {
-      return;
-    }
-
-    // Update playing state immediately
     setIsPlaying(webPlayback.isPlaying);
 
-    // Throttle position updates to every 500ms to reduce re-renders
     const interval = setInterval(() => {
-      if (useWebPlayback && webPlayback.isReady) {
+      if (strategy.isActive) {
         setCurrentTime(webPlayback.position);
       }
     }, 500);
 
     return () => clearInterval(interval);
-  }, [useWebPlayback, webPlayback.isReady, webPlayback.isPlaying, webPlayback.position]);
+  }, [strategy.isActive, webPlayback.isPlaying, webPlayback.position]);
+
+  const toggleShuffle = useCallback(async () => {
+    if (strategy.isActive) {
+      const newShuffleState = !webPlayback.shuffle;
+      await webPlayback.setShuffle(newShuffleState);
+      localToggleShuffle();
+    } else {
+      localToggleShuffle();
+    }
+  }, [strategy.isActive, webPlayback, localToggleShuffle]);
+
+  const toggleRepeat = useCallback(async () => {
+    if (strategy.isActive) {
+      const currentSpotifyRepeat = webPlayback.repeatMode;
+      const nextState: 'off' | 'track' = currentSpotifyRepeat === 0 ? 'track' : 'off';
+      await webPlayback.setRepeatMode(nextState);
+    } else {
+      localToggleRepeat();
+    }
+  }, [strategy.isActive, webPlayback, localToggleRepeat]);
 
   return {
     currentTrack,
@@ -342,5 +373,9 @@ export const useMusicPlayer = (): UseMusicPlayerReturn => {
     setQueue,
     audioElement: audioRef.current,
     useWebPlayback,
+    isShuffled,
+    toggleShuffle,
+    repeatMode,
+    toggleRepeat,
   };
 };

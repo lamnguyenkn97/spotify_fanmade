@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { MusicPlayer as DesignSystemMusicPlayer } from 'spotify-design-system';
+import { MusicPlayer as DesignSystemMusicPlayer, colors } from 'spotify-design-system';
 import { useMusicPlayerContext } from '@/contexts/MusicPlayerContext';
 
 interface MusicPlayerProps {
@@ -20,6 +20,10 @@ export const MusicPlayer: React.FC<MusicPlayerProps> = ({ className }) => {
     setVolume,
     next,
     previous,
+    isShuffled,
+    toggleShuffle,
+    repeatMode,
+    toggleRepeat,
   } = useMusicPlayerContext();
 
   // Don't render if there's no track
@@ -32,33 +36,24 @@ export const MusicPlayer: React.FC<MusicPlayerProps> = ({ className }) => {
   const durationInSeconds = Math.floor(duration / 1000);
   const currentTimeInSeconds = Math.floor(currentTime / 1000);
 
-  // Placeholder handlers for additional features
-  const handleAddToPlaylist = () => {
-    console.log('Add to playlist');
-  };
-
-  const handleCast = () => {
-    console.log('Cast');
-  };
-
-  const handleFullscreen = () => {
-    console.log('Fullscreen');
-  };
-
   const handleLyrics = () => {
     console.log('Lyrics');
   };
 
-  const handleQueue = () => {
-    console.log('Queue');
+  const handleRepeat = async () => {
+    try {
+      await toggleRepeat();
+    } catch (error) {
+      console.error('Error toggling repeat:', error);
+    }
   };
 
-  const handleRepeat = () => {
-    console.log('Repeat');
-  };
-
-  const handleShuffle = () => {
-    console.log('Shuffle');
+  const handleShuffle = async () => {
+    try {
+      await toggleShuffle();
+    } catch (error) {
+      console.error('Error toggling shuffle:', error);
+    }
   };
 
   return (
@@ -84,14 +79,16 @@ export const MusicPlayer: React.FC<MusicPlayerProps> = ({ className }) => {
         }
         duration={durationInSeconds}
         isPlaying={isPlaying}
-        onAddToPlaylist={handleAddToPlaylist}
-        onCast={handleCast}
-        onFullscreen={handleFullscreen}
+        isShuffled={isShuffled}
+        repeatMode={repeatMode}
+        // Note: The design system component should apply brand color (colors.primary.brand)
+        // to shuffle icon when isShuffled=true
+        // and to repeat icon when repeatMode !== 'off'
+        // If the design system doesn't handle this, we may need to pass color props directly
         onLyrics={handleLyrics}
         onNext={next}
         onPlayPause={togglePlayPause}
         onPrevious={previous}
-        onQueue={handleQueue}
         onRepeat={handleRepeat}
         onSeek={(timeInSeconds: number) => {
           seek(timeInSeconds * 1000);

@@ -222,6 +222,7 @@ export default function SearchPage() {
       <Stack
         direction="column"
         spacing="xl"
+        className="pb-8"
         style={{
           padding: '24px 32px',
           minHeight: '100vh',

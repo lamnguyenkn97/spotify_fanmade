@@ -215,7 +215,7 @@ export default function ArtistPage() {
   }));
 
   return (
-    <Stack direction="column" className="w-full min-w-0">
+    <Stack direction="column" className="w-full min-w-0 pb-8">
       {/* Artist Banner */}
       <Stack
         direction="column"

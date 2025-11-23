@@ -3,6 +3,9 @@
 ## 📋 Table of Contents
 1. [Overview](#overview)
 2. [Architecture](#architecture)
+   - [High-Level Architecture](#high-level-architecture)
+   - [Architecture Patterns](#architecture-patterns)
+   - [Music Player Architecture](#music-player-architecture)
 3. [Key Technologies](#key-technologies)
 4. [Project Structure](#project-structure)
 5. [Important Concepts](#important-concepts)
@@ -80,6 +83,70 @@
    - Design system components from `spotify-design-system`
    - Page-level components in `/src/app`
 
+4. **Strategy Pattern**
+   - Abstracts playback logic between Web Playback SDK and Preview URLs
+   - Encapsulates different playback strategies (Premium vs. non-Premium)
+   - Automatic fallback handling with consistent interface
+   - See [STRATEGY_PATTERN.md](./STRATEGY_PATTERN.md) for detailed documentation
+
+### Music Player Architecture
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                  MusicPlayerContext                         │
+│  (Provides music player state to entire app)               │
+└───────────────────────┬─────────────────────────────────────┘
+                        │
+                        ▼
+┌─────────────────────────────────────────────────────────────┐
+│                    useMusicPlayer                           │
+│  ┌──────────────────────────────────────────────────────┐   │
+│  │  • State management (useState)                       │   │
+│  │  • React lifecycle (useEffect)                       │   │
+│  │  • Queue management (useQueue)                       │   │
+│  │  • Repeat mode (useRepeat)                           │   │
+│  │  • Delegates playback to strategy                    │   │
+│  └───────────────────┬──────────────────────────────────┘   │
+└──────────────────────┼───────────────────────────────────────┘
+                       │
+                       │ strategy.play()
+                       │ strategy.pause()
+                       │ strategy.resume()
+                       │ strategy.seek()
+                       │ etc.
+                       ▼
+┌─────────────────────────────────────────────────────────────┐
+│              usePlaybackStrategy (Strategy Selector)         │
+│  ┌──────────────────────────────────────────────────────┐   │
+│  │  • Selects appropriate playback strategy            │   │
+│  │  • Handles automatic fallback                        │   │
+│  │  • Provides unified interface                        │   │
+│  └───────────────────┬──────────────────────────────────┘   │
+└──────────────────────┼───────────────────────────────────────┘
+                       │
+              ┌────────┴─────────┐
+              ▼                  ▼
+┌───────────────────────┐  ┌──────────────────────┐
+│ Web Playback SDK      │  │  Preview URLs        │
+│ (createWebPlayback    │  │  (createPreview      │
+│  Strategy)            │  │   Strategy)          │
+│                       │  │                      │
+│ • Premium users       │  │ • All users          │
+│ • Full tracks         │  │ • 30-second previews │
+│ • Spotify API         │  │ • HTML5 Audio        │
+└───────────────────────┘  └──────────────────────┘
+```
+
+**Key Components:**
+- **MusicPlayerContext**: Provides `useMusicPlayer` return value to all components
+- **useMusicPlayer**: Main orchestrator - manages state, queue, and uses strategy
+- **usePlaybackStrategy**: Strategy selector - chooses between Web SDK and Preview
+- **useSpotifyWebPlayback**: Web Playback SDK integration (Premium features)
+- **useQueue**: Queue management with shuffle support
+- **useRepeat**: Repeat mode (off, one, all)
+
+For detailed information, see [STRATEGY_PATTERN.md](./STRATEGY_PATTERN.md).
+
 ---
 
 ## Key Technologies
@@ -155,6 +222,13 @@ spotify_fanmade/
 │   │   └── ...                        # Other components
 │   ├── hooks/                         # Custom React hooks
 │   │   ├── useSpotify.ts              # Main Spotify hook
+│   │   ├── useMusicPlayer.ts          # Music player hook (orchestration)
+│   │   ├── usePlaybackStrategy.ts     # Strategy pattern for playback
+│   │   ├── useSpotifyWebPlayback.ts   # Web Playback SDK integration
+│   │   ├── useQueue.ts                # Queue management
+│   │   ├── useRepeat.ts               # Repeat mode management
+│   │   ├── useAccessToken.ts          # Access token management
+│   │   ├── useLikedTracks.ts          # Liked tracks management
 │   │   └── useCardModal.ts            # Modal state management
 │   ├── lib/                           # Utility libraries
 │   │   ├── spotify.ts                 # Spotify API helpers
@@ -557,10 +631,13 @@ SPOTIFY_REDIRECT_URI=http://localhost:3010/api/auth/callback
 ## Key Files to Understand
 
 1. **`src/lib/spotify.ts`** - Spotify API configuration and helpers
-2. **`src/hooks/useSpotify.ts`** - Main client-side hook
-3. **`src/components/AppLayout/AppLayout.tsx`** - Root layout component
-4. **`src/app/api/auth/callback/route.ts`** - OAuth callback handler
-5. **`src/app/api/spotify/search/route.ts`** - Example API route
+2. **`src/hooks/useSpotify.ts`** - Main client-side hook for Spotify data
+3. **`src/hooks/useMusicPlayer.ts`** - Music player orchestration (uses Strategy Pattern)
+4. **`src/hooks/usePlaybackStrategy.ts`** - Strategy Pattern implementation for playback
+5. **`src/hooks/useSpotifyWebPlayback.ts`** - Web Playback SDK integration
+6. **`src/components/AppLayout/AppLayout.tsx`** - Root layout component
+7. **`src/app/api/auth/callback/route.ts`** - OAuth callback handler
+8. **`src/app/api/spotify/search/route.ts`** - Example API route
 
 ---
 
@@ -572,6 +649,16 @@ SPOTIFY_REDIRECT_URI=http://localhost:3010/api/auth/callback
 4. **Caching** - Cache API responses to reduce calls
 5. **Pagination** - Handle large result sets
 6. **Offline support** - Service workers for offline functionality
+
+---
+
+## Related Documentation
+
+- **[STRATEGY_PATTERN.md](./STRATEGY_PATTERN.md)** - Detailed documentation of the Strategy Pattern implementation for music playback
+- **[AUDIO_PLAYER.md](./AUDIO_PLAYER.md)** - Audio player implementation details
+- **[MUSIC_PLAYER_FEATURES.md](./MUSIC_PLAYER_FEATURES.md)** - Music player features and controls
+- **[SHUFFLE_FEATURE.md](./SHUFFLE_FEATURE.md)** - Shuffle functionality documentation
+- **[SPOTIFY_API.md](./SPOTIFY_API.md)** - Spotify API integration guide
 
 ---
 

@@ -152,7 +152,7 @@ export default function ShowPage() {
   }
 
   return (
-    <Stack direction="column">
+    <Stack direction="column" className="pb-8">
       {/* Show Banner */}
       <Stack
         direction="column"

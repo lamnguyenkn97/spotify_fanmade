@@ -192,6 +192,18 @@ const {
 3. Verify Premium account is active (for Web Playback SDK)
 4. Try playing in Spotify app to verify account
 
+## Additional Features
+
+### Shuffle
+- Toggle shuffle on/off to randomize queue order
+- Works for both Premium and non-Premium users
+- See [SHUFFLE_FEATURE.md](./SHUFFLE_FEATURE.md) for details
+
+### Repeat
+- Toggle between 'off' and 'one' (repeat current track)
+- Integrated with queue navigation
+- See `src/hooks/useRepeat.ts` for implementation
+
 ## Integration Points
 
 The player is integrated in:

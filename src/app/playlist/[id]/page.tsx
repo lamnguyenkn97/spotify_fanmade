@@ -5,6 +5,8 @@ import { useParams } from 'next/navigation';
 import { Stack, Typography } from 'spotify-design-system';
 import { PlaylistHeader, TrackTable } from '@/components';
 import { extractColorsFromImage, ExtractedColors } from '@/utils/colorExtractor';
+import { useMusicPlayerContext } from '@/contexts/MusicPlayerContext';
+import { convertTracksToQueue } from '@/utils/trackHelpers';
 
 interface PlaylistData {
   id: string;
@@ -38,6 +40,7 @@ export default function PlaylistPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [gradientColors, setGradientColors] = useState<ExtractedColors | null>(null);
+  const { playTrack, setQueue, toggleShuffle, isShuffled } = useMusicPlayerContext();
 
   useEffect(() => {
     if (!params.id) return;
@@ -130,9 +133,56 @@ export default function PlaylistPage() {
     fetchPlaylist();
   }, [params.id]);
 
-  const handlePlayPlaylist = () => {
-    console.log('Play entire playlist');
-    // TODO: Connect to music player when built
+  const handlePlayPlaylist = async () => {
+    if (!playlist || playlist.tracks.items.length === 0) return;
+
+    // Convert tracks to queue format
+    const trackList = playlist.tracks.items.map((item) => item.track);
+    const queue = convertTracksToQueue(trackList);
+    
+    // Set the queue
+    setQueue(queue);
+    
+    // Play the first track
+    if (queue.length > 0) {
+      await playTrack(queue[0]);
+    }
+  };
+
+  const handleShufflePlaylist = async () => {
+    if (!playlist || playlist.tracks.items.length === 0) return;
+
+    // Convert tracks to queue format
+    const trackList = playlist.tracks.items.map((item) => item.track);
+    const queue = convertTracksToQueue(trackList);
+    
+    // Set the queue first (this will reset shuffle state if needed)
+    setQueue(queue);
+    
+    // If shuffle is currently off, toggle it on (this will shuffle the queue)
+    if (!isShuffled) {
+      toggleShuffle();
+    }
+    
+    // Play the first track from the queue
+    // Note: After toggleShuffle, the queue will be shuffled
+    // We need to get the shuffled queue, but since state updates are async,
+    // we'll manually shuffle for immediate playback and sync state
+    if (queue.length > 0) {
+      // Manually shuffle for immediate playback
+      const shuffled = [...queue];
+      for (let i = shuffled.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+      }
+      setQueue(shuffled);
+      await playTrack(shuffled[0]);
+      
+      // Ensure shuffle state is on (in case it wasn't already)
+      if (!isShuffled) {
+        toggleShuffle();
+      }
+    }
   };
 
   const handleTrackClick = (track: any) => {
@@ -163,11 +213,12 @@ export default function PlaylistPage() {
   }
 
   return (
-    <Stack direction="column" className="w-full min-w-0">
+    <Stack direction="column" className="w-full min-w-0 pb-8">
       {/* Playlist Header */}
       <PlaylistHeader
         playlist={playlist}
         onPlay={handlePlayPlaylist}
+        onShuffle={toggleShuffle}
         gradientColors={gradientColors || undefined}
       />
 
