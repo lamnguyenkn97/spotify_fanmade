@@ -30,26 +30,22 @@ interface LibraryItem {
 }
 
 interface AuthenticatedSideBarProps {
-  currentView?: 'list' | 'grid';
   libraryItems: LibraryItem[];
   onAddClick?: () => void;
   onExpandClick?: () => void;
   onFilterClick?: (filter: LibraryFilter) => void;
   onLibraryItemClick?: (item: LibraryItem) => void;
   onSearch?: () => void;
-  onViewToggle?: () => void;
   showLogo?: boolean;
 }
 
 export const AuthenticatedSideBar: React.FC<AuthenticatedSideBarProps> = ({
-  currentView = 'list',
   libraryItems = [],
   onAddClick,
   onExpandClick,
   onFilterClick,
   onLibraryItemClick,
   onSearch,
-  onViewToggle,
   showLogo = false,
 }) => {
   // Map our LibraryItem to Sidebar's LibraryItem type
@@ -92,22 +88,14 @@ export const AuthenticatedSideBar: React.FC<AuthenticatedSideBarProps> = ({
   };
 
   // Wrap onViewToggle to match Sidebar's signature (viewType: 'list' | 'grid') => void
-  const handleViewToggle = (viewType: 'list' | 'grid') => {
-    if (onViewToggle) {
-      onViewToggle();
-    }
-  };
-
   return (
     <Sidebar
-      currentView={currentView}
       libraryItems={mappedLibraryItems}
       onAddClick={onAddClick}
       onExpandClick={onExpandClick}
       onFilterClick={handleFilterClick}
       onLibraryItemClick={handleLibraryItemClick}
       onSearch={handleSearch}
-      onViewToggle={handleViewToggle}
       showLogo={showLogo}
       style={{
         width: '450px',

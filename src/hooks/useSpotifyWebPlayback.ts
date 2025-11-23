@@ -77,6 +77,8 @@ interface UseSpotifyWebPlaybackReturn {
   currentTrack: SpotifyTrack | null;
   position: number;
   duration: number;
+  shuffle: boolean;
+  repeatMode: number; // 0 = off, 1 = context, 2 = track
   playTrack: (uri: string) => Promise<void>;
   pause: () => Promise<void>;
   resume: () => Promise<void>;
@@ -84,6 +86,8 @@ interface UseSpotifyWebPlaybackReturn {
   setVolume: (volume: number) => Promise<void>;
   nextTrack: () => Promise<void>;
   previousTrack: () => Promise<void>;
+  setShuffle: (state: boolean) => Promise<void>;
+  setRepeatMode: (state: 'off' | 'context' | 'track') => Promise<void>;
 }
 
 export const useSpotifyWebPlayback = (
@@ -96,8 +100,13 @@ export const useSpotifyWebPlayback = (
   const [currentTrack, setCurrentTrack] = useState<SpotifyTrack | null>(null);
   const [position, setPosition] = useState(0);
   const [duration, setDuration] = useState(0);
+  const [shuffle, setShuffleState] = useState(false);
+  const [repeatMode, setRepeatModeState] = useState<number>(0); // 0 = off, 1 = context, 2 = track
   const playerRef = useRef<SpotifyPlayer | null>(null);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
+  // Track pending shuffle state to prevent race conditions with player_state_changed events
+  const pendingShuffleStateRef = useRef<boolean | null>(null);
+  const shuffleUpdateTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   // Note: Script is loaded in layout.tsx, so we don't need to load it here
   // Just ensure the callback is set if it wasn't already set
@@ -106,11 +115,8 @@ export const useSpotifyWebPlayback = (
       return;
     }
 
-    // Only set callback if it doesn't exist (it should be set in layout.tsx)
     if (!window.onSpotifyWebPlaybackSDKReady) {
-      window.onSpotifyWebPlaybackSDKReady = () => {
-        console.log('Spotify Web Playback SDK ready (from hook)');
-      };
+      window.onSpotifyWebPlaybackSDKReady = () => {};
     }
   }, []);
 
@@ -141,16 +147,12 @@ export const useSpotifyWebPlayback = (
       console.error('Account error:', message);
     });
 
-    // Ready event - player is ready
     newPlayer.addListener('ready', ({ device_id }: { device_id: string }) => {
-      console.log('Spotify player is ready with device ID:', device_id);
       setDeviceId(device_id);
       setIsReady(true);
     });
 
-    // Not ready event
     newPlayer.addListener('not_ready', ({ device_id }: { device_id: string }) => {
-      console.log('Spotify player is not ready:', device_id);
       setIsReady(false);
     });
 
@@ -164,12 +166,33 @@ export const useSpotifyWebPlayback = (
       setPosition(state.position);
       setCurrentTrack(state.track_window.current_track);
       setDuration(state.track_window.current_track.duration_ms);
+      
+      // Handle shuffle state updates with race condition protection
+      if (pendingShuffleStateRef.current === null) {
+        // No pending update, accept the event state
+        setShuffleState(state.shuffle);
+      } else {
+        // We have a pending update - check if event matches
+        if (state.shuffle === pendingShuffleStateRef.current) {
+          // Event matches our pending state - this is the confirmation we were waiting for
+          pendingShuffleStateRef.current = null;
+          if (shuffleUpdateTimeoutRef.current) {
+            clearTimeout(shuffleUpdateTimeoutRef.current);
+            shuffleUpdateTimeoutRef.current = null;
+          }
+          setShuffleState(state.shuffle);
+        } else {
+          // Event doesn't match - this is likely a stale event from before our update
+          // Keep our optimistic state, but don't update from the stale event
+          // The pending flag will clear after timeout, and fresh events will be accepted
+        }
+      }
+      
+      setRepeatModeState(state.repeat_mode);
     });
 
-    // Connect to player
     newPlayer.connect().then((success) => {
       if (success) {
-        console.log('Successfully connected to Spotify player');
         setPlayer(newPlayer);
         playerRef.current = newPlayer;
       } else {
@@ -219,12 +242,12 @@ export const useSpotifyWebPlayback = (
   // Play track by URI
   const playTrack = useCallback(
     async (uri: string) => {
-      if (!accessToken || !deviceId) {
-        console.error('Cannot play track: missing access token or device ID');
-        return;
+      if (!accessToken || !deviceId || !player) {
+        throw new Error('Player not ready');
       }
 
       try {
+        // Use the Spotify Web API to start playback on this device
         const response = await fetch(`https://api.spotify.com/v1/me/player/play?device_id=${deviceId}`, {
           method: 'PUT',
           headers: {
@@ -237,15 +260,14 @@ export const useSpotifyWebPlayback = (
         });
 
         if (!response.ok) {
-          const error = await response.json();
-          console.error('Error playing track:', error);
-          throw new Error('Failed to play track');
+          throw new Error(`Failed to play: ${response.status}`);
         }
       } catch (error) {
         console.error('Error in playTrack:', error);
+        throw error;
       }
     },
-    [accessToken, deviceId]
+    [accessToken, deviceId, player]
   );
 
   // Pause playback
@@ -316,6 +338,88 @@ export const useSpotifyWebPlayback = (
     }
   }, [player]);
 
+  // Set shuffle state via Spotify API
+  const setShuffle = useCallback(
+    async (state: boolean) => {
+      if (!accessToken || !deviceId) {
+        console.error('Cannot set shuffle: missing access token or device ID');
+        return;
+      }
+
+      try {
+        const response = await fetch(
+          `https://api.spotify.com/v1/me/player/shuffle?state=${state}&device_id=${deviceId}`,
+          {
+            method: 'PUT',
+            headers: {
+              'Authorization': `Bearer ${accessToken}`,
+            },
+          }
+        );
+
+        if (!response.ok) {
+          const error = await response.json();
+          console.error('Error setting shuffle:', error);
+          throw new Error('Failed to set shuffle');
+        }
+        
+        // Set pending state to prevent race conditions with player_state_changed events
+        // This ensures we don't accept stale events that fire before Spotify processes our request
+        pendingShuffleStateRef.current = state;
+        setShuffleState(state);
+        
+        // Clear pending state after 3 seconds - by then, Spotify should have processed our request
+        // and sent a fresh player_state_changed event
+        if (shuffleUpdateTimeoutRef.current) {
+          clearTimeout(shuffleUpdateTimeoutRef.current);
+        }
+        shuffleUpdateTimeoutRef.current = setTimeout(() => {
+          // After timeout, clear pending flag to allow normal event processing
+          // If we haven't received a matching event by now, our optimistic update stands
+          pendingShuffleStateRef.current = null;
+          shuffleUpdateTimeoutRef.current = null;
+        }, 3000);
+      } catch (error) {
+        console.error('Error in setShuffle:', error);
+      }
+    },
+    [accessToken, deviceId]
+  );
+
+  // Set repeat mode via Spotify API
+  const setRepeatMode = useCallback(
+    async (state: 'off' | 'context' | 'track') => {
+      if (!accessToken || !deviceId) {
+        console.error('Cannot set repeat mode: missing access token or device ID');
+        return;
+      }
+
+      try {
+        const response = await fetch(
+          `https://api.spotify.com/v1/me/player/repeat?state=${state}&device_id=${deviceId}`,
+          {
+            method: 'PUT',
+            headers: {
+              'Authorization': `Bearer ${accessToken}`,
+            },
+          }
+        );
+
+        if (!response.ok) {
+          const error = await response.json();
+          console.error('Error setting repeat mode:', error);
+          throw new Error('Failed to set repeat mode');
+        }
+        // Map state to number: 'off' = 0, 'context' = 1, 'track' = 2
+        const repeatModeNum = state === 'off' ? 0 : state === 'context' ? 1 : 2;
+        setRepeatModeState(repeatModeNum);
+      } catch (error) {
+        console.error('Error in setRepeatMode:', error);
+      }
+    },
+    [accessToken, deviceId]
+  );
+
   return {
     player,
     isReady,
@@ -324,6 +428,8 @@ export const useSpotifyWebPlayback = (
     currentTrack,
     position,
     duration,
+    shuffle,
+    repeatMode,
     playTrack,
     pause,
     resume,
@@ -331,6 +437,8 @@ export const useSpotifyWebPlayback = (
     setVolume,
     nextTrack,
     previousTrack,
+    setShuffle,
+    setRepeatMode,
   };
 };
 

@@ -52,7 +52,7 @@ export default function PodcastsPage() {
   return (
     <>
       {/* Content Sections */}
-      <div className="px-6 pt-6 pb-6">
+      <div className="px-6 pt-6 pb-24">
         {sections.map((section, sectionIndex) => {
           const firstItem = section.sectionItems.items.filter(
             (item) => item.content?.data?.data?.cardRepresentation
