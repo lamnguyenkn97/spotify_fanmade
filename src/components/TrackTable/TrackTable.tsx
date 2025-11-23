@@ -55,11 +55,25 @@ const formatDuration = (ms: number): string => {
 
 export const TrackTable: React.FC<TrackTableProps> = ({ tracks, onTrackClick }) => {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
-  const { playTrack, pause, resume, setQueue, currentTrack, isPlaying } = useMusicPlayerContext();
+  const [contextMenuTrack, setContextMenuTrack] = useState<Track | null>(null);
+  const { playTrack, pause, resume, setQueue, currentTrack, isPlaying, addToQueue } = useMusicPlayerContext();
   
   // Get track IDs for checking liked status (read-only, no toggle functionality)
   const trackIds = React.useMemo(() => tracks.map((item) => item.track.id), [tracks]);
   const { isLiked } = useLikedTracks(trackIds);
+
+  // Close context menu when clicking outside
+  React.useEffect(() => {
+    const handleClickOutside = () => {
+      if (contextMenuTrack) {
+        setContextMenuTrack(null);
+      }
+    };
+    document.addEventListener('click', handleClickOutside);
+    return () => {
+      document.removeEventListener('click', handleClickOutside);
+    };
+  }, [contextMenuTrack]);
 
   // Set up queue when tracks change
   React.useEffect(() => {
@@ -85,6 +99,12 @@ export const TrackTable: React.FC<TrackTableProps> = ({ tracks, onTrackClick }) 
     }
     
     onTrackClick?.(track);
+  };
+
+  const handleAddToQueue = (track: Track) => {
+    const trackToAdd = convertTrackToCurrentTrack(track);
+    addToQueue(trackToAdd);
+    setContextMenuTrack(null);
   };
 
   // Transform tracks data to match Table format
@@ -271,17 +291,54 @@ export const TrackTable: React.FC<TrackTableProps> = ({ tracks, onTrackClick }) 
                     {row.duration}
                   </Typography>
                   {isHovered && (
-                    <Icon
-                      icon={faEllipsis}
-                      size="sm"
-                      color="muted"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        // TODO: Open more options menu
-                        console.log('More options:', row.track.name);
-                      }}
-                      style={{ cursor: 'pointer' }}
-                    />
+                    <div style={{ position: 'relative' }}>
+                      <Icon
+                        icon={faEllipsis}
+                        size="sm"
+                        color="muted"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setContextMenuTrack(contextMenuTrack?.id === row.track.id ? null : row.track);
+                        }}
+                        style={{ cursor: 'pointer' }}
+                      />
+                      {contextMenuTrack?.id === row.track.id && (
+                        <div
+                          style={{
+                            position: 'absolute',
+                            top: '100%',
+                            right: 0,
+                            backgroundColor: colors.grey.grey1,
+                            border: `1px solid ${colors.grey.grey2}`,
+                            borderRadius: '4px',
+                            padding: '8px 0',
+                            minWidth: '200px',
+                            zIndex: 1000,
+                            boxShadow: '0 4px 12px rgba(0, 0, 0, 0.5)',
+                          }}
+                          onClick={(e) => e.stopPropagation()}
+                        >
+                          <div
+                            onClick={() => handleAddToQueue(row.track)}
+                            style={{
+                              padding: '12px 16px',
+                              cursor: 'pointer',
+                              transition: 'background-color 0.2s',
+                            }}
+                            onMouseEnter={(e) => {
+                              e.currentTarget.style.backgroundColor = colors.grey.grey2;
+                            }}
+                            onMouseLeave={(e) => {
+                              e.currentTarget.style.backgroundColor = 'transparent';
+                            }}
+                          >
+                            <Typography variant="body" size="sm" color="primary">
+                              Add to queue
+                            </Typography>
+                          </div>
+                        </div>
+                      )}
+                    </div>
                   )}
                 </Stack>
               );

@@ -11,3 +11,4 @@ export { PlaylistTable } from './PlaylistTable';
 export { ShowTable } from './ShowTable';
 export { AppLayout } from './AppLayout';
 export { MusicPlayer } from './MusicPlayer';
+export { QueueDrawer } from './QueueDrawer';
