@@ -22,14 +22,16 @@
     "@types/react": "^18.2.45",
     "@types/react-dom": "^18.2.18",
     "autoprefixer": "^10.4.16",
+    "dayjs": "^1.11.13",
     "eslint": "^8.56.0",
     "eslint-config-next": "14.0.4",
+    "fast-average-color": "^9.4.0",
     "next": "^14.2.33",
     "postcss": "^8.4.32",
     "react": "^18.2.0",
     "react-audio-analyser": "^1.0.0",
     "react-dom": "^18.2.0",
-    "spotify-design-system": "^1.0.53",
+    "spotify-design-system": "^1.0.56",
     "spotify-web-api-node": "^5.0.2",
     "styled-components": "^6.1.19",
     "tailwindcss": "^3.4.0",
@@ -45,5 +47,7 @@
     "eslint-plugin-prettier": "^5.1.2",
     "prettier": "^3.1.1"
   },
-  "packageManager": "pnpm@10.18.1+sha512.77a884a165cbba2d8d1c19e3b4880eee6d2fcabd0d879121e282196b80042351d5eb3ca0935fa599da1dc51265cc68816ad2bddd2a2de5ea9fdf92adbec7cd34"
+  "overrides": {
+    "@fortawesome/fontawesome-common-types": "7.1.0"
+  }
 }

@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, Suspense } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import {
   Stack,
@@ -36,9 +36,11 @@ interface TrackTableRow {
   duration: string;
   explicit: boolean;
   track: any;
+  // Column placeholders for Table component
+  [key: string]: any;
 }
 
-export default function SearchPage() {
+function SearchPageContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [query, setQuery] = useState(searchParams.get('q') || '');
@@ -221,7 +223,7 @@ export default function SearchPage() {
   return (
       <Stack
         direction="column"
-        spacing="xl"
+        spacing="lg"
         className="pb-8"
         style={{
           padding: '24px 32px',
@@ -270,7 +272,6 @@ export default function SearchPage() {
                     color="primary"
                     style={{ cursor: 'pointer' }}
                     onClick={() => {
-                      // TODO: Navigate to full songs results page
                     }}
                   >
                     See all ({results.tracksTotal})
@@ -524,3 +525,10 @@ export default function SearchPage() {
   );
 }
 
+export default function SearchPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <SearchPageContent />
+    </Suspense>
+  );
+}

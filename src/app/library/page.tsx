@@ -51,6 +51,7 @@ export default function LibraryPage() {
 
   useEffect(() => {
     fetchLibraryItems();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedFilter]);
 
   const fetchLibraryItems = async () => {
@@ -138,7 +139,6 @@ export default function LibraryPage() {
   };
 
   const handleCreate = () => {
-    console.log('Create new playlist');
     // TODO: Open create playlist modal
   };
 
@@ -166,7 +166,7 @@ export default function LibraryPage() {
             icon={faExpand}
             size="md"
             color="primary"
-            onClick={() => console.log('Expand')}
+            onClick={() => {}}
           />
         </Stack>
       </Stack>

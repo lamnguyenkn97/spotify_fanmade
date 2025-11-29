@@ -48,11 +48,12 @@ export async function GET(request: NextRequest) {
     };
 
     return NextResponse.json(results);
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Error searching Spotify:', error);
+    const errorMessage = error instanceof Error ? error.message : 'Failed to search';
     return NextResponse.json(
-      { error: error.message || 'Failed to search' },
-      { status: error.statusCode || 500 }
+      { error: errorMessage },
+      { status: 500 }
     );
   }
 }

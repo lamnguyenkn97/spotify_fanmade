@@ -8,13 +8,23 @@ interface User {
   product: string;
 }
 
+interface PlaylistOwner {
+  id: string;
+  display_name: string;
+}
+
+interface PlaylistTracks {
+  total: number;
+  href: string;
+}
+
 interface Playlist {
   id: string;
   name: string;
   description: string;
   images: Array<{ url: string }>;
-  owner: any;
-  tracks: any;
+  owner: PlaylistOwner;
+  tracks: PlaylistTracks;
   public: boolean;
 }
 

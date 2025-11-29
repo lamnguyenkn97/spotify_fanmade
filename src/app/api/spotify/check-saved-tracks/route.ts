@@ -51,11 +51,12 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({
       saved: savedMap,
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Error checking saved tracks:', error);
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
     return NextResponse.json(
-      { error: 'Failed to check saved tracks', details: error.message },
-      { status: error.statusCode || 500 }
+      { error: 'Failed to check saved tracks', details: errorMessage },
+      { status: 500 }
     );
   }
 }

@@ -20,15 +20,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           dangerouslySetInnerHTML={{
             __html: `
               window.onSpotifyWebPlaybackSDKReady = function() {
-                console.log('Spotify Web Playback SDK ready (from layout)');
+                // SDK is ready
               };
             `,
           }}
         />
-        <Script
-          src="https://sdk.scdn.co/spotify-player.js"
-          strategy="beforeInteractive"
-        />
+        <Script src="https://sdk.scdn.co/spotify-player.js" strategy="beforeInteractive" />
       </head>
       <body>
         <StyledComponentsRegistry>

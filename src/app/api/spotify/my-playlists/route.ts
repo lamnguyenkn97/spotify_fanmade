@@ -27,10 +27,10 @@ export async function GET(request: NextRequest) {
     });
 
     return NextResponse.json(playlists.body);
-  } catch (error: any) {
+  } catch (error) {
     console.error('Error fetching playlists:', error);
     return NextResponse.json(
-      { error: 'Failed to fetch playlists', details: error.message },
+      { error: 'Failed to fetch playlists', details: error instanceof Error ? error.message : "Unknown error" },
       { status: 500 }
     );
   }

@@ -6,7 +6,7 @@ export interface UseRepeatReturn {
   repeatMode: RepeatMode;
   toggleRepeat: () => void;
   shouldRepeatTrack: () => boolean;
-  shouldRepeatQueue: (isLastTrack: boolean) => boolean;
+  shouldRepeatQueue: () => boolean;
 }
 
 /**
@@ -32,7 +32,7 @@ export const useRepeat = (): UseRepeatReturn => {
   // Check if queue should repeat (go to start)
   // Note: With only off/one modes, queue repeat is not supported
   const shouldRepeatQueue = useCallback(
-    (isLastTrack: boolean): boolean => {
+    (): boolean => {
       return false; // Queue repeat (all) is no longer supported
     },
     []
@@ -45,4 +45,3 @@ export const useRepeat = (): UseRepeatReturn => {
     shouldRepeatQueue,
   };
 };
-

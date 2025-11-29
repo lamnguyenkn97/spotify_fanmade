@@ -17,6 +17,7 @@ import {
 } from 'spotify-design-system';
 import { faPlay, faEllipsis, faCheckCircle } from '@fortawesome/free-solid-svg-icons';
 import { faClock } from '@fortawesome/free-regular-svg-icons';
+import { useMusicPlayerContext } from '@/contexts/MusicPlayerContext';
 
 interface ShowData {
   id: string;
@@ -63,6 +64,7 @@ interface EpisodeTableRow {
 
 export default function ShowPage() {
   const params = useParams();
+  const { playTrack } = useMusicPlayerContext();
   const [show, setShow] = useState<ShowData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -85,9 +87,10 @@ export default function ShowPage() {
 
         const data = await response.json();
         setShow(data);
-      } catch (err: any) {
+      } catch (err: unknown) {
         console.error('Error fetching show:', err);
-        setError(err.message || 'Failed to load show');
+        const errorMessage = err instanceof Error ? err.message : 'Failed to load show';
+        setError(errorMessage);
       } finally {
         setLoading(false);
       }
@@ -101,9 +104,41 @@ export default function ShowPage() {
     // TODO: Implement follow/unfollow functionality
   };
 
-  const handleEpisodeClick = (episodeId: string) => {
-    console.log('Play episode:', episodeId);
-    // TODO: Connect to podcast player when built
+  const handleEpisodeClick = async (episodeId: string) => {
+    if (!show) return;
+
+    // Find the episode in the show's episodes
+    const episode = show.episodes.items.find((ep) => ep.id === episodeId);
+    if (!episode) {
+      console.error('Episode not found:', episodeId);
+      return;
+    }
+
+    // Convert episode to track format for the music player
+    const episodeAsTrack = {
+      id: episode.id,
+      title: episode.name,
+      artist: show.publisher || 'Unknown Publisher',
+      album: show.name,
+      coverUrl: episode.images?.[0]?.url || show.images?.[0]?.url || '',
+      duration: episode.duration_ms,
+      previewUrl: null, // Podcasts typically don't have preview URLs
+      spotifyUri: `spotify:episode:${episode.id}`, // Use spotifyUri instead of uri
+    };
+
+    try {
+      await playTrack(episodeAsTrack);
+    } catch (error) {
+      console.error('Error playing episode:', error);
+    }
+  };
+
+  const handlePlayShow = async () => {
+    if (!show || !show.episodes || show.episodes.items.length === 0) return;
+
+    // Play the first episode
+    const firstEpisode = show.episodes.items[0];
+    await handleEpisodeClick(firstEpisode.id);
   };
 
   const formatDuration = (ms: number): string => {
@@ -181,7 +216,7 @@ export default function ShowPage() {
               size={ButtonSize.Medium}
             />
             <Button
-              onClick={() => console.log('More options')}
+              onClick={() => {}}
               variant={ButtonVariant.Text}
               size={ButtonSize.Medium}
               icon={<Icon icon={faEllipsis} color="primary" size="lg" />}

@@ -34,11 +34,10 @@ export async function GET(
     const albums = await spotifyApi.getArtistAlbums(params.id, {
       limit: 50,
       include_groups: 'album,single,compilation',
-      market: 'US',
-    });
+    } as any); // Type issue with spotify-web-api-node library
 
     // Sort albums by release date (latest to oldest)
-    const sortedAlbums = albums.body.items.sort((a: any, b: any) => {
+    const sortedAlbums = (albums as any).body.items.sort((a: any, b: any) => {
       const dateA = new Date(a.release_date || 0).getTime();
       const dateB = new Date(b.release_date || 0).getTime();
       return dateB - dateA; // Descending order (latest first)
@@ -83,10 +82,10 @@ export async function GET(
         total_tracks: album.total_tracks,
       })),
     });
-  } catch (error: any) {
+  } catch (error) {
     console.error('Error fetching artist:', error);
     return NextResponse.json(
-      { error: 'Failed to fetch artist', details: error.message },
+      { error: 'Failed to fetch artist', details: error instanceof Error ? error.message : "Unknown error" },
       { status: 500 }
     );
   }
