@@ -6,7 +6,9 @@ import { useRouter } from 'next/navigation';
 import { UnauthenticatedSideBar, AuthenticatedSideBar, LibraryFilter } from '@/components/LibrarySideBar';
 import { useSpotify } from '@/hooks/useSpotify';
 import { MusicPlayerProvider, useMusicPlayerContext } from '@/contexts/MusicPlayerContext';
+import { QueueDrawerProvider, useQueueDrawer } from '@/contexts/QueueDrawerContext';
 import { MusicPlayer } from '@/components/MusicPlayer';
+import { QueueDrawer } from '@/components/QueueDrawer';
 
 interface AppLayoutProps {
   children: React.ReactNode;
@@ -149,20 +151,22 @@ export const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
   return (
     <ThemeProvider>
       <MusicPlayerProvider>
-        <AppLayoutContent
-          isAuthenticated={isAuthenticated}
-          user={user}
-          libraryItems={libraryItems}
-          onLogin={login}
-          onLogout={logout}
-          onCreatePlaylist={handleCreatePlaylist}
-          onBrowsePodcasts={handleBrowsePodcasts}
-          onFilterClick={handleFilterClick}
-          onLibraryItemClick={handleLibraryItemClick}
-          router={router}
-        >
-          {children}
-        </AppLayoutContent>
+        <QueueDrawerProvider>
+          <AppLayoutContent
+            isAuthenticated={isAuthenticated}
+            user={user}
+            libraryItems={libraryItems}
+            onLogin={login}
+            onLogout={logout}
+            onCreatePlaylist={handleCreatePlaylist}
+            onBrowsePodcasts={handleBrowsePodcasts}
+            onFilterClick={handleFilterClick}
+            onLibraryItemClick={handleLibraryItemClick}
+            router={router}
+          >
+            {children}
+          </AppLayoutContent>
+        </QueueDrawerProvider>
       </MusicPlayerProvider>
     </ThemeProvider>
   );
@@ -195,6 +199,7 @@ const AppLayoutContent: React.FC<{
   children,
 }) => {
   const { currentTrack } = useMusicPlayerContext();
+  const { isQueueOpen, openQueue, closeQueue } = useQueueDrawer();
 
   return (
     <Stack direction="column" className="h-screen bg-spotify-dark text-white overflow-hidden">
@@ -259,9 +264,12 @@ const AppLayoutContent: React.FC<{
         >
           {children}
         </Stack>
+        
+        {/* Queue Panel - Side Column */}
+        <QueueDrawer isOpen={isQueueOpen} onClose={closeQueue} />
       </Stack>
 
-      <MusicPlayer />
+      <MusicPlayer onQueueClick={openQueue} />
     </Stack>
   );
 };

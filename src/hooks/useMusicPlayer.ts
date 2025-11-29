@@ -35,6 +35,8 @@ export interface UseMusicPlayerReturn {
   previous: () => Promise<void>;
   queue: CurrentTrack[];
   setQueue: (tracks: CurrentTrack[]) => void;
+  addToQueue: (track: CurrentTrack) => void;
+  removeFromQueue: (index: number) => void;
   audioElement: HTMLAudioElement | null;
   useWebPlayback: boolean;
   isShuffled: boolean;
@@ -355,6 +357,24 @@ export const useMusicPlayer = (): UseMusicPlayerReturn => {
     }
   }, [strategy.isActive, webPlayback, localToggleRepeat]);
 
+  const addToQueue = useCallback(
+    (track: CurrentTrack) => {
+      // Add track to the end of the current queue
+      const newQueue = [...queue, track];
+      setQueue(newQueue);
+    },
+    [queue, setQueue]
+  );
+
+  const removeFromQueue = useCallback(
+    (index: number) => {
+      // Remove track at the specified index
+      const newQueue = queue.filter((_, i) => i !== index);
+      setQueue(newQueue);
+    },
+    [queue, setQueue]
+  );
+
   return {
     currentTrack,
     isPlaying,
@@ -371,6 +391,8 @@ export const useMusicPlayer = (): UseMusicPlayerReturn => {
     previous,
     queue,
     setQueue,
+    addToQueue,
+    removeFromQueue,
     audioElement: audioRef.current,
     useWebPlayback,
     isShuffled,

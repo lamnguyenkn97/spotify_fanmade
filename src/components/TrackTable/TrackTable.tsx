@@ -2,9 +2,10 @@
 
 import React, { useState } from 'react';
 import { Stack, Typography, Icon, Image, colors, Table, Equalizer } from 'spotify-design-system';
-import { faPlay, faPause, faCheckCircle, faEllipsis } from '@fortawesome/free-solid-svg-icons';
+import { faPlay, faPause, faCheckCircle, faEllipsis, faListUl } from '@fortawesome/free-solid-svg-icons';
 import { faClock } from '@fortawesome/free-regular-svg-icons';
 import { useMusicPlayerContext } from '@/contexts/MusicPlayerContext';
+import { useQueueDrawer } from '@/contexts/QueueDrawerContext';
 import { convertTrackToCurrentTrack, convertTracksToQueue } from '@/utils/trackHelpers';
 import { useLikedTracks } from '@/hooks/useLikedTracks';
 import { formatRelativeTime } from '@/utils/dateHelpers';
@@ -55,21 +56,27 @@ const formatDuration = (ms: number): string => {
 
 export const TrackTable: React.FC<TrackTableProps> = ({ tracks, onTrackClick }) => {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
-  const { playTrack, pause, resume, setQueue, currentTrack, isPlaying } = useMusicPlayerContext();
+  const { playTrack, pause, resume, setQueue, currentTrack, isPlaying, addToQueue } = useMusicPlayerContext();
+  const { openQueue } = useQueueDrawer();
   
   // Get track IDs for checking liked status (read-only, no toggle functionality)
   const trackIds = React.useMemo(() => tracks.map((item) => item.track.id), [tracks]);
   const { isLiked } = useLikedTracks(trackIds);
 
-  // Set up queue when tracks change
-  React.useEffect(() => {
+  // Set up queue only when a track is played, not on page load
+  const setPlaylistQueue = React.useCallback((startIndex: number) => {
     const trackList = tracks.map((item) => item.track);
     const queue = convertTracksToQueue(trackList);
-    setQueue(queue);
+    // Set the queue starting from the clicked track
+    const reorderedQueue = [
+      ...queue.slice(startIndex),
+      ...queue.slice(0, startIndex)
+    ];
+    setQueue(reorderedQueue);
   }, [tracks, setQueue]);
 
   // Handle track click - play the track, or pause if already playing
-  const handleTrackClick = async (track: Track) => {
+  const handleTrackClick = async (track: Track, trackIndex: number) => {
     const trackToPlay = convertTrackToCurrentTrack(track);
     
     // If clicking the same track that's currently playing, toggle play/pause
@@ -80,11 +87,20 @@ export const TrackTable: React.FC<TrackTableProps> = ({ tracks, onTrackClick }) 
         await resume();
       }
     } else {
-      // Different track - play it
+      // Different track - set up queue starting from this track, then play it
+      setPlaylistQueue(trackIndex);
       await playTrack(trackToPlay);
     }
     
     onTrackClick?.(track);
+  };
+
+  const handleAddToQueue = (e: React.MouseEvent, track: Track) => {
+    e.stopPropagation();
+    const trackToAdd = convertTrackToCurrentTrack(track);
+    addToQueue(trackToAdd);
+    // Open queue drawer to show visual feedback
+    openQueue();
   };
 
   // Transform tracks data to match Table format
@@ -140,7 +156,7 @@ export const TrackTable: React.FC<TrackTableProps> = ({ tracks, onTrackClick }) 
                       color="primary"
                       onClick={(e) => {
                         e.stopPropagation();
-                        handleTrackClick(row.track);
+                        handleTrackClick(row.track, row.index);
                       }}
                     />
                   ) : (
@@ -252,14 +268,44 @@ export const TrackTable: React.FC<TrackTableProps> = ({ tracks, onTrackClick }) 
             width: 'auto',
           },
           {
-            align: 'right',
-            key: 'actions',
+            align: 'center',
+            key: 'addToQueue',
             label: '',
             renderCell: (row: TrackTableRow) => {
-              const isHovered = hoveredIndex === row.index;
+              return (
+                <div
+                  onClick={(e) => handleAddToQueue(e, row.track)}
+                  style={{
+                    cursor: 'pointer',
+                    padding: '8px 12px',
+                    borderRadius: '4px',
+                    transition: 'background-color 0.15s ease',
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '8px',
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.1)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.backgroundColor = 'transparent';
+                  }}
+                >
+                  <Icon icon={faListUl} size="sm" color="muted" />
+                  <Typography variant="body" size="sm" color="muted" weight="medium">
+                    Add to queue
+                  </Typography>
+                </div>
+              );
+            },
+            width: '150px',
+          },
+          {
+            align: 'right',
+            key: 'duration',
+            label: <Icon icon={faClock} size="sm" color="muted" />,
+            renderCell: (row: TrackTableRow) => {
               const isCurrentlyPlaying = currentTrack?.id === row.track.id && isPlaying;
-              
-              // Show check icon if track is currently playing OR if it's in liked songs
               const showCheckIcon = isCurrentlyPlaying || row.isLiked;
               
               return (
@@ -270,27 +316,14 @@ export const TrackTable: React.FC<TrackTableProps> = ({ tracks, onTrackClick }) 
                   <Typography variant="body" size="sm" color="muted">
                     {row.duration}
                   </Typography>
-                  {isHovered && (
-                    <Icon
-                      icon={faEllipsis}
-                      size="sm"
-                      color="muted"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        // TODO: Open more options menu
-                        console.log('More options:', row.track.name);
-                      }}
-                      style={{ cursor: 'pointer' }}
-                    />
-                  )}
                 </Stack>
               );
             },
-            width: '150px',
+            width: '100px',
           },
         ]}
         data={tableData}
-        onRowClick={(row: TrackTableRow) => handleTrackClick(row.track)}
+        onRowClick={(row: TrackTableRow) => handleTrackClick(row.track, row.index)}
         onRowHover={(row: TrackTableRow, index?: number) =>
           setHoveredIndex(index ?? row.index)
         }

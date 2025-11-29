@@ -33,6 +33,11 @@ yarn-error.log*
 .env*.local
 .env
 
+# SSL certificates for local HTTPS development
+.cert/
+*.crt
+*.key
+
 # vercel
 .vercel
 

@@ -6,9 +6,11 @@ import { useMusicPlayerContext } from '@/contexts/MusicPlayerContext';
 
 interface MusicPlayerProps {
   className?: string;
+  onQueueClick?: () => void;
 }
 
-export const MusicPlayer: React.FC<MusicPlayerProps> = ({ className }) => {
+export const MusicPlayer: React.FC<MusicPlayerProps> = ({ className, onQueueClick }) => {
+  
   const {
     currentTrack,
     isPlaying,
@@ -96,6 +98,7 @@ export const MusicPlayer: React.FC<MusicPlayerProps> = ({ className }) => {
         onShuffle={handleShuffle}
         onVolumeChange={setVolume}
         volume={volume}
+        onQueue={onQueueClick}
         className="rounded-lg w-full min-h-[74px] shadow-[0_8px_32px_rgba(0,0,0,0.3)]"
       />
     </div>
