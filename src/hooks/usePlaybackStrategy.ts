@@ -107,7 +107,8 @@ export const usePlaybackStrategy = (
 ): PlaybackStrategy => {
   const webPlaybackStrategy = useMemo(
     () => createWebPlaybackStrategy(webPlayback, webPlayback.isReady),
-    [webPlayback, webPlayback.isReady]
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [webPlayback]
   );
 
   const previewStrategy = useMemo(

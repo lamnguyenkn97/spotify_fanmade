@@ -122,9 +122,10 @@ export default function PlaylistPage() {
             });
           }
         }
-      } catch (err: any) {
+      } catch (err: unknown) {
         console.error('Error fetching playlist:', err);
-        setError(err.message || 'Failed to load playlist');
+        const errorMessage = err instanceof Error ? err.message : 'Failed to load playlist';
+        setError(errorMessage);
       } finally {
         setLoading(false);
       }

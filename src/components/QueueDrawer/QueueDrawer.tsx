@@ -41,10 +41,10 @@ export const QueueDrawer: React.FC<QueueDrawerProps> = ({ isOpen, onClose }) => 
   const queueItems: QueueItem[] = upcomingTracks.map(convertToQueueItem);
 
   // Handle item click
-  const handleItemClick = async (item: QueueItem, index: number) => {
+  const handleItemClick = (item: QueueItem, index: number) => {
     const track = upcomingTracks[index];
     if (track) {
-      await playTrack(track);
+      playTrack(track); // Fire and forget - no need to await
     }
   };
 
@@ -81,7 +81,7 @@ export const QueueDrawer: React.FC<QueueDrawerProps> = ({ isOpen, onClose }) => 
       showCloseButton={true}
       enableDragDrop={true}
       onClose={onClose}
-      onItemClick={handleItemClick}
+      onItemClick={handleItemClick as any}
       onItemReorder={handleItemReorder}
     />
   );

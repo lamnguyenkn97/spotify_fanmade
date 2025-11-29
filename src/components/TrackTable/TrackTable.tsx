@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { Stack, Typography, Icon, Image, colors, Table, Equalizer } from 'spotify-design-system';
-import { faPlay, faPause, faCheckCircle, faEllipsis, faListUl } from '@fortawesome/free-solid-svg-icons';
+import { faPlay, faPause, faCheckCircle, faListUl } from '@fortawesome/free-solid-svg-icons';
 import { faClock } from '@fortawesome/free-regular-svg-icons';
 import { useMusicPlayerContext } from '@/contexts/MusicPlayerContext';
 import { useQueueDrawer } from '@/contexts/QueueDrawerContext';
@@ -40,6 +40,7 @@ interface TrackTableRow {
   isLiked?: boolean;
   dateAdded?: string;
   track: Track;
+  addToQueue?: string; // Action column placeholder
 }
 
 interface TrackTableProps {
@@ -56,29 +57,30 @@ const formatDuration = (ms: number): string => {
 
 export const TrackTable: React.FC<TrackTableProps> = ({ tracks, onTrackClick }) => {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
-  const { playTrack, pause, resume, setQueue, currentTrack, isPlaying, addToQueue } = useMusicPlayerContext();
+  const { playTrack, pause, resume, setQueue, currentTrack, isPlaying, addToQueue } =
+    useMusicPlayerContext();
   const { openQueue } = useQueueDrawer();
-  
+
   // Get track IDs for checking liked status (read-only, no toggle functionality)
   const trackIds = React.useMemo(() => tracks.map((item) => item.track.id), [tracks]);
   const { isLiked } = useLikedTracks(trackIds);
 
   // Set up queue only when a track is played, not on page load
-  const setPlaylistQueue = React.useCallback((startIndex: number) => {
-    const trackList = tracks.map((item) => item.track);
-    const queue = convertTracksToQueue(trackList);
-    // Set the queue starting from the clicked track
-    const reorderedQueue = [
-      ...queue.slice(startIndex),
-      ...queue.slice(0, startIndex)
-    ];
-    setQueue(reorderedQueue);
-  }, [tracks, setQueue]);
+  const setPlaylistQueue = React.useCallback(
+    (startIndex: number) => {
+      const trackList = tracks.map((item) => item.track);
+      const queue = convertTracksToQueue(trackList);
+      // Set the queue starting from the clicked track
+      const reorderedQueue = [...queue.slice(startIndex), ...queue.slice(0, startIndex)];
+      setQueue(reorderedQueue);
+    },
+    [tracks, setQueue]
+  );
 
   // Handle track click - play the track, or pause if already playing
   const handleTrackClick = async (track: Track, trackIndex: number) => {
     const trackToPlay = convertTrackToCurrentTrack(track);
-    
+
     // If clicking the same track that's currently playing, toggle play/pause
     if (currentTrack?.id === trackToPlay.id) {
       if (isPlaying) {
@@ -91,7 +93,7 @@ export const TrackTable: React.FC<TrackTableProps> = ({ tracks, onTrackClick }) 
       setPlaylistQueue(trackIndex);
       await playTrack(trackToPlay);
     }
-    
+
     onTrackClick?.(track);
   };
 
@@ -131,14 +133,11 @@ export const TrackTable: React.FC<TrackTableProps> = ({ tracks, onTrackClick }) 
             renderCell: (row: TrackTableRow) => {
               const isCurrentlyPlaying = currentTrack?.id === row.track.id && isPlaying;
               const isHovered = hoveredIndex === row.index;
-              
+
               return (
                 <Stack direction="row" align="center" justify="center" style={{ width: '48px' }}>
                   {isCurrentlyPlaying && !isHovered ? (
-                    <Equalizer 
-                      size="sm" 
-                      isPlaying={isPlaying}
-                    />
+                    <Equalizer size="sm" isPlaying={isPlaying} />
                   ) : isHovered && isCurrentlyPlaying ? (
                     <Icon
                       icon={faPause}
@@ -175,44 +174,23 @@ export const TrackTable: React.FC<TrackTableProps> = ({ tracks, onTrackClick }) 
             label: 'Title',
             renderCell: (row: TrackTableRow) => {
               const isCurrentlyPlaying = currentTrack?.id === row.track.id && isPlaying;
-              const isHovered = hoveredIndex === row.index;
-              
+
               return (
                 <Stack direction="row" spacing="sm" align="center">
                   <Image src={row.albumImage || ''} alt={row.album} size="sm" />
                   <Stack direction="column" spacing="xs">
                     <Stack direction="row" spacing="xs" align="center">
-                      <Typography 
-                        variant="body" 
-                        size="sm" 
-                        weight="medium" 
-                        color={isCurrentlyPlaying ? "primary" : "primary"}
+                      <Typography
+                        variant="body"
+                        size="sm"
+                        weight="medium"
+                        color={isCurrentlyPlaying ? 'primary' : 'primary'}
                         style={isCurrentlyPlaying ? { color: colors.primary.brand } : undefined}
                       >
                         {row.title}
                       </Typography>
-                    {/* Explicit indicator */}
-                    {row.explicit && (
-                      <Stack
-                        direction="row"
-                        align="center"
-                        justify="center"
-                        style={{
-                          width: '16px',
-                          height: '16px',
-                          backgroundColor: colors.grey.grey2,
-                          borderRadius: '2px',
-                        }}
-                        title="Explicit"
-                      >
-                        <Typography variant="caption" size="sm" color="primary" weight="bold">
-                          E
-                        </Typography>
-                      </Stack>
-                    )}
-                    {/* Music video indicator */}
-                    {row.hasVideo && (
-                      <Stack direction="row" spacing="xs" align="center">
+                      {/* Explicit indicator */}
+                      {row.explicit && (
                         <Stack
                           direction="row"
                           align="center"
@@ -223,21 +201,41 @@ export const TrackTable: React.FC<TrackTableProps> = ({ tracks, onTrackClick }) 
                             backgroundColor: colors.grey.grey2,
                             borderRadius: '2px',
                           }}
-                          title="Music video"
+                          title="Explicit"
                         >
-                          <Icon icon={faPlay} size="sm" color="primary" />
+                          <Typography variant="caption" size="sm" color="primary" weight="bold">
+                            E
+                          </Typography>
                         </Stack>
-                        <Typography variant="caption" size="sm" color="muted">
-                          Music video
-                        </Typography>
-                      </Stack>
-                    )}
+                      )}
+                      {/* Music video indicator */}
+                      {row.hasVideo && (
+                        <Stack direction="row" spacing="xs" align="center">
+                          <Stack
+                            direction="row"
+                            align="center"
+                            justify="center"
+                            style={{
+                              width: '16px',
+                              height: '16px',
+                              backgroundColor: colors.grey.grey2,
+                              borderRadius: '2px',
+                            }}
+                            title="Music video"
+                          >
+                            <Icon icon={faPlay} size="sm" color="primary" />
+                          </Stack>
+                          <Typography variant="caption" size="sm" color="muted">
+                            Music video
+                          </Typography>
+                        </Stack>
+                      )}
+                    </Stack>
+                    <Typography variant="caption" size="sm" color="muted">
+                      {row.artists}
+                    </Typography>
                   </Stack>
-                  <Typography variant="caption" size="sm" color="muted">
-                    {row.artists}
-                  </Typography>
                 </Stack>
-              </Stack>
               );
             },
             width: 'auto',
@@ -307,7 +305,7 @@ export const TrackTable: React.FC<TrackTableProps> = ({ tracks, onTrackClick }) 
             renderCell: (row: TrackTableRow) => {
               const isCurrentlyPlaying = currentTrack?.id === row.track.id && isPlaying;
               const showCheckIcon = isCurrentlyPlaying || row.isLiked;
-              
+
               return (
                 <Stack direction="row" align="center" spacing="sm" justify="end">
                   {showCheckIcon && (
@@ -324,9 +322,7 @@ export const TrackTable: React.FC<TrackTableProps> = ({ tracks, onTrackClick }) 
         ]}
         data={tableData}
         onRowClick={(row: TrackTableRow) => handleTrackClick(row.track, row.index)}
-        onRowHover={(row: TrackTableRow, index?: number) =>
-          setHoveredIndex(index ?? row.index)
-        }
+        onRowHover={(row: TrackTableRow, index?: number) => setHoveredIndex(index ?? row.index)}
       />
     </Stack>
   );

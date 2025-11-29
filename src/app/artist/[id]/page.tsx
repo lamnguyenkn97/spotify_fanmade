@@ -84,9 +84,10 @@ export default function ArtistPage() {
 
         const data = await response.json();
         setArtist(data);
-      } catch (err: any) {
+      } catch (err: unknown) {
         console.error('Error fetching artist:', err);
-        setError(err.message || 'Failed to load artist');
+        const errorMessage = err instanceof Error ? err.message : 'Failed to load artist';
+        setError(errorMessage);
       } finally {
         setLoading(false);
       }
@@ -96,12 +97,10 @@ export default function ArtistPage() {
   }, [params.id]);
 
   const handlePlay = () => {
-    console.log('Play artist top tracks');
     // TODO: Connect to music player when built
   };
 
   const handleShuffle = () => {
-    console.log('Shuffle artist tracks');
     // TODO: Connect to music player when built
   };
 
@@ -111,7 +110,6 @@ export default function ArtistPage() {
   };
 
   const handleTrackClick = (track: any) => {
-    console.log('Play track:', track.name);
     // TODO: Connect to music player when built
   };
 
@@ -264,7 +262,7 @@ export default function ArtistPage() {
             </button>
             <Icon
               icon={faEllipsis}
-              onClick={() => console.log('More options')}
+              onClick={() => {}}
               aria-label="More options"
               color={'white'}
               size="lg"
@@ -408,14 +406,6 @@ export default function ArtistPage() {
           <Stack direction="row" justify="space-between" align="center">
             <Typography variant="heading" size="xl" weight="bold" color="primary">
               Discography
-            </Typography>
-            <Typography
-              variant="body"
-              size="sm"
-              color="muted"
-              className="hover:text-white cursor-pointer"
-            >
-              Show all
             </Typography>
           </Stack>
 

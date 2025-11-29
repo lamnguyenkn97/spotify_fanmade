@@ -1,17 +1,15 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
 import homepageData from './data/homepageData.json';
 import {
-  CookieBanner,
-  SignupBanner,
   UnauthenticatedHomePage,
   AuthenticatedHomePage,
   AuthModals,
 } from '@/components';
 import { useSpotify } from '@/hooks/useSpotify';
 import { useCardModal } from '@/hooks/useCardModal';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 
 // Helper: Extract best quality image URL from sources
 const getBestImageUrl = (sources: any[] = []) => {
@@ -66,12 +64,10 @@ const getCardProps = (item: any) => {
   return cardPropsMap[__typename as keyof typeof cardPropsMap] || null;
 };
 
-export default function Home() {
-  const router = useRouter();
+function HomeContent() {
   const searchParams = useSearchParams();
   const { user, isAuthenticated, login } = useSpotify();
   const { showCardModal, selectedCard, openCardModal, closeCardModal } = useCardModal();
-  const [showCookieBanner, setShowCookieBanner] = useState(true);
   const [showCreatePlaylistDialog, setShowCreatePlaylistDialog] = useState(false);
 
   const sections = homepageData.data.home.sectionContainer.sections.items.filter((section: any) => {
@@ -79,6 +75,7 @@ export default function Home() {
     const firstItem = items.find((item: any) => item.content?.data);
     return firstItem !== undefined && items.length > 0;
   });
+  
   // Handle error from URL parameters (OAuth callback errors)
   useEffect(() => {
     const error = searchParams.get('error');
@@ -87,7 +84,6 @@ export default function Home() {
     if (error === 'access_denied') {
       console.error('User denied authorization');
       alert('You need to authorize the app to use Spotify features');
-      // Clean up URL
       window.history.replaceState({}, '', '/');
     } else if (error === 'auth_failed' || errorDescription) {
       console.error('Authentication failed:', errorDescription);
@@ -103,10 +99,6 @@ export default function Home() {
       window.history.replaceState({}, '', '/');
     }
   }, [searchParams]);
-
-  const handleCloseCookieBanner = () => {
-    setShowCookieBanner(false);
-  };
 
   const handleLogin = () => {
     login();
@@ -126,7 +118,6 @@ export default function Home() {
         <UnauthenticatedHomePage
           sections={sections}
           onCardClick={openCardModal}
-          onShowAll={openCardModal}
           getCardProps={getCardProps}
         />
       )}
@@ -141,5 +132,13 @@ export default function Home() {
         onSignUpFree={handleSignUpFree}
       />
     </>
+  );
+}
+
+export default function Home() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <HomeContent />
+    </Suspense>
   );
 }

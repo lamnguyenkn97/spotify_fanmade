@@ -30,28 +30,12 @@ export async function GET(request: NextRequest) {
     // Spotify's getMyRecentlyPlayedTracks already includes full track objects with
     // duration_ms, preview_url, etc., so we can return as-is
     return NextResponse.json(recentlyPlayed.body);
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Error fetching recently played:', error);
-    
-    // Handle specific Spotify API errors
-    if (error.statusCode === 401 || error.body?.error?.status === 401) {
-      return NextResponse.json(
-        { 
-          error: 'Permissions missing',
-          message: 'The access token does not have the required scope (user-read-recently-played). Please log out and log back in to grant the necessary permissions.',
-          status: 401
-        },
-        { status: 401 }
-      );
-    }
-    
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
     return NextResponse.json(
-      { 
-        error: 'Failed to fetch recently played tracks', 
-        details: error.message || error.body?.error?.message,
-        status: error.statusCode || 500
-      },
-      { status: error.statusCode || 500 }
+      { error: 'Failed to fetch recently played tracks', details: errorMessage },
+      { status: 500 }
     );
   }
 }

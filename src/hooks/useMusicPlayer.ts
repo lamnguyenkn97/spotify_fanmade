@@ -188,6 +188,7 @@ export const useMusicPlayer = (): UseMusicPlayerReturn => {
         audioRef.current = null;
       }
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []); // Empty deps - only run on mount/unmount
 
   useEffect(() => {

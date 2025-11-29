@@ -22,17 +22,17 @@ export async function GET(request: NextRequest) {
     spotifyApi.setAccessToken(accessToken);
 
     // Get user's followed artists with pagination
-    let allArtists: any[] = [];
+    const allArtists: SpotifyApi.ArtistObjectFull[] = [];
     let after: string | undefined = undefined;
 
     do {
-      const response = await spotifyApi.getFollowedArtists({
+      const response: Awaited<ReturnType<typeof spotifyApi.getFollowedArtists>> = await spotifyApi.getFollowedArtists({
         limit: 50,
         after,
       });
 
       if (response.body.artists?.items) {
-        allArtists = allArtists.concat(response.body.artists.items);
+        allArtists.push(...response.body.artists.items);
         after = response.body.artists.cursors?.after;
       } else {
         break;
@@ -43,10 +43,10 @@ export async function GET(request: NextRequest) {
       items: allArtists,
       total: allArtists.length,
     });
-  } catch (error: any) {
+  } catch (error) {
     console.error('Error fetching artists:', error);
     return NextResponse.json(
-      { error: 'Failed to fetch artists', details: error.message },
+      { error: 'Failed to fetch artists', details: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : 'Unknown error' },
       { status: 500 }
     );
   }

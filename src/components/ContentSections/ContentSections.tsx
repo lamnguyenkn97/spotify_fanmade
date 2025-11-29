@@ -1,19 +1,17 @@
 'use client';
 
 import React from 'react';
-import { Card, Typography, Stack, Button, ButtonVariant, ButtonSize } from 'spotify-design-system';
+import { Card, Typography, Stack } from 'spotify-design-system';
 
 interface ContentSectionsProps {
   sections: any[];
   onCardClick: (title: string, imageUrl?: string) => void;
-  onShowAll: (title: string, imageUrl?: string) => void;
   getCardProps: (item: any) => any;
 }
 
 export const ContentSections: React.FC<ContentSectionsProps> = ({
   sections,
   onCardClick,
-  onShowAll,
   getCardProps,
 }) => {
   return (
@@ -24,21 +22,11 @@ export const ContentSections: React.FC<ContentSectionsProps> = ({
 
         return (
           <Stack key={sectionIndex} direction="column" spacing="sm" className="mb-8">
-            {/* Section Header with Show all */}
+            {/* Section Header */}
             <Stack direction="row" align="center" justify="space-between" className="mb-2">
               <Typography variant="title" size="xl">
                 {section.data.title.transformedLabel}
               </Typography>
-              <Button
-                text="Show all"
-                variant={ButtonVariant.Text}
-                size={ButtonSize.Small}
-                onClick={() => {
-                  if (firstCardProps) {
-                    onShowAll(firstCardProps.title, firstCardProps.imageUrl);
-                  }
-                }}
-              />
             </Stack>
 
             <div className="overflow-x-auto overflow-y-visible pb-4 -mx-6 px-6 scrollbar-hide">
@@ -55,7 +43,7 @@ export const ContentSections: React.FC<ContentSectionsProps> = ({
                           {...cardProps}
                           size="md"
                           showPlayButton
-                          onPlayClick={() => console.log(`Playing ${cardProps.title}`)}
+                          onPlayClick={() => {}}
                           onClick={() => onCardClick(cardProps.title, cardProps.imageUrl)}
                         />
                       </div>

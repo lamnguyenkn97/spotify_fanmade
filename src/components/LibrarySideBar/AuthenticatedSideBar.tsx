@@ -90,7 +90,7 @@ export const AuthenticatedSideBar: React.FC<AuthenticatedSideBarProps> = ({
   // Wrap onViewToggle to match Sidebar's signature (viewType: 'list' | 'grid') => void
   return (
     <Sidebar
-      libraryItems={mappedLibraryItems}
+      libraryItems={mappedLibraryItems as any}
       onAddClick={onAddClick}
       onExpandClick={onExpandClick}
       onFilterClick={handleFilterClick}

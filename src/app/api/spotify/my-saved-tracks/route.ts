@@ -66,11 +66,12 @@ export async function GET(request: NextRequest) {
       limit: limit,
       offset: offset,
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Error fetching saved tracks:', error);
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
     return NextResponse.json(
-      { error: 'Failed to fetch saved tracks', details: error.message },
-      { status: error.statusCode || 500 }
+      { error: 'Failed to fetch saved tracks', details: errorMessage },
+      { status: 500 }
     );
   }
 }

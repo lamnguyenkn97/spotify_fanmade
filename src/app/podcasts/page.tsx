@@ -113,7 +113,7 @@ export default function PodcastsPage() {
       {showCookieBanner && <CookieBanner onClose={handleCloseCookieBanner} />}
 
       {/* Signup Banner - shows after cookie banner is closed */}
-      {!showCookieBanner && <SignupBanner onSignUp={() => console.log('Sign up clicked')} />}
+      {!showCookieBanner && <SignupBanner onSignUp={() => {}} />}
 
       {/* All Authentication Modals */}
       <AuthModals

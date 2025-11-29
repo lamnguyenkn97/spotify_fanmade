@@ -84,10 +84,10 @@ export async function GET(
     };
 
     return NextResponse.json(playlistFormat);
-  } catch (error: any) {
+  } catch (error) {
     console.error('Error fetching album:', error);
     return NextResponse.json(
-      { error: 'Failed to fetch album', details: error.message },
+      { error: 'Failed to fetch album', details: error instanceof Error ? error.message : "Unknown error" },
       { status: 500 }
     );
   }

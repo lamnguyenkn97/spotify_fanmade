@@ -67,10 +67,10 @@ export async function GET(
     }
 
     return NextResponse.json(playlist.body);
-  } catch (error: any) {
+  } catch (error) {
     console.error('Error fetching playlist:', error);
     return NextResponse.json(
-      { error: 'Failed to fetch playlist', details: error.message },
+      { error: 'Failed to fetch playlist', details: error instanceof Error ? error.message : "Unknown error" },
       { status: 500 }
     );
   }

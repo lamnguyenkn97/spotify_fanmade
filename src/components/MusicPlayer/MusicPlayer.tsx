@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { MusicPlayer as DesignSystemMusicPlayer, colors } from 'spotify-design-system';
+import { MusicPlayer as DesignSystemMusicPlayer } from 'spotify-design-system';
 import { useMusicPlayerContext } from '@/contexts/MusicPlayerContext';
 
 interface MusicPlayerProps {
@@ -10,7 +10,6 @@ interface MusicPlayerProps {
 }
 
 export const MusicPlayer: React.FC<MusicPlayerProps> = ({ className, onQueueClick }) => {
-  
   const {
     currentTrack,
     isPlaying,
@@ -39,7 +38,7 @@ export const MusicPlayer: React.FC<MusicPlayerProps> = ({ className, onQueueClic
   const currentTimeInSeconds = Math.floor(currentTime / 1000);
 
   const handleLyrics = () => {
-    console.log('Lyrics');
+    // TODO: Implement lyrics feature
   };
 
   const handleRepeat = async () => {
@@ -104,4 +103,3 @@ export const MusicPlayer: React.FC<MusicPlayerProps> = ({ className, onQueueClic
     </div>
   );
 };
-
