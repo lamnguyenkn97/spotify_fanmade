@@ -295,9 +295,9 @@ const AppLayoutContent: React.FC<{
         customLinks={
           !isAuthenticated
             ? [
-                { id: 'portfolio', label: '🎨 Portfolio Project', href: '#' },
-                { id: 'npm', label: '📦 NPM Package', href: 'https://www.npmjs.com/package/spotify-design-system' },
-                { id: 'storybook', label: '📚 Storybook', href: 'https://spotify-storybook.vercel.app' },
+                { id: 'portfolio', label: 'Portfolio Demo', href: '#' },
+                { id: 'npm', label: 'Design System', href: 'https://www.npmjs.com/package/spotify-design-system' },
+                { id: 'storybook', label: 'Documentation', href: 'https://spotify-storybook.vercel.app' },
               ]
             : []
         }
