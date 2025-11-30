@@ -66,11 +66,11 @@ function SearchPageContent() {
         const data = await response.json();
         setResults(data);
       } else {
-        console.error('Search failed:', response.statusText);
+
         setResults(null);
       }
     } catch (error) {
-      console.error('Error searching:', error);
+
       setResults(null);
     } finally {
       setLoading(false);

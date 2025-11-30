@@ -16,7 +16,7 @@ export const useAccessToken = (): string | null => {
           setAccessToken(data.accessToken);
         }
       } catch (error) {
-        console.error('Error fetching access token:', error);
+
       }
     };
 

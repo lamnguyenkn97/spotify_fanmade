@@ -45,7 +45,7 @@ export const MusicPlayer: React.FC<MusicPlayerProps> = ({ className, onQueueClic
     try {
       await toggleRepeat();
     } catch (error) {
-      console.error('Error toggling repeat:', error);
+
     }
   };
 
@@ -53,7 +53,7 @@ export const MusicPlayer: React.FC<MusicPlayerProps> = ({ className, onQueueClic
     try {
       await toggleShuffle();
     } catch (error) {
-      console.error('Error toggling shuffle:', error);
+
     }
   };
 

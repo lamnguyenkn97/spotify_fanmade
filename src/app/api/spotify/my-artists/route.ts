@@ -44,7 +44,7 @@ export async function GET(request: NextRequest) {
       total: allArtists.length,
     });
   } catch (error) {
-    console.error('Error fetching artists:', error);
+
     return NextResponse.json(
       { error: 'Failed to fetch artists', details: error instanceof Error ? error instanceof Error ? error.message : "Unknown error" : 'Unknown error' },
       { status: 500 }

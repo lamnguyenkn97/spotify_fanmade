@@ -45,7 +45,7 @@ export const useSpotify = () => {
         setUser(userData);
       }
     } catch (error) {
-      console.error('Error checking auth:', error);
+
     } finally {
       setLoading(false);
     }
@@ -59,7 +59,7 @@ export const useSpotify = () => {
         window.location.href = data.url;
       }
     } catch (error) {
-      console.error('Error during login:', error);
+
     }
   };
 
@@ -69,7 +69,7 @@ export const useSpotify = () => {
       setUser(null);
       window.location.href = '/';
     } catch (error) {
-      console.error('Error during logout:', error);
+
     }
   };
 
@@ -80,7 +80,7 @@ export const useSpotify = () => {
       const data = await response.json();
       return data.items;
     } catch (error) {
-      console.error('Error fetching playlists:', error);
+
       return [];
     }
   };
@@ -99,7 +99,7 @@ export const useSpotify = () => {
       if (!response.ok) throw new Error('Failed to create playlist');
       return await response.json();
     } catch (error) {
-      console.error('Error creating playlist:', error);
+
       return null;
     }
   };
@@ -110,7 +110,7 @@ export const useSpotify = () => {
       if (!response.ok) throw new Error('Failed to fetch playlist');
       return await response.json();
     } catch (error) {
-      console.error('Error fetching playlist:', error);
+
       return null;
     }
   };

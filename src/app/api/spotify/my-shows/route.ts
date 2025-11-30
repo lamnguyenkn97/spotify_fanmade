@@ -59,7 +59,7 @@ export async function GET(request: NextRequest) {
       total: allShows.length,
     });
   } catch (error) {
-    console.error('Error fetching shows:', error);
+
     return NextResponse.json(
       { error: 'Failed to fetch shows', details: error instanceof Error ? error.message : "Unknown error" },
       { status: 500 }

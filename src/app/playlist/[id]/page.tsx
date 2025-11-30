@@ -83,7 +83,7 @@ export default function PlaylistPage() {
               const colors = await extractColorsFromImage(likedData.items[0].track.album.images[0].url);
               setGradientColors(colors);
             } catch (colorError) {
-              console.error('Error extracting colors:', colorError);
+
               setGradientColors({
                 color1: '#121212',
                 color2: '#1a1a1a',
@@ -114,7 +114,7 @@ export default function PlaylistPage() {
             const colors = await extractColorsFromImage(data.images[0].url);
             setGradientColors(colors);
           } catch (colorError) {
-            console.error('Error extracting colors:', colorError);
+
             // Use default colors on error
             setGradientColors({
               color1: '#121212',
@@ -123,7 +123,7 @@ export default function PlaylistPage() {
           }
         }
       } catch (err: unknown) {
-        console.error('Error fetching playlist:', err);
+
         const errorMessage = err instanceof Error ? err.message : 'Failed to load playlist';
         setError(errorMessage);
       } finally {

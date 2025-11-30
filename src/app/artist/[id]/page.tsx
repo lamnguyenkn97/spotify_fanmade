@@ -85,7 +85,7 @@ export default function ArtistPage() {
         const data = await response.json();
         setArtist(data);
       } catch (err: unknown) {
-        console.error('Error fetching artist:', err);
+
         const errorMessage = err instanceof Error ? err.message : 'Failed to load artist';
         setError(errorMessage);
       } finally {

@@ -42,7 +42,7 @@ export async function GET(request: NextRequest) {
 
     if (!releasesResponse.ok) {
       const errorData = await releasesResponse.text();
-      console.error('Spotify API error:', releasesResponse.status, errorData);
+
       throw new Error(`Failed to fetch new releases: ${releasesResponse.status}`);
     }
 
@@ -54,7 +54,7 @@ export async function GET(request: NextRequest) {
       },
     });
   } catch (error: any) {
-    console.error('Error fetching new releases:', error.message);
+
     return NextResponse.json(
       { error: 'Failed to fetch new releases', details: error.message },
       { status: 500 }

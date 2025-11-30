@@ -131,7 +131,7 @@ export const usePlaybackStrategy = (
             await primaryStrategy.play(track);
             return;
           } catch (error) {
-            console.error('Primary strategy failed, trying fallback:', error);
+
           }
         }
 

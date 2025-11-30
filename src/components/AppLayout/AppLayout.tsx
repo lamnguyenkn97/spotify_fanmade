@@ -135,7 +135,7 @@ export const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
 
       setLibraryItems(data);
     } catch (error) {
-      console.error('Error fetching library items:', error);
+
     }
   };
 

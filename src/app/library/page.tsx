@@ -125,7 +125,7 @@ export default function LibraryPage() {
 
       setItems(data);
     } catch (error) {
-      console.error('Error fetching library items:', error);
+
     } finally {
       setLoading(false);
     }

@@ -151,7 +151,6 @@ export const UnauthenticatedHomePage: React.FC<UnauthenticatedHomePageProps> = (
           throw new Error('API request failed');
         }
       } catch (error) {
-        console.warn('API failed, using static homepage data:', error);
         // Fallback to static data only
         const filteredSections = homepageData.data.home.sectionContainer.sections.items.filter(
           (section: any) => {

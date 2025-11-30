@@ -88,7 +88,7 @@ export default function ShowPage() {
         const data = await response.json();
         setShow(data);
       } catch (err: unknown) {
-        console.error('Error fetching show:', err);
+
         const errorMessage = err instanceof Error ? err.message : 'Failed to load show';
         setError(errorMessage);
       } finally {
@@ -110,7 +110,7 @@ export default function ShowPage() {
     // Find the episode in the show's episodes
     const episode = show.episodes.items.find((ep) => ep.id === episodeId);
     if (!episode) {
-      console.error('Episode not found:', episodeId);
+
       return;
     }
 
@@ -129,7 +129,7 @@ export default function ShowPage() {
     try {
       await playTrack(episodeAsTrack);
     } catch (error) {
-      console.error('Error playing episode:', error);
+
     }
   };
 

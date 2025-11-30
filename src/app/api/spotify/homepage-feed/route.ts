@@ -116,8 +116,7 @@ export async function GET() {
       },
     });
   } catch (error: any) {
-    console.error('Error fetching homepage feed:', error.message);
-    
+
     // Return static fallback on error
     return NextResponse.json(
       {

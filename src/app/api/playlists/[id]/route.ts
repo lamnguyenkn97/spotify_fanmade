@@ -32,7 +32,7 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
       followers: playlist.body.followers,
     });
   } catch (error) {
-    console.error('Error fetching playlist:', error);
+
     return NextResponse.json({ error: 'Failed to fetch playlist' }, { status: 500 });
   }
 }

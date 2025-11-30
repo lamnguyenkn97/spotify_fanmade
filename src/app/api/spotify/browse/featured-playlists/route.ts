@@ -42,7 +42,7 @@ export async function GET(request: NextRequest) {
 
     if (!playlistsResponse.ok) {
       const errorData = await playlistsResponse.text();
-      console.error('Spotify API error:', playlistsResponse.status, errorData);
+
       throw new Error(`Failed to fetch featured playlists: ${playlistsResponse.status}`);
     }
 
@@ -54,7 +54,7 @@ export async function GET(request: NextRequest) {
       },
     });
   } catch (error: any) {
-    console.error('Error fetching featured playlists:', error.message);
+
     return NextResponse.json(
       { error: 'Failed to fetch featured playlists', details: error.message },
       { status: 500 }

@@ -136,15 +136,15 @@ export const useSpotifyWebPlayback = (
 
     // Error handling
     newPlayer.addListener('initialization_error', ({ message }: { message: string }) => {
-      console.error('Failed to initialize Spotify player:', message);
+
     });
 
     newPlayer.addListener('authentication_error', ({ message }: { message: string }) => {
-      console.error('Failed to authenticate with Spotify:', message);
+
     });
 
     newPlayer.addListener('account_error', ({ message }: { message: string }) => {
-      console.error('Account error:', message);
+
     });
 
     newPlayer.addListener('ready', ({ device_id }: { device_id: string }) => {
@@ -196,7 +196,7 @@ export const useSpotifyWebPlayback = (
         setPlayer(newPlayer);
         playerRef.current = newPlayer;
       } else {
-        console.error('Failed to connect to Spotify player');
+
       }
     });
 
@@ -228,7 +228,7 @@ export const useSpotifyWebPlayback = (
           setPosition(state.position);
         }
       } catch (error) {
-        console.error('Error getting playback state:', error);
+
       }
     }, 1000); // Update every second
 
@@ -263,7 +263,7 @@ export const useSpotifyWebPlayback = (
           throw new Error(`Failed to play: ${response.status}`);
         }
       } catch (error) {
-        console.error('Error in playTrack:', error);
+
         throw error;
       }
     },
@@ -276,7 +276,7 @@ export const useSpotifyWebPlayback = (
     try {
       await player.pause();
     } catch (error) {
-      console.error('Error pausing:', error);
+
     }
   }, [player]);
 
@@ -286,7 +286,7 @@ export const useSpotifyWebPlayback = (
     try {
       await player.resume();
     } catch (error) {
-      console.error('Error resuming:', error);
+
     }
   }, [player]);
 
@@ -298,7 +298,7 @@ export const useSpotifyWebPlayback = (
         await player.seek(positionMs);
         setPosition(positionMs);
       } catch (error) {
-        console.error('Error seeking:', error);
+
       }
     },
     [player]
@@ -312,7 +312,7 @@ export const useSpotifyWebPlayback = (
         const clampedVolume = Math.max(0, Math.min(1, volume / 100)); // Convert 0-100 to 0-1
         await player.setVolume(clampedVolume);
       } catch (error) {
-        console.error('Error setting volume:', error);
+
       }
     },
     [player]
@@ -324,7 +324,7 @@ export const useSpotifyWebPlayback = (
     try {
       await player.nextTrack();
     } catch (error) {
-      console.error('Error going to next track:', error);
+
     }
   }, [player]);
 
@@ -334,7 +334,7 @@ export const useSpotifyWebPlayback = (
     try {
       await player.previousTrack();
     } catch (error) {
-      console.error('Error going to previous track:', error);
+
     }
   }, [player]);
 
@@ -342,7 +342,7 @@ export const useSpotifyWebPlayback = (
   const setShuffle = useCallback(
     async (state: boolean) => {
       if (!accessToken || !deviceId) {
-        console.error('Cannot set shuffle: missing access token or device ID');
+
         return;
       }
 
@@ -359,7 +359,7 @@ export const useSpotifyWebPlayback = (
 
         if (!response.ok) {
           const error = await response.json();
-          console.error('Error setting shuffle:', error);
+
           throw new Error('Failed to set shuffle');
         }
         
@@ -380,7 +380,7 @@ export const useSpotifyWebPlayback = (
           shuffleUpdateTimeoutRef.current = null;
         }, 3000);
       } catch (error) {
-        console.error('Error in setShuffle:', error);
+
       }
     },
     [accessToken, deviceId]
@@ -390,7 +390,7 @@ export const useSpotifyWebPlayback = (
   const setRepeatMode = useCallback(
     async (state: 'off' | 'context' | 'track') => {
       if (!accessToken || !deviceId) {
-        console.error('Cannot set repeat mode: missing access token or device ID');
+
         return;
       }
 
@@ -407,14 +407,14 @@ export const useSpotifyWebPlayback = (
 
         if (!response.ok) {
           const error = await response.json();
-          console.error('Error setting repeat mode:', error);
+
           throw new Error('Failed to set repeat mode');
         }
         // Map state to number: 'off' = 0, 'context' = 1, 'track' = 2
         const repeatModeNum = state === 'off' ? 0 : state === 'context' ? 1 : 2;
         setRepeatModeState(repeatModeNum);
       } catch (error) {
-        console.error('Error in setRepeatMode:', error);
+
       }
     },
     [accessToken, deviceId]

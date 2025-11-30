@@ -18,11 +18,9 @@ function HomeContent() {
     const errorDescription = searchParams.get('error_description');
 
     if (error === 'access_denied') {
-      console.error('User denied authorization');
       alert('You need to authorize the app to use Spotify features');
       window.history.replaceState({}, '', '/');
     } else if (error === 'auth_failed' || errorDescription) {
-      console.error('Authentication failed:', errorDescription);
       alert('Authentication failed. Please try again.');
       window.history.replaceState({}, '', '/');
     }
@@ -30,7 +28,6 @@ function HomeContent() {
     // Handle missing code (shouldn't happen but just in case)
     const code = searchParams.get('code');
     if (searchParams.get('missing_code') === 'true' || (code && !code.trim())) {
-      console.error('Authorization code was missing');
       alert('Authentication error. Please try logging in again.');
       window.history.replaceState({}, '', '/');
     }
