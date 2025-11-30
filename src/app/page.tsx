@@ -9,6 +9,7 @@ import {
 import { useSpotify } from '@/hooks/useSpotify';
 import { useCardModal } from '@/hooks/useCardModal';
 import { useSearchParams } from 'next/navigation';
+import { Stack, Button, ButtonVariant, ButtonSize } from 'spotify-design-system';
 
 function HomeContent() {
   const searchParams = useSearchParams();
@@ -63,7 +64,24 @@ function HomeContent() {
 
 export default function Home() {
   return (
-    <Suspense fallback={<div>Loading...</div>}>
+    <Suspense
+      fallback={
+        <Stack
+          direction="column"
+          align="center"
+          justify="center"
+          className="h-screen w-full bg-spotify-dark"
+        >
+          <Button
+            text="Loading"
+            variant={ButtonVariant.Primary}
+            size={ButtonSize.Large}
+            loading={true}
+            disabled={true}
+          />
+        </Stack>
+      }
+    >
       <HomeContent />
     </Suspense>
   );

@@ -176,11 +176,15 @@ export const UnauthenticatedHomePage: React.FC<UnauthenticatedHomePageProps> = (
     return (
       <>
         <HeroBanner onLogin={onLogin} />
-        <div className="px-8 py-12">
-          <Typography variant="body" color="muted">
-            Loading...
-          </Typography>
-        </div>
+        <Stack direction="column" align="center" justify="center" className="px-8 py-12">
+          <Button
+            text="Loading"
+            variant={ButtonVariant.Primary}
+            size={ButtonSize.Large}
+            loading={true}
+            disabled={true}
+          />
+        </Stack>
       </>
     );
   }

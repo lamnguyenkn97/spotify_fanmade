@@ -8,6 +8,9 @@ import {
   Card,
   Table,
   colors,
+  Button,
+  ButtonVariant,
+  ButtonSize,
 } from 'spotify-design-system';
 
 interface SearchResults {
@@ -527,7 +530,24 @@ function SearchPageContent() {
 
 export default function SearchPage() {
   return (
-    <Suspense fallback={<div>Loading...</div>}>
+    <Suspense
+      fallback={
+        <Stack
+          direction="column"
+          align="center"
+          justify="center"
+          className="h-screen w-full bg-spotify-dark"
+        >
+          <Button
+            text="Loading"
+            variant={ButtonVariant.Primary}
+            size={ButtonSize.Large}
+            loading={true}
+            disabled={true}
+          />
+        </Stack>
+      }
+    >
       <SearchPageContent />
     </Suspense>
   );

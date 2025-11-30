@@ -11,6 +11,8 @@ import {
   Pill,
   Image,
   colors,
+  Modal,
+  ModalSize,
 } from 'spotify-design-system';
 import { faPlus, faSearch, faExpand, faBars, faHeart, faVolumeHigh } from '@fortawesome/free-solid-svg-icons';
 import { useRouter } from 'next/navigation';
@@ -48,6 +50,7 @@ export default function LibraryPage() {
   const [sortOption, setSortOption] = useState<SortOption>(SortOption.RECENTS);
   const [items, setItems] = useState<LibraryItem[]>([]);
   const [loading, setLoading] = useState(true);
+  const [showFeatureNotImplemented, setShowFeatureNotImplemented] = useState(false);
 
   useEffect(() => {
     fetchLibraryItems();
@@ -139,7 +142,7 @@ export default function LibraryPage() {
   };
 
   const handleCreate = () => {
-    // TODO: Open create playlist modal
+    setShowFeatureNotImplemented(true);
   };
 
   const getBestImageUrl = (images: Array<{ url: string }> | undefined): string => {
@@ -217,10 +220,14 @@ export default function LibraryPage() {
 
       {/* Library Items List */}
       {loading ? (
-        <Stack direction="column" spacing="md">
-          <Typography variant="body" color="muted">
-            Loading...
-          </Typography>
+        <Stack direction="column" align="center" justify="center" className="py-12">
+          <Button
+            text="Loading"
+            variant={ButtonVariant.Primary}
+            size={ButtonSize.Large}
+            loading={true}
+            disabled={true}
+          />
         </Stack>
       ) : items.length === 0 ? (
         <Stack direction="column" spacing="md">
@@ -295,6 +302,28 @@ export default function LibraryPage() {
           ))}
         </Stack>
       )}
+
+      {/* Feature Not Implemented Modal */}
+      <Modal
+        open={showFeatureNotImplemented}
+        onClose={() => setShowFeatureNotImplemented(false)}
+        size={ModalSize.Small}
+        title="Feature Not Implemented"
+        description="This feature is not implemented in this portfolio demo. Please visit the official Spotify website to experience the full functionality."
+        actions={[
+          {
+            label: 'Visit Spotify',
+            onClick: () => {
+              window.open('https://open.spotify.com', '_blank');
+              setShowFeatureNotImplemented(false);
+            },
+            variant: 'primary',
+          },
+        ]}
+        showCloseButton={true}
+        closeOnBackdropClick={true}
+        closeOnEscape={true}
+      />
     </Stack>
   );
 }

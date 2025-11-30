@@ -37,6 +37,7 @@ export const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
   const [libraryItems, setLibraryItems] = useState<LibraryItem[]>([]);
   const [selectedFilter, setSelectedFilter] = useState<LibraryFilter>(LibraryFilter.PLAYLISTS);
   const [showLoginPrompt, setShowLoginPrompt] = useState(false);
+  const [showFeatureNotImplemented, setShowFeatureNotImplemented] = useState(false);
 
   useEffect(() => {
     if (isAuthenticated) {
@@ -142,8 +143,8 @@ export const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
     if (!isAuthenticated) {
       setShowLoginPrompt(true);
     } else {
-      // TODO: Implement create playlist functionality for authenticated users
-      console.log('Create playlist functionality not yet implemented');
+      // Show feature not implemented for authenticated users
+      setShowFeatureNotImplemented(true);
     }
   };
 
@@ -200,6 +201,28 @@ export const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
               {
                 label: 'Connect with Spotify',
                 onClick: handleLoginFromPrompt,
+                variant: 'primary',
+              },
+            ]}
+            showCloseButton={true}
+            closeOnBackdropClick={true}
+            closeOnEscape={true}
+          />
+
+          {/* Feature Not Implemented Modal */}
+          <Modal
+            open={showFeatureNotImplemented}
+            onClose={() => setShowFeatureNotImplemented(false)}
+            size={ModalSize.Small}
+            title="Feature Not Implemented"
+            description="This feature is not implemented in this portfolio demo. Please visit the official Spotify website to experience the full functionality."
+            actions={[
+              {
+                label: 'Visit Spotify',
+                onClick: () => {
+                  window.open('https://open.spotify.com', '_blank');
+                  setShowFeatureNotImplemented(false);
+                },
                 variant: 'primary',
               },
             ]}
@@ -318,10 +341,10 @@ const AppLayoutContent: React.FC<{
           <AuthenticatedSideBar
             libraryItems={libraryItems}
             onAddClick={onCreatePlaylist}
-            onExpandClick={() => {}}
+            onExpandClick={() => setShowFeatureNotImplemented(true)}
             onFilterClick={onFilterClick}
             onLibraryItemClick={onLibraryItemClick}
-            onSearch={() => {}}
+            onSearch={() => setShowFeatureNotImplemented(true)}
           />
         ) : (
           <UnauthenticatedSideBar
