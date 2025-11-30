@@ -183,31 +183,11 @@ export const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
             router={router}
             showLoginPrompt={showLoginPrompt}
             setShowLoginPrompt={setShowLoginPrompt}
+            showFeatureNotImplemented={showFeatureNotImplemented}
+            setShowFeatureNotImplemented={setShowFeatureNotImplemented}
           >
             {children}
           </AppLayoutContent>
-
-          {/* Feature Not Implemented Modal */}
-          <Modal
-            open={showFeatureNotImplemented}
-            onClose={() => setShowFeatureNotImplemented(false)}
-            size={ModalSize.Small}
-            title="Feature Not Implemented"
-            description="This feature is not implemented in this portfolio demo. Please visit the official Spotify website to experience the full functionality."
-            actions={[
-              {
-                label: 'Visit Spotify',
-                onClick: () => {
-                  window.open('https://open.spotify.com', '_blank');
-                  setShowFeatureNotImplemented(false);
-                },
-                variant: 'primary',
-              },
-            ]}
-            showCloseButton={true}
-            closeOnBackdropClick={true}
-            closeOnEscape={true}
-          />
         </QueueDrawerProvider>
       </MusicPlayerProvider>
     </ThemeProvider>
@@ -229,6 +209,8 @@ const AppLayoutContent: React.FC<{
   children: React.ReactNode;
   showLoginPrompt: boolean;
   setShowLoginPrompt: (show: boolean) => void;
+  showFeatureNotImplemented: boolean;
+  setShowFeatureNotImplemented: (show: boolean) => void;
 }> = ({
   isAuthenticated,
   user,
@@ -243,6 +225,8 @@ const AppLayoutContent: React.FC<{
   children,
   showLoginPrompt,
   setShowLoginPrompt,
+  showFeatureNotImplemented,
+  setShowFeatureNotImplemented,
 }) => {
   const { currentTrack } = useMusicPlayerContext();
   const { isQueueOpen, openQueue, closeQueue } = useQueueDrawer();
@@ -468,6 +452,30 @@ const AppLayoutContent: React.FC<{
           ]}
           showCloseButton={true}
           closeOnBackdropClick={false}
+          closeOnEscape={true}
+        />
+      )}
+
+      {/* Feature Not Implemented Modal */}
+      {showFeatureNotImplemented && (
+        <Modal
+          open={showFeatureNotImplemented}
+          onClose={() => setShowFeatureNotImplemented(false)}
+          size={ModalSize.Small}
+          title="Feature Not Implemented"
+          description="This feature is not implemented in this portfolio demo. Please visit the official Spotify website to experience the full functionality."
+          actions={[
+            {
+              label: 'Visit Spotify',
+              onClick: () => {
+                window.open('https://open.spotify.com', '_blank');
+                setShowFeatureNotImplemented(false);
+              },
+              variant: 'primary',
+            },
+          ]}
+          showCloseButton={true}
+          closeOnBackdropClick={true}
           closeOnEscape={true}
         />
       )}
