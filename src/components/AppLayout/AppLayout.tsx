@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { ThemeProvider, AppHeader, Stack, Typography, Icon, Footer } from 'spotify-design-system';
 import { useRouter } from 'next/navigation';
 import { faGithub, faLinkedin } from '@fortawesome/free-brands-svg-icons';
+import { faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
 import {
   UnauthenticatedSideBar,
   AuthenticatedSideBar,
@@ -327,12 +328,7 @@ const AppLayoutContent: React.FC<{
           {children}
 
           {/* Footer at bottom of content */}
-          <Footer
-            copyrightText=""
-            showSocialLinks={false}
-            showLinks={false}
-            showCopyright={false}
-          >
+          <Footer copyrightText="" showSocialLinks={false} showLinks={false} showCopyright={false}>
             <Stack direction="row" spacing="sm" align="start" justify="space-between">
               {/* Developer Column */}
               <Stack direction="column" spacing="md" align="start">
@@ -401,13 +397,20 @@ const AppLayoutContent: React.FC<{
             </Stack>
 
             {/* Legal Disclaimer */}
-            <Stack direction="column" spacing="sm" className="mt-8 pt-8 border-t border-spotify-grey2">
-              <Typography variant="caption" color="muted" className="text-center">
+            <Stack
+              direction="column"
+              spacing="sm"
+              className="mt-8 pt-8 border-t border-spotify-grey2"
+            >
+              <Typography variant="caption" color="primary" className="text-center">
                 © 2025 Lam Nguyen
               </Typography>
-              <Typography variant="body" size="sm" weight="bold" color="primary" className="text-center">
-                ⚠️ Not affiliated with Spotify AB. This is a portfolio project.
-              </Typography>
+              <Stack direction="row" spacing="xs" align="center" justify="center">
+                <Icon icon={faExclamationTriangle} size="sm" color="muted" />
+                <Typography variant="body" size="sm" weight="bold" color="primary">
+                  Not affiliated with Spotify AB. This is a portfolio project.
+                </Typography>
+              </Stack>
             </Stack>
           </Footer>
         </Stack>
