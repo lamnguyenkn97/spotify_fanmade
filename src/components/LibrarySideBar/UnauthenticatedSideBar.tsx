@@ -44,10 +44,10 @@ const SidebarHeader: React.FC<{ onAddClick: () => void }> = ({ onAddClick }) => 
 
 const ProjectBadges: React.FC = () => {
   const badges = [
-    { label: '🎨 Showcase' },
-    { label: '🎵 Fanmade' },
-    { label: '⚡ TypeScript' },
-    { label: '👨‍💻 Made by Lam' },
+    { label: 'Portfolio Project' },
+    { label: 'Fanmade' },
+    { label: 'TypeScript' },
+    { label: 'Custom Design System' },
   ];
 
   return (
@@ -55,7 +55,7 @@ const ProjectBadges: React.FC = () => {
       {badges.map((badge, index) => (
         <span
           key={index}
-          className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-spotify-green text-black"
+          className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium border border-spotify-green text-spotify-green bg-transparent"
         >
           {badge.label}
         </span>
