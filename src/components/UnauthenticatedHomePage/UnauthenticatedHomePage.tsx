@@ -172,13 +172,6 @@ export const UnauthenticatedHomePage: React.FC<UnauthenticatedHomePageProps> = (
       <HeroBanner onLogin={onLogin} />
       
       <div className="px-8 py-6 space-y-8">
-        {/* Demo Disclaimer */}
-        <Stack direction="row" align="center" justify="center" className="py-2">
-          <Typography variant="caption" color="muted" className="text-center">
-            {usingFallback ? '📋 Demo Data' : '🎵 Fresh from Spotify'} • Connect to see your personalized content
-          </Typography>
-        </Stack>
-
         {/* Render Sections */}
         {sections.length > 0 ? (
           sections.map((section: any, sectionIndex: number) => {
