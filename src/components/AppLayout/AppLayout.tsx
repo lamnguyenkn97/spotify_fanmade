@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import {
   ThemeProvider,
   AppHeader,
@@ -11,7 +11,7 @@ import {
   colors,
 } from 'spotify-design-system';
 import { useRouter } from 'next/navigation';
-import { faGithub, faLinkedin } from '@fortawesome/free-brands-svg-icons';
+import type { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime';
 import { faHeart } from '@fortawesome/free-solid-svg-icons';
 import {
   UnauthenticatedSideBar,
@@ -24,6 +24,13 @@ import { QueueDrawerProvider, useQueueDrawer } from '@/contexts/QueueDrawerConte
 import { MusicPlayer } from '@/components/MusicPlayer';
 import { QueueDrawer } from '@/components/QueueDrawer';
 import { Modal, ModalSize } from 'spotify-design-system';
+import { FOOTER_DATA } from '@/config/footerData';
+
+interface SpotifyUser {
+  displayName: string;
+  email: string;
+  images?: Array<{ url: string }>;
+}
 
 interface AppLayoutProps {
   children: React.ReactNode;
@@ -89,7 +96,7 @@ export const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
                 subtitle: `Playlist • ${playlist.owner?.display_name || 'Spotify'}${
                   playlist.tracks?.total ? ` • ${playlist.tracks.total} songs` : ''
                 }`,
-                pinned: Math.random() > 0.7,
+                pinned: false,
               })) || [];
             data = [...data, ...playlists];
           }
@@ -142,27 +149,30 @@ export const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
       }
 
       setLibraryItems(data);
-    } catch (error) {}
+    } catch (error) {
+      // Silently fail - user will see empty library
+      setLibraryItems([]);
+    }
   };
 
-  const handleCreatePlaylist = () => {
+  const handleCreatePlaylist = useCallback(() => {
     if (!isAuthenticated) {
       setShowLoginPrompt(true);
     } else {
       // Show feature not implemented for authenticated users
       setShowFeatureNotImplemented(true);
     }
-  };
+  }, [isAuthenticated]);
 
-  const handleBrowsePodcasts = () => {
+  const handleBrowsePodcasts = useCallback(() => {
     router.push('/podcasts');
-  };
+  }, [router]);
 
-  const handleFilterClick = (filter: LibraryFilter) => {
+  const handleFilterClick = useCallback((filter: LibraryFilter) => {
     setSelectedFilter(filter);
-  };
+  }, []);
 
-  const handleLibraryItemClick = (item: LibraryItem) => {
+  const handleLibraryItemClick = useCallback((item: LibraryItem) => {
     if (item.type === 'playlist' || item.type === 'album') {
       router.push(`/playlist/${item.id}`);
     } else if (item.type === 'show' || item.type === 'podcast') {
@@ -170,7 +180,7 @@ export const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
     } else if (item.type === 'artist') {
       router.push(`/artist/${item.id}`);
     }
-  };
+  }, [router]);
 
   return (
     <ThemeProvider>
@@ -201,9 +211,9 @@ export const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
 };
 
 // Inner component that has access to MusicPlayerContext
-const AppLayoutContent: React.FC<{
+interface AppLayoutContentProps {
   isAuthenticated: boolean;
-  user: any;
+  user: SpotifyUser | null;
   libraryItems: LibraryItem[];
   onLogin: () => void;
   onLogout: () => void;
@@ -211,13 +221,15 @@ const AppLayoutContent: React.FC<{
   onBrowsePodcasts: () => void;
   onFilterClick: (filter: LibraryFilter) => void;
   onLibraryItemClick: (item: LibraryItem) => void;
-  router: any;
+  router: AppRouterInstance;
   children: React.ReactNode;
   showLoginPrompt: boolean;
   setShowLoginPrompt: (show: boolean) => void;
   showFeatureNotImplemented: boolean;
   setShowFeatureNotImplemented: (show: boolean) => void;
-}> = ({
+}
+
+const AppLayoutContent: React.FC<AppLayoutContentProps> = ({
   isAuthenticated,
   user,
   libraryItems,
@@ -239,23 +251,7 @@ const AppLayoutContent: React.FC<{
 
   const handleLoginFromPrompt = () => {
     setShowLoginPrompt(false);
-    window.open('https://open.spotify.com', '_blank');
-  };
-
-  const footerData = {
-    developer: [
-      { name: 'Portfolio', url: 'https://yourportfolio.com' }, // TODO: Replace
-      { name: 'GitHub Profile', url: 'https://github.com/lamnguyenkn97' }, // TODO: Replace
-    ],
-    project: [
-      { name: 'Project Repository', url: 'https://github.com/lamnguyenkn97/spotify_fanmade' }, // TODO: Replace
-      { name: 'Design System', url: 'https://github.com/lamnguyenkn97/spotify_design_system' },
-      { name: 'Storybook', url: 'https://spotify-storybook.vercel.app' },
-    ],
-    social: [
-      { icon: faGithub, url: 'https://github.com/lamnguyenkn97', label: 'GitHub' }, // TODO: Replace
-      { icon: faLinkedin, url: 'https://linkedin.com/in/yourprofile', label: 'LinkedIn' }, // TODO: Replace
-    ],
+    onLogin();
   };
 
   return (
@@ -339,7 +335,6 @@ const AppLayoutContent: React.FC<{
         ) : (
           <UnauthenticatedSideBar
             onCreatePlaylist={onCreatePlaylist}
-            onAddClick={onCreatePlaylist}
             onBrowsePodcasts={onBrowsePodcasts}
           />
         )}
@@ -358,7 +353,7 @@ const AppLayoutContent: React.FC<{
                   Developer
                 </Typography>
                 <Stack direction="column" spacing="sm">
-                  {footerData.developer.map((link, index) => (
+                  {FOOTER_DATA.developer.map((link, index) => (
                     <a
                       key={index}
                       href={link.url}
@@ -380,7 +375,7 @@ const AppLayoutContent: React.FC<{
                   Project
                 </Typography>
                 <Stack direction="column" spacing="sm">
-                  {footerData.project.map((link, index) => (
+                  {FOOTER_DATA.project.map((link, index) => (
                     <a
                       key={index}
                       href={link.url}
@@ -402,7 +397,7 @@ const AppLayoutContent: React.FC<{
                   Social
                 </Typography>
                 <Stack direction="row" spacing="md">
-                  {footerData.social.map((social, index) => (
+                  {FOOTER_DATA.social.map((social, index) => (
                     <a
                       key={index}
                       href={social.url}
