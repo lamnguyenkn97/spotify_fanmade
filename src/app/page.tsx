@@ -119,6 +119,7 @@ function HomeContent() {
           sections={sections}
           onCardClick={openCardModal}
           getCardProps={getCardProps}
+          onLogin={handleLogin}
         />
       )}
       {/* All Authentication Modals */}

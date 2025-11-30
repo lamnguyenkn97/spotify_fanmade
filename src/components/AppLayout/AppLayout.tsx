@@ -328,7 +328,7 @@ const AppLayoutContent: React.FC<{
 
           {/* Footer at bottom of content */}
           <Footer
-            copyrightText="© 2024 Lam Nguyen. Not affiliated with Spotify AB. This is a portfolio project."
+            copyrightText="© 2025 Lam Nguyen. Not affiliated with Spotify AB. This is a portfolio project."
             showSocialLinks={false}
             showLinks={false}
             showCopyright={true}
