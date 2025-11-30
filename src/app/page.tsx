@@ -13,8 +13,7 @@ import { useSearchParams } from 'next/navigation';
 function HomeContent() {
   const searchParams = useSearchParams();
   const { user, isAuthenticated, login } = useSpotify();
-  const { showCardModal, selectedCard, openCardModal, closeCardModal } = useCardModal();
-  const [showCreatePlaylistDialog, setShowCreatePlaylistDialog] = useState(false);
+  const { showCardModal, openCardModal, closeCardModal } = useCardModal();
   
   // Handle error from URL parameters (OAuth callback errors)
   useEffect(() => {
@@ -45,11 +44,6 @@ function HomeContent() {
     closeCardModal();
   };
 
-  const handleSignUpFree = () => {
-    login();
-    closeCardModal();
-  };
-
   return (
     <>
       {isAuthenticated && user ? (
@@ -57,15 +51,11 @@ function HomeContent() {
       ) : (
         <UnauthenticatedHomePage onCardClick={openCardModal} onLogin={handleLogin} />
       )}
-      {/* All Authentication Modals */}
+      {/* Unified Authentication Modal */}
       <AuthModals
-        showCreatePlaylistDialog={showCreatePlaylistDialog}
-        onCloseCreatePlaylist={() => setShowCreatePlaylistDialog(false)}
-        onLogin={handleLogin}
         showCardModal={showCardModal}
-        selectedCard={selectedCard}
         onCloseCardModal={closeCardModal}
-        onSignUpFree={handleSignUpFree}
+        onLogin={handleLogin}
       />
     </>
   );

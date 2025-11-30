@@ -198,17 +198,12 @@ export const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
             description="Log in with your Spotify account to experience all features including search, playlists, library, and personalized recommendations."
             actions={[
               {
-                label: 'Not now',
-                onClick: () => setShowLoginPrompt(false),
-                variant: 'text',
-              },
-              {
                 label: 'Connect with Spotify',
                 onClick: handleLoginFromPrompt,
                 variant: 'primary',
               },
             ]}
-            showCloseButton={false}
+            showCloseButton={true}
             closeOnBackdropClick={true}
             closeOnEscape={true}
           />

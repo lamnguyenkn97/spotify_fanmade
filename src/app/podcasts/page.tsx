@@ -27,16 +27,11 @@ const getBestImageUrl = (sources: any[] = []) => {
 
 export default function PodcastsPage() {
   const { login } = useSpotify();
-  const { showCardModal, selectedCard, openCardModal, closeCardModal } = useCardModal();
+  const { showCardModal, openCardModal, closeCardModal } = useCardModal();
 
   const sections = categoriesData.data.browse.sections.items.filter(
     (section) => section.data.title?.transformedLabel
   );
-
-  const handleSignUpFree = () => {
-    login();
-    closeCardModal();
-  };
 
   const handleLogin = () => {
     login();
@@ -103,15 +98,11 @@ export default function PodcastsPage() {
         })}
       </div>
 
-      {/* All Authentication Modals */}
+      {/* Unified Authentication Modal */}
       <AuthModals
-        showCreatePlaylistDialog={false}
-        onCloseCreatePlaylist={() => {}}
-        onLogin={handleLogin}
         showCardModal={showCardModal}
-        selectedCard={selectedCard}
         onCloseCardModal={closeCardModal}
-        onSignUpFree={handleSignUpFree}
+        onLogin={handleLogin}
       />
     </>
   );
