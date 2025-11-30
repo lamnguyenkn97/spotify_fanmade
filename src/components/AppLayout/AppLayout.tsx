@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { ThemeProvider, AppHeader, Stack, Typography, Icon, Footer } from 'spotify-design-system';
 import { useRouter } from 'next/navigation';
 import { faGithub, faLinkedin } from '@fortawesome/free-brands-svg-icons';
-import { faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
+import { faHeart } from '@fortawesome/free-solid-svg-icons';
 import {
   UnauthenticatedSideBar,
   AuthenticatedSideBar,
@@ -402,15 +402,21 @@ const AppLayoutContent: React.FC<{
               spacing="sm"
               className="mt-8 pt-8 border-t border-spotify-grey2"
             >
-              <Typography variant="caption" color="primary" className="text-center">
+              <Typography variant="caption" color="muted" className="text-center">
                 © 2025 Lam Nguyen
               </Typography>
               <Stack direction="row" spacing="xs" align="center" justify="center">
-                <Icon icon={faExclamationTriangle} size="sm" color="muted" />
-                <Typography variant="body" size="sm" weight="bold" color="primary">
-                  Not affiliated with Spotify AB. This is a portfolio project.
+                <Typography variant="body" size="sm" color="muted">
+                  Made with
+                </Typography>
+                <Icon icon={faHeart} size="sm" className="text-spotify-green" />
+                <Typography variant="body" size="sm" color="muted">
+                  for music lovers
                 </Typography>
               </Stack>
+              <Typography variant="caption" color="muted" className="text-center">
+                Not affiliated with Spotify AB • Independent portfolio project
+              </Typography>
             </Stack>
           </Footer>
         </Stack>
