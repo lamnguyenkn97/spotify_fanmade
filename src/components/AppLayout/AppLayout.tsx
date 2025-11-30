@@ -1,7 +1,15 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { ThemeProvider, AppHeader, Stack, Typography, Icon, Footer } from 'spotify-design-system';
+import {
+  ThemeProvider,
+  AppHeader,
+  Stack,
+  Typography,
+  Icon,
+  Footer,
+  colors,
+} from 'spotify-design-system';
 import { useRouter } from 'next/navigation';
 import { faGithub, faLinkedin } from '@fortawesome/free-brands-svg-icons';
 import { faHeart } from '@fortawesome/free-solid-svg-icons';
@@ -134,9 +142,7 @@ export const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
       }
 
       setLibraryItems(data);
-    } catch (error) {
-
-    }
+    } catch (error) {}
   };
 
   const handleCreatePlaylist = () => {
@@ -233,7 +239,7 @@ const AppLayoutContent: React.FC<{
 
   const handleLoginFromPrompt = () => {
     setShowLoginPrompt(false);
-    onLogin();
+    window.open('https://open.spotify.com', '_blank');
   };
 
   const footerData = {
@@ -292,8 +298,16 @@ const AppLayoutContent: React.FC<{
           !isAuthenticated
             ? [
                 { id: 'portfolio', label: 'Portfolio Demo', href: '#' },
-                { id: 'npm', label: 'Design System', href: 'https://www.npmjs.com/package/spotify-design-system' },
-                { id: 'storybook', label: 'Documentation', href: 'https://spotify-storybook.vercel.app' },
+                {
+                  id: 'npm',
+                  label: 'Design System',
+                  href: 'https://www.npmjs.com/package/spotify-design-system',
+                },
+                {
+                  id: 'storybook',
+                  label: 'Documentation',
+                  href: 'https://spotify-storybook.vercel.app',
+                },
               ]
             : []
         }
@@ -410,20 +424,20 @@ const AppLayoutContent: React.FC<{
               spacing="sm"
               className="mt-8 pt-8 border-t border-spotify-grey2"
             >
-              <Typography variant="caption" color="muted" className="text-center">
+              <Typography variant="caption" color="primary" className="text-center">
                 © 2025 Lam Nguyen
               </Typography>
               <Stack direction="row" spacing="xs" align="center" justify="center">
-                <Typography variant="body" size="sm" color="muted">
+                <Typography variant="body" size="sm" color="primary">
                   Made with
                 </Typography>
-                <Icon icon={faHeart} size="sm" className="text-spotify-green" />
-                <Typography variant="body" size="sm" color="muted">
+                <Icon icon={faHeart} size="sm" color={colors.primary.brand} />
+                <Typography variant="body" size="sm" color="primary">
                   for music lovers
                 </Typography>
               </Stack>
-              <Typography variant="caption" color="muted" className="text-center">
-                Not affiliated with Spotify AB • Independent portfolio project
+              <Typography variant="caption" color="secondary" className="text-center">
+                Not affiliated with Spotify AB.
               </Typography>
             </Stack>
           </Footer>

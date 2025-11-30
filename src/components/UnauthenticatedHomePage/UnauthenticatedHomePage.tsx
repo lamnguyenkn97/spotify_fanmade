@@ -64,7 +64,7 @@ const getCardProps = (item: any) => {
   return cardPropsMap[__typename as keyof typeof cardPropsMap] || null;
 };
 
-const HeroBanner: React.FC<{ onLogin?: () => void }> = ({ onLogin }) => (
+const HeroBanner: React.FC = () => (
   <div className="relative w-full bg-gradient-to-b from-spotify-green/20 to-transparent px-8 py-12 mb-8">
     <Stack direction="column" spacing="lg" align="center" className="max-w-4xl mx-auto text-center">
       <Stack direction="column" spacing="md">
@@ -76,18 +76,16 @@ const HeroBanner: React.FC<{ onLogin?: () => void }> = ({ onLogin }) => (
           a custom design system.
         </Typography>
       </Stack>
-      {onLogin && (
-        <Button
-          variant={ButtonVariant.Primary}
-          size={ButtonSize.Large}
-          onClick={onLogin}
-          className="px-12 py-4 text-lg font-bold"
-        >
-          Connect with Spotify
-        </Button>
-      )}
+      <Button
+        variant={ButtonVariant.Primary}
+        size={ButtonSize.Large}
+        onClick={() => window.open('https://open.spotify.com', '_blank')}
+        className="px-12 py-4 text-lg font-bold"
+      >
+        Connect with Spotify
+      </Button>
       <Typography variant="caption" color="secondary" className="mt-2">
-        Experience the full app by connecting your Spotify account
+        Visit Spotify to experience the full music streaming service
       </Typography>
     </Stack>
   </div>
@@ -172,7 +170,7 @@ export const UnauthenticatedHomePage: React.FC<UnauthenticatedHomePageProps> = (
   if (loading) {
     return (
       <>
-        <HeroBanner onLogin={onLogin} />
+        <HeroBanner />
         <Stack direction="column" align="center" justify="center" className="px-8 py-12">
           <Button
             text="Loading"
