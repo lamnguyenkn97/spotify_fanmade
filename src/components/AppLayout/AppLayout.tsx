@@ -148,11 +148,6 @@ export const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
     }
   };
 
-  const handleLoginFromPrompt = () => {
-    setShowLoginPrompt(false);
-    login();
-  };
-
   const handleBrowsePodcasts = () => {
     router.push('/podcasts');
   };
@@ -186,28 +181,11 @@ export const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
             onFilterClick={handleFilterClick}
             onLibraryItemClick={handleLibraryItemClick}
             router={router}
+            showLoginPrompt={showLoginPrompt}
+            setShowLoginPrompt={setShowLoginPrompt}
           >
             {children}
           </AppLayoutContent>
-
-          {/* Login Prompt Modal */}
-          <Modal
-            open={showLoginPrompt}
-            onClose={() => setShowLoginPrompt(false)}
-            size={ModalSize.Small}
-            title="Connect with Spotify"
-            description="Log in with your Spotify account to experience all features including search, playlists, library, and personalized recommendations."
-            actions={[
-              {
-                label: 'Connect with Spotify',
-                onClick: handleLoginFromPrompt,
-                variant: 'primary',
-              },
-            ]}
-            showCloseButton={true}
-            closeOnBackdropClick={true}
-            closeOnEscape={true}
-          />
 
           {/* Feature Not Implemented Modal */}
           <Modal
@@ -249,6 +227,8 @@ const AppLayoutContent: React.FC<{
   onLibraryItemClick: (item: LibraryItem) => void;
   router: any;
   children: React.ReactNode;
+  showLoginPrompt: boolean;
+  setShowLoginPrompt: (show: boolean) => void;
 }> = ({
   isAuthenticated,
   user,
@@ -261,9 +241,16 @@ const AppLayoutContent: React.FC<{
   onLibraryItemClick,
   router,
   children,
+  showLoginPrompt,
+  setShowLoginPrompt,
 }) => {
   const { currentTrack } = useMusicPlayerContext();
   const { isQueueOpen, openQueue, closeQueue } = useQueueDrawer();
+
+  const handleLoginFromPrompt = () => {
+    setShowLoginPrompt(false);
+    onLogin();
+  };
 
   const footerData = {
     developer: [
@@ -295,8 +282,13 @@ const AppLayoutContent: React.FC<{
         }
         onSearch={(query: string) => {
           if (!isAuthenticated) {
-            // Show login prompt for unauthenticated users
-            setShowLoginPrompt(true);
+            // Show login prompt for unauthenticated users only when they actually try to search
+            if (query.trim()) {
+              // Use setTimeout to avoid Enter key event propagating to modal
+              setTimeout(() => {
+                setShowLoginPrompt(true);
+              }, 0);
+            }
             return;
           }
           // Authenticated users can search
@@ -458,6 +450,27 @@ const AppLayoutContent: React.FC<{
       </Stack>
 
       <MusicPlayer onQueueClick={openQueue} />
+
+      {/* Login Prompt Modal */}
+      {showLoginPrompt && (
+        <Modal
+          open={showLoginPrompt}
+          onClose={() => setShowLoginPrompt(false)}
+          size={ModalSize.Small}
+          title="Connect with Spotify"
+          description="Log in with your Spotify account to experience all features including search, playlists, library, and personalized recommendations."
+          actions={[
+            {
+              label: 'Connect with Spotify',
+              onClick: handleLoginFromPrompt,
+              variant: 'primary',
+            },
+          ]}
+          showCloseButton={true}
+          closeOnBackdropClick={false}
+          closeOnEscape={true}
+        />
+      )}
     </Stack>
   );
 };

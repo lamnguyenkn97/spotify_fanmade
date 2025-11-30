@@ -118,7 +118,6 @@ export const UnauthenticatedHomePage: React.FC<UnauthenticatedHomePageProps> = (
         
         if (response.ok) {
           const data = await response.json();
-          console.log('Homepage API response:', data);
           
           if (data.data?.home?.sectionContainer?.sections?.items) {
             const apiSections = data.data.home.sectionContainer.sections.items.filter(
@@ -142,7 +141,6 @@ export const UnauthenticatedHomePage: React.FC<UnauthenticatedHomePageProps> = (
             );
             
             const mergedSections = [...apiSections, ...uniqueStaticSections];
-            console.log('Merged sections:', mergedSections.length, '(API:', apiSections.length, '+ Static:', uniqueStaticSections.length, ')');
             
             setSections(mergedSections);
             setUsingFallback(false);
