@@ -1,12 +1,9 @@
 'use client';
-import React from 'react';
-import { ContentSections } from '../ContentSections';
-import { Stack, Typography, Button, ButtonVariant, ButtonSize } from 'spotify-design-system';
+import React, { useState, useEffect } from 'react';
+import { Card, Stack, Typography, Button, ButtonVariant, ButtonSize } from 'spotify-design-system';
 
 interface UnauthenticatedHomePageProps {
-  sections: any[];
   onCardClick: (card: any) => void;
-  getCardProps: (item: any) => any;
   onLogin?: () => void;
 }
 
@@ -40,15 +37,100 @@ const HeroBanner: React.FC<{ onLogin?: () => void }> = ({ onLogin }) => (
 );
 
 export const UnauthenticatedHomePage: React.FC<UnauthenticatedHomePageProps> = ({
-  sections,
   onCardClick,
-  getCardProps,
   onLogin,
 }) => {
+  const [featuredPlaylists, setFeaturedPlaylists] = useState<any[]>([]);
+  const [newReleases, setNewReleases] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchBrowseData = async () => {
+      try {
+        const [playlistsRes, releasesRes] = await Promise.all([
+          fetch('/api/spotify/browse/featured-playlists'),
+          fetch('/api/spotify/browse/new-releases'),
+        ]);
+
+        if (playlistsRes.ok) {
+          const playlistsData = await playlistsRes.json();
+          setFeaturedPlaylists(playlistsData.playlists?.items || []);
+        }
+
+        if (releasesRes.ok) {
+          const releasesData = await releasesRes.json();
+          setNewReleases(releasesData.albums?.items || []);
+        }
+      } catch (error) {
+        console.error('Error fetching browse data:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchBrowseData();
+  }, []);
+
+  if (loading) {
+    return (
+      <>
+        <HeroBanner onLogin={onLogin} />
+        <div className="px-8 py-12">
+          <Typography variant="body" color="muted">
+            Loading...
+          </Typography>
+        </div>
+      </>
+    );
+  }
+
   return (
     <>
       <HeroBanner onLogin={onLogin} />
-      <ContentSections sections={sections} onCardClick={onCardClick} getCardProps={getCardProps} />
+      
+      <div className="px-8 py-6 space-y-12">
+        {/* Featured Playlists Section */}
+        {featuredPlaylists.length > 0 && (
+          <Stack direction="column" spacing="lg">
+            <Typography variant="heading" size="xl" weight="bold" color="primary">
+              Featured Playlists
+            </Typography>
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+              {featuredPlaylists.slice(0, 10).map((playlist) => (
+                <Card
+                  key={playlist.id}
+                  title={playlist.name}
+                  subtitle={playlist.description || 'Playlist'}
+                  imageUrl={playlist.images?.[0]?.url}
+                  variant="default"
+                  onClick={() => onCardClick(playlist)}
+                />
+              ))}
+            </div>
+          </Stack>
+        )}
+
+        {/* New Releases Section */}
+        {newReleases.length > 0 && (
+          <Stack direction="column" spacing="lg">
+            <Typography variant="heading" size="xl" weight="bold" color="primary">
+              New Releases
+            </Typography>
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+              {newReleases.slice(0, 10).map((album) => (
+                <Card
+                  key={album.id}
+                  title={album.name}
+                  subtitle={album.artists?.map((a: any) => a.name).join(', ') || 'Various Artists'}
+                  imageUrl={album.images?.[0]?.url}
+                  variant="default"
+                  onClick={() => onCardClick(album)}
+                />
+              ))}
+            </div>
+          </Stack>
+        )}
+      </div>
     </>
   );
 };

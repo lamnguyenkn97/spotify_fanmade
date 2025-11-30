@@ -1,7 +1,6 @@
 'use client';
 
 import React, { useState, useEffect, Suspense } from 'react';
-import homepageData from './data/homepageData.json';
 import {
   UnauthenticatedHomePage,
   AuthenticatedHomePage,
@@ -11,70 +10,11 @@ import { useSpotify } from '@/hooks/useSpotify';
 import { useCardModal } from '@/hooks/useCardModal';
 import { useSearchParams } from 'next/navigation';
 
-// Helper: Extract best quality image URL from sources
-const getBestImageUrl = (sources: any[] = []) => {
-  if (!sources || sources.length === 0) return '';
-
-  // Handle sources with width/height properties
-  const hasWidth = sources.some((s) => s.width != null);
-  if (hasWidth) {
-    return (
-      sources.find((source) => source.width && source.width >= 300)?.url ||
-      sources.find((source) => source.width && source.width >= 64)?.url ||
-      sources[0]?.url ||
-      ''
-    );
-  }
-
-  // Handle sources without width (e.g., radio/chart images with null width)
-  return sources[0]?.url || '';
-};
-
-// Helper: Extract card props from different content types
-const getCardProps = (item: any) => {
-  const { __typename, data } = item.content;
-
-  const cardPropsMap = {
-    TrackResponseWrapper: {
-      title: data.name || 'Unknown Track',
-      subtitle: data.artists?.items?.[0]?.profile?.name || 'Unknown Artist',
-      variant: 'default' as const,
-      imageUrl: getBestImageUrl(data.albumOfTrack?.coverArt?.sources),
-    },
-    ArtistResponseWrapper: {
-      title: data.profile?.name || 'Unknown Artist',
-      subtitle: undefined,
-      variant: 'artist' as const,
-      imageUrl: getBestImageUrl(data.visuals?.avatarImage?.sources),
-    },
-    AlbumResponseWrapper: {
-      title: data.name || 'Unknown Album',
-      subtitle: data.artists?.items?.[0]?.profile?.name || 'Unknown Artist',
-      variant: 'default' as const,
-      imageUrl: getBestImageUrl(data.coverArt?.sources),
-    },
-    PlaylistResponseWrapper: {
-      title: data.name || 'Unknown Playlist',
-      subtitle: data.description || 'Playlist',
-      variant: 'default' as const,
-      imageUrl: getBestImageUrl(data.images?.items?.[0]?.sources || data.images?.items),
-    },
-  };
-
-  return cardPropsMap[__typename as keyof typeof cardPropsMap] || null;
-};
-
 function HomeContent() {
   const searchParams = useSearchParams();
   const { user, isAuthenticated, login } = useSpotify();
   const { showCardModal, selectedCard, openCardModal, closeCardModal } = useCardModal();
   const [showCreatePlaylistDialog, setShowCreatePlaylistDialog] = useState(false);
-
-  const sections = homepageData.data.home.sectionContainer.sections.items.filter((section: any) => {
-    const items = section.sectionItems?.items || [];
-    const firstItem = items.find((item: any) => item.content?.data);
-    return firstItem !== undefined && items.length > 0;
-  });
   
   // Handle error from URL parameters (OAuth callback errors)
   useEffect(() => {
@@ -115,12 +55,7 @@ function HomeContent() {
       {isAuthenticated && user ? (
         <AuthenticatedHomePage user={user} />
       ) : (
-        <UnauthenticatedHomePage
-          sections={sections}
-          onCardClick={openCardModal}
-          getCardProps={getCardProps}
-          onLogin={handleLogin}
-        />
+        <UnauthenticatedHomePage onCardClick={openCardModal} onLogin={handleLogin} />
       )}
       {/* All Authentication Modals */}
       <AuthModals
