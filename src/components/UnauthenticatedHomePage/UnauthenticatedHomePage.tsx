@@ -104,7 +104,16 @@ export const UnauthenticatedHomePage: React.FC<UnauthenticatedHomePageProps> = (
   useEffect(() => {
     const fetchHomepageData = async () => {
       try {
-        // Try to fetch fresh data from Spotify
+        // Always load static data first
+        const staticSections = homepageData.data.home.sectionContainer.sections.items.filter(
+          (section: any) => {
+            const items = section.sectionItems?.items || [];
+            const firstItem = items.find((item: any) => item.content?.data);
+            return firstItem !== undefined && items.length > 0;
+          }
+        );
+
+        // Try to fetch fresh data from Spotify API
         const response = await fetch('/api/spotify/homepage-feed');
         
         if (response.ok) {
@@ -112,21 +121,30 @@ export const UnauthenticatedHomePage: React.FC<UnauthenticatedHomePageProps> = (
           console.log('Homepage API response:', data);
           
           if (data.data?.home?.sectionContainer?.sections?.items) {
-            const allSections = data.data.home.sectionContainer.sections.items;
-            console.log('All sections:', allSections.length);
+            const apiSections = data.data.home.sectionContainer.sections.items.filter(
+              (section: any) => {
+                const items = section.sectionItems?.items || [];
+                const validItems = items.filter((item: any) => {
+                  const hasContent = item.content && (item.content.data || item.content.__typename);
+                  return hasContent;
+                });
+                return validItems.length > 0;
+              }
+            );
             
-            const filteredSections = allSections.filter((section: any) => {
-              const items = section.sectionItems?.items || [];
-              // Check if section has valid items with content
-              const validItems = items.filter((item: any) => {
-                const hasContent = item.content && (item.content.data || item.content.__typename);
-                return hasContent;
-              });
-              return validItems.length > 0;
-            });
+            // Merge API sections with static sections
+            // API sections first, then static sections (avoid duplicates by title)
+            const apiTitles = new Set(
+              apiSections.map((s: any) => s.data?.title?.transformedLabel).filter(Boolean)
+            );
+            const uniqueStaticSections = staticSections.filter(
+              (s: any) => !apiTitles.has(s.data?.title?.transformedLabel)
+            );
             
-            console.log('Filtered sections:', filteredSections.length);
-            setSections(filteredSections);
+            const mergedSections = [...apiSections, ...uniqueStaticSections];
+            console.log('Merged sections:', mergedSections.length, '(API:', apiSections.length, '+ Static:', uniqueStaticSections.length, ')');
+            
+            setSections(mergedSections);
             setUsingFallback(false);
           } else {
             throw new Error('Invalid data structure');
@@ -135,8 +153,8 @@ export const UnauthenticatedHomePage: React.FC<UnauthenticatedHomePageProps> = (
           throw new Error('API request failed');
         }
       } catch (error) {
-        console.warn('Using fallback homepage data:', error);
-        // Fallback to static data
+        console.warn('API failed, using static homepage data:', error);
+        // Fallback to static data only
         const filteredSections = homepageData.data.home.sectionContainer.sections.items.filter(
           (section: any) => {
             const items = section.sectionItems?.items || [];
@@ -200,36 +218,16 @@ export const UnauthenticatedHomePage: React.FC<UnauthenticatedHomePageProps> = (
                     );
                   })}
                 </div>
-              </Stack>
-            );
-          })
-        ) : (
-          <Stack direction="column" align="center" spacing="md" className="py-12">
-            <Typography variant="body" color="muted">
-              No content available. Please try again later.
-            </Typography>
-          </Stack>
-        )}
-
-        {/* CTA to Connect */}
+            </Stack>
+          );
+        })
+      ) : (
         <Stack direction="column" align="center" spacing="md" className="py-12">
-          <Typography variant="heading" size="lg" weight="bold" color="primary" className="text-center">
-            See Your Personalized Music
+          <Typography variant="body" color="muted">
+            No content available. Please try again later.
           </Typography>
-          <Typography variant="body" color="secondary" className="text-center max-w-2xl">
-            Connect your Spotify account to access your playlists, recently played, top artists, and more.
-          </Typography>
-          {onLogin && (
-            <Button
-              variant={ButtonVariant.Primary}
-              size={ButtonSize.Large}
-              onClick={onLogin}
-              className="px-12"
-            >
-              Connect with Spotify
-            </Button>
-          )}
         </Stack>
+      )}
       </div>
     </>
   );

@@ -36,7 +36,7 @@ export const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
   const { user, isAuthenticated, login, logout } = useSpotify();
   const [libraryItems, setLibraryItems] = useState<LibraryItem[]>([]);
   const [selectedFilter, setSelectedFilter] = useState<LibraryFilter>(LibraryFilter.PLAYLISTS);
-  const [showCreatePlaylistDialog, setShowCreatePlaylistDialog] = useState(false);
+  const [showLoginPrompt, setShowLoginPrompt] = useState(false);
 
   useEffect(() => {
     if (isAuthenticated) {
@@ -140,15 +140,15 @@ export const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
 
   const handleCreatePlaylist = () => {
     if (!isAuthenticated) {
-      setShowCreatePlaylistDialog(true);
+      setShowLoginPrompt(true);
     } else {
       // TODO: Implement create playlist functionality for authenticated users
       console.log('Create playlist functionality not yet implemented');
     }
   };
 
-  const handleLoginFromDialog = () => {
-    setShowCreatePlaylistDialog(false);
+  const handleLoginFromPrompt = () => {
+    setShowLoginPrompt(false);
     login();
   };
 
@@ -189,22 +189,22 @@ export const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
             {children}
           </AppLayoutContent>
 
-          {/* Create Playlist Modal */}
+          {/* Login Prompt Modal */}
           <Modal
-            open={showCreatePlaylistDialog}
-            onClose={() => setShowCreatePlaylistDialog(false)}
+            open={showLoginPrompt}
+            onClose={() => setShowLoginPrompt(false)}
             size={ModalSize.Small}
-            title="Create a playlist"
-            description="Log in to create and share playlists."
+            title="Connect with Spotify"
+            description="Log in with your Spotify account to experience all features including search, playlists, library, and personalized recommendations."
             actions={[
               {
                 label: 'Not now',
-                onClick: () => setShowCreatePlaylistDialog(false),
+                onClick: () => setShowLoginPrompt(false),
                 variant: 'text',
               },
               {
-                label: 'Log in',
-                onClick: handleLoginFromDialog,
+                label: 'Connect with Spotify',
+                onClick: handleLoginFromPrompt,
                 variant: 'primary',
               },
             ]}
@@ -275,17 +275,19 @@ const AppLayoutContent: React.FC<{
               }
             : undefined
         }
-        onSearch={
-          isAuthenticated
-            ? (query: string) => {
-                if (query.trim()) {
-                  router.push(`/search?q=${encodeURIComponent(query)}`);
-                } else {
-                  router.push('/search');
-                }
-              }
-            : () => {}
-        }
+        onSearch={(query: string) => {
+          if (!isAuthenticated) {
+            // Show login prompt for unauthenticated users
+            setShowLoginPrompt(true);
+            return;
+          }
+          // Authenticated users can search
+          if (query.trim()) {
+            router.push(`/search?q=${encodeURIComponent(query)}`);
+          } else {
+            router.push('/search');
+          }
+        }}
         onLogin={onLogin}
         onInstallApp={() => {}}
         onHomeClick={() => router.push('/')}
