@@ -53,6 +53,12 @@ const getCardProps = (item: any) => {
       variant: 'default' as const,
       imageUrl: getBestImageUrl(data.images?.items?.[0]?.sources || data.images?.items),
     },
+    CategoryResponseWrapper: {
+      title: data.name || 'Category',
+      subtitle: undefined,
+      variant: 'default' as const,
+      imageUrl: data.icons?.[0]?.url || '',
+    },
   };
 
   return cardPropsMap[__typename as keyof typeof cardPropsMap] || null;
@@ -103,14 +109,23 @@ export const UnauthenticatedHomePage: React.FC<UnauthenticatedHomePageProps> = (
         
         if (response.ok) {
           const data = await response.json();
+          console.log('Homepage API response:', data);
+          
           if (data.data?.home?.sectionContainer?.sections?.items) {
-            const filteredSections = data.data.home.sectionContainer.sections.items.filter(
-              (section: any) => {
-                const items = section.sectionItems?.items || [];
-                const firstItem = items.find((item: any) => item.content?.data);
-                return firstItem !== undefined && items.length > 0;
-              }
-            );
+            const allSections = data.data.home.sectionContainer.sections.items;
+            console.log('All sections:', allSections.length);
+            
+            const filteredSections = allSections.filter((section: any) => {
+              const items = section.sectionItems?.items || [];
+              // Check if section has valid items with content
+              const validItems = items.filter((item: any) => {
+                const hasContent = item.content && (item.content.data || item.content.__typename);
+                return hasContent;
+              });
+              return validItems.length > 0;
+            });
+            
+            console.log('Filtered sections:', filteredSections.length);
             setSections(filteredSections);
             setUsingFallback(false);
           } else {
@@ -165,35 +180,43 @@ export const UnauthenticatedHomePage: React.FC<UnauthenticatedHomePageProps> = (
         </Stack>
 
         {/* Render Sections */}
-        {sections.map((section: any, sectionIndex: number) => {
-          const items = section.sectionItems?.items || [];
-          const sectionTitle = section.data?.title?.transformedLabel || 'Discover';
+        {sections.length > 0 ? (
+          sections.map((section: any, sectionIndex: number) => {
+            const items = section.sectionItems?.items || [];
+            const sectionTitle = section.data?.title?.transformedLabel || 'Discover';
 
-          return (
-            <Stack key={sectionIndex} direction="column" spacing="lg">
-              <Typography variant="heading" size="xl" weight="bold" color="primary">
-                {sectionTitle}
-              </Typography>
-              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
-                {items.slice(0, 10).map((item: any, itemIndex: number) => {
-                  const cardProps = getCardProps(item);
-                  if (!cardProps) return null;
+            return (
+              <Stack key={sectionIndex} direction="column" spacing="lg">
+                <Typography variant="heading" size="xl" weight="bold" color="primary">
+                  {sectionTitle}
+                </Typography>
+                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+                  {items.slice(0, 10).map((item: any, itemIndex: number) => {
+                    const cardProps = getCardProps(item);
+                    if (!cardProps) return null;
 
-                  return (
-                    <Card
-                      key={itemIndex}
-                      title={cardProps.title}
-                      subtitle={cardProps.subtitle}
-                      imageUrl={cardProps.imageUrl}
-                      variant={cardProps.variant}
-                      onClick={() => onCardClick(item)}
-                    />
-                  );
-                })}
-              </div>
-            </Stack>
-          );
-        })}
+                    return (
+                      <Card
+                        key={itemIndex}
+                        title={cardProps.title}
+                        subtitle={cardProps.subtitle}
+                        imageUrl={cardProps.imageUrl}
+                        variant={cardProps.variant}
+                        onClick={() => onCardClick(item)}
+                      />
+                    );
+                  })}
+                </div>
+              </Stack>
+            );
+          })
+        ) : (
+          <Stack direction="column" align="center" spacing="md" className="py-12">
+            <Typography variant="body" color="muted">
+              No content available. Please try again later.
+            </Typography>
+          </Stack>
+        )}
 
         {/* CTA to Connect */}
         <Stack direction="column" align="center" spacing="md" className="py-12">
