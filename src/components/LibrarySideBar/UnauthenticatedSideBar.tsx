@@ -9,7 +9,6 @@ import {
   Stack,
   TextLink,
   Typography,
-  Badge,
 } from 'spotify-design-system';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { CallToActionCard } from './components';
@@ -45,31 +44,22 @@ const SidebarHeader: React.FC<{ onAddClick: () => void }> = ({ onAddClick }) => 
 
 const ProjectBadges: React.FC = () => {
   const badges = [
-    { label: '🎨 Showcase', variant: 'primary' as const },
-    { label: '🎵 Fanmade', variant: 'secondary' as const },
-    { label: '⚡ TypeScript', variant: 'primary' as const },
-    { label: '👨‍💻 Made by Lam', variant: 'secondary' as const },
+    { label: '🎨 Showcase' },
+    { label: '🎵 Fanmade' },
+    { label: '⚡ TypeScript' },
+    { label: '👨‍💻 Made by Lam' },
   ];
 
   return (
-    <Stack
-      direction="column"
-      spacing="sm"
-      className="px-4 py-3 bg-spotify-grey/20 rounded-lg mx-4 mb-4"
-    >
-      <Typography variant="caption" weight="bold" color="secondary">
-        Portfolio Project
-      </Typography>
-      <Stack direction="row" spacing="xs" className="flex-wrap">
-        {badges.map((badge, index) => (
-          <span
-            key={index}
-            className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-spotify-grey/40 text-spotify-lightgrey"
-          >
-            {badge.label}
-          </span>
-        ))}
-      </Stack>
+    <Stack direction="row" spacing="xs" className="flex-wrap px-4 py-3 mx-4 mt-auto">
+      {badges.map((badge, index) => (
+        <span
+          key={index}
+          className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-spotify-green text-black"
+        >
+          {badge.label}
+        </span>
+      ))}
     </Stack>
   );
 };
@@ -118,8 +108,8 @@ export const UnauthenticatedSideBar: React.FC<UnauthenticatedLibraryProps> = ({
   return (
     <Stack direction="column" className={containerClasses} style={{ width: '280px', flexShrink: 0 }}>
       <SidebarHeader onAddClick={onAddClick} />
-      <ProjectBadges />
       <SidebarContent onCreatePlaylist={onCreatePlaylist} onBrowsePodcasts={onBrowsePodcasts} />
+      <ProjectBadges />
     </Stack>
   );
 };

@@ -1,3 +1,4 @@
+'use client';
 import React from 'react';
 import { ContentSections } from '../ContentSections';
 import { Stack, Typography, Button, ButtonVariant, ButtonSize } from 'spotify-design-system';
@@ -17,7 +18,8 @@ const HeroBanner: React.FC<{ onLogin?: () => void }> = ({ onLogin }) => (
           Spotify Fan-Made Experience
         </Typography>
         <Typography variant="body" color="secondary" className="text-xl">
-          A full-stack portfolio project showcasing modern web development with React, Next.js, and a custom design system.
+          A full-stack portfolio project showcasing modern web development with React, Next.js, and
+          a custom design system.
         </Typography>
       </Stack>
       {onLogin && (
@@ -46,12 +48,7 @@ export const UnauthenticatedHomePage: React.FC<UnauthenticatedHomePageProps> = (
   return (
     <>
       <HeroBanner onLogin={onLogin} />
-      <ContentSections
-        sections={sections}
-        onCardClick={onCardClick}
-        getCardProps={getCardProps}
-      />
+      <ContentSections sections={sections} onCardClick={onCardClick} getCardProps={getCardProps} />
     </>
   );
 };
-
