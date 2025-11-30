@@ -1,4 +1,3 @@
-export { CookieBanner } from './CookieBanner';
 export { SignupBanner } from './SignupBanner';
 export { UnauthenticatedSideBar } from './LibrarySideBar';
 export { ContentSections } from './ContentSections';
@@ -12,3 +11,4 @@ export { ShowTable } from './ShowTable';
 export { AppLayout } from './AppLayout';
 export { MusicPlayer } from './MusicPlayer';
 export { QueueDrawer } from './QueueDrawer';
+export { ErrorBoundary } from './ErrorBoundary';

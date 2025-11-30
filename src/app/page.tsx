@@ -1,11 +1,7 @@
 'use client';
 
-import React, { useState, useEffect, Suspense } from 'react';
-import {
-  UnauthenticatedHomePage,
-  AuthenticatedHomePage,
-  AuthModals,
-} from '@/components';
+import React, { useEffect, Suspense } from 'react';
+import { UnauthenticatedHomePage, AuthenticatedHomePage, AuthModals } from '@/components';
 import { useSpotify } from '@/hooks/useSpotify';
 import { useCardModal } from '@/hooks/useCardModal';
 import { useSearchParams } from 'next/navigation';
@@ -15,7 +11,7 @@ function HomeContent() {
   const searchParams = useSearchParams();
   const { user, isAuthenticated, login } = useSpotify();
   const { showCardModal, openCardModal, closeCardModal } = useCardModal();
-  
+
   // Handle error from URL parameters (OAuth callback errors)
   useEffect(() => {
     const error = searchParams.get('error');
