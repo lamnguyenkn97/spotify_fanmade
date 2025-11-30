@@ -275,20 +275,32 @@ const AppLayoutContent: React.FC<{
               }
             : undefined
         }
-        onSearch={(query: string) => {
-          if (query.trim()) {
-            router.push(`/search?q=${encodeURIComponent(query)}`);
-          } else {
-            router.push('/search');
-          }
-        }}
+        onSearch={
+          isAuthenticated
+            ? (query: string) => {
+                if (query.trim()) {
+                  router.push(`/search?q=${encodeURIComponent(query)}`);
+                } else {
+                  router.push('/search');
+                }
+              }
+            : () => {}
+        }
         onLogin={onLogin}
         onInstallApp={() => {}}
         onHomeClick={() => router.push('/')}
         showInstallApp={false}
         showAuthButtons={true}
-        showCustomLinks={false}
-        customLinks={[]}
+        showCustomLinks={!isAuthenticated}
+        customLinks={
+          !isAuthenticated
+            ? [
+                { id: 'portfolio', label: '🎨 Portfolio Project', href: '#' },
+                { id: 'npm', label: '📦 NPM Package', href: 'https://www.npmjs.com/package/spotify-design-system' },
+                { id: 'storybook', label: '📚 Storybook', href: 'https://spotify-storybook.vercel.app' },
+              ]
+            : []
+        }
         customActions={
           isAuthenticated
             ? [
