@@ -36,21 +36,27 @@ export async function GET(request: NextRequest) {
         headers: {
           Authorization: `Bearer ${access_token}`,
         },
-        next: { revalidate: 3600 }, // Cache for 1 hour
+        cache: 'no-store',
       }
     );
 
     if (!releasesResponse.ok) {
-      throw new Error('Failed to fetch new releases');
+      const errorData = await releasesResponse.text();
+      console.error('Spotify API error:', releasesResponse.status, errorData);
+      throw new Error(`Failed to fetch new releases: ${releasesResponse.status}`);
     }
 
     const data = await releasesResponse.json();
 
-    return NextResponse.json(data);
-  } catch (error) {
-    console.error('Error fetching new releases:', error);
+    return NextResponse.json(data, {
+      headers: {
+        'Cache-Control': 'public, s-maxage=3600, stale-while-revalidate=7200',
+      },
+    });
+  } catch (error: any) {
+    console.error('Error fetching new releases:', error.message);
     return NextResponse.json(
-      { error: 'Failed to fetch new releases' },
+      { error: 'Failed to fetch new releases', details: error.message },
       { status: 500 }
     );
   }

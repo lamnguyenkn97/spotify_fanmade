@@ -36,21 +36,27 @@ export async function GET(request: NextRequest) {
         headers: {
           Authorization: `Bearer ${access_token}`,
         },
-        next: { revalidate: 3600 }, // Cache for 1 hour
+        cache: 'no-store',
       }
     );
 
     if (!playlistsResponse.ok) {
-      throw new Error('Failed to fetch featured playlists');
+      const errorData = await playlistsResponse.text();
+      console.error('Spotify API error:', playlistsResponse.status, errorData);
+      throw new Error(`Failed to fetch featured playlists: ${playlistsResponse.status}`);
     }
 
     const data = await playlistsResponse.json();
 
-    return NextResponse.json(data);
-  } catch (error) {
-    console.error('Error fetching featured playlists:', error);
+    return NextResponse.json(data, {
+      headers: {
+        'Cache-Control': 'public, s-maxage=3600, stale-while-revalidate=7200',
+      },
+    });
+  } catch (error: any) {
+    console.error('Error fetching featured playlists:', error.message);
     return NextResponse.json(
-      { error: 'Failed to fetch featured playlists' },
+      { error: 'Failed to fetch featured playlists', details: error.message },
       { status: 500 }
     );
   }
