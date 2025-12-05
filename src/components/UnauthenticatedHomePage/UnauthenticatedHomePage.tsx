@@ -64,7 +64,11 @@ const getCardProps = (item: any) => {
   return cardPropsMap[__typename as keyof typeof cardPropsMap] || null;
 };
 
-const HeroBanner: React.FC = () => (
+interface HeroBannerProps {
+  onLogin?: () => void;
+}
+
+const HeroBanner: React.FC<HeroBannerProps> = ({ onLogin }) => (
   <div className="relative w-full bg-gradient-to-b from-spotify-green/20 to-transparent px-8 py-12 mb-8">
     <Stack direction="column" spacing="lg" align="center" className="max-w-4xl mx-auto text-center">
       <Stack direction="column" spacing="md">
@@ -79,13 +83,15 @@ const HeroBanner: React.FC = () => (
       <Button
         variant={ButtonVariant.Primary}
         size={ButtonSize.Large}
-        onClick={() => window.open('https://open.spotify.com', '_blank')}
+        onClick={onLogin || (() => window.open('https://open.spotify.com', '_blank'))}
         className="px-12 py-4 text-lg font-bold"
       >
         Connect with Spotify
       </Button>
       <Typography variant="caption" color="secondary" className="mt-2">
-        Visit Spotify to experience the full music streaming service
+        {onLogin 
+          ? 'Log in with your Spotify account to unlock all features'
+          : 'Visit Spotify to experience the full music streaming service'}
       </Typography>
     </Stack>
   </div>
