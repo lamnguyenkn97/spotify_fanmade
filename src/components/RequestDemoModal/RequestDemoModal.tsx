@@ -17,8 +17,6 @@ export const RequestDemoModal: React.FC<RequestDemoModalProps> = ({ isOpen, onCl
   const [error, setError] = useState('');
   const [isAlreadyApproved, setIsAlreadyApproved] = useState(false);
 
-  console.log('RequestDemoModal render:', { isOpen, email, name, loading, submitted });
-
   const handleSubmit = async () => {
     if (!email || !email.includes('@')) {
       setError('Please enter a valid email address');
@@ -127,10 +125,7 @@ export const RequestDemoModal: React.FC<RequestDemoModalProps> = ({ isOpen, onCl
               type="email"
               placeholder="your.email@example.com"
               value={email}
-              onValueChange={(val) => {
-                console.log('Email onValueChange:', val);
-                setEmail(val);
-              }}
+              onValueChange={setEmail}
               disabled={loading}
               fullWidth
             />
@@ -140,10 +135,7 @@ export const RequestDemoModal: React.FC<RequestDemoModalProps> = ({ isOpen, onCl
               type="text"
               placeholder="Your name"
               value={name}
-              onValueChange={(val) => {
-                console.log('Name onValueChange:', val);
-                setName(val);
-              }}
+              onValueChange={setName}
               disabled={loading}
               fullWidth
             />

@@ -161,10 +161,11 @@ export const ModalProvider: React.FC<{ children: ReactNode }> = ({ children }) =
         />
       )}
 
-      {/* Request Demo Modal */}
-      {modalConfig.type === 'requestDemo' && (
-        <RequestDemoModal isOpen={true} onClose={closeModal} />
-      )}
+      {/* Request Demo Modal - Always mounted to preserve focus */}
+      <RequestDemoModal 
+        isOpen={modalConfig.type === 'requestDemo'} 
+        onClose={closeModal} 
+      />
     </ModalContext.Provider>
   );
 };
