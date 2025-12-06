@@ -63,23 +63,18 @@ const HeroBanner: React.FC<HeroBannerProps> = ({ onLogin }) => (
           Spotify Fan-Made Experience
         </Typography>
         <Typography variant="body" color="secondary" className="text-xl">
-          Frontend portfolio project showcasing React, Next.js, TypeScript, and a custom design system published to NPM.
+          Frontend portfolio project with custom design system
         </Typography>
       </Stack>
       
-      <Stack direction="column" spacing="sm" align="center">
-        <Button
-          variant={ButtonVariant.Primary}
-          size={ButtonSize.Large}
-          onClick={onLogin || (() => window.open('https://open.spotify.com', '_blank'))}
-          className="px-12 py-4 text-lg font-bold"
-        >
-          Connect with Spotify
-        </Button>
-        <Typography variant="caption" color="secondary" className="opacity-80">
-          Login available for authorized users • See README for access request
-        </Typography>
-      </Stack>
+      <Button
+        variant={ButtonVariant.Primary}
+        size={ButtonSize.Large}
+        onClick={onLogin || (() => window.open('https://open.spotify.com', '_blank'))}
+        className="px-12 py-4 text-lg font-bold"
+      >
+        Connect with Spotify
+      </Button>
     </Stack>
   </div>
 );
