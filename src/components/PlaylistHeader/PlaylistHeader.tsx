@@ -76,7 +76,7 @@ export const PlaylistHeader: React.FC<PlaylistHeaderProps> = ({
             size="md"
             color={'black'}
             circular
-            backgroundColor="brand"
+            backgroundColor={colors.primary.brand}
             onClick={onPlay}
             clickable
           />
@@ -84,7 +84,7 @@ export const PlaylistHeader: React.FC<PlaylistHeaderProps> = ({
             icon={faShuffle}
             onClick={onShuffle}
             aria-label="Shuffle"
-            color={isShuffled ? 'brand' : 'white'}
+            color={isShuffled ? colors.primary.brand : 'white'}
             size="lg"
             clickable
             className="hover:scale-110 hover:opacity-80 transition-all cursor-pointer"

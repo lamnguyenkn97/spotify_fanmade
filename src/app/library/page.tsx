@@ -281,7 +281,7 @@ export default function LibraryPage() {
                     <Icon
                       icon={faHeart}
                       size="sm"
-                      color="brand"
+                      color={colors.primary.brand}
                       className="flex-shrink-0"
                     />
                   )}
@@ -294,7 +294,7 @@ export default function LibraryPage() {
 
               {/* Playing Indicator */}
               {item.isPlaying && (
-                <Icon icon={faVolumeHigh} size="sm" color="brand" />
+                <Icon icon={faVolumeHigh} size="sm" color={colors.primary.brand} />
               )}
             </Stack>
           ))}
