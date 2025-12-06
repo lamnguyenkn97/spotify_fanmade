@@ -33,6 +33,7 @@ import {
   useMyShows,
   useMyAlbums,
 } from '@/hooks/api';
+import { useModal } from '@/contexts';
 
 interface AppLayoutProps {
   children: React.ReactNode;
@@ -42,8 +43,6 @@ export const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
   const router = useRouter();
   const { user, isAuthenticated, login, logout } = useSpotify();
   const [selectedFilter, setSelectedFilter] = useState<LibraryFilter>(LibraryFilter.PLAYLISTS);
-  const [showLoginPrompt, setShowLoginPrompt] = useState(false);
-  const [showFeatureNotImplemented, setShowFeatureNotImplemented] = useState(false);
 
   // Fetch all library data with SWR hooks
   const { tracks: likedTracks, total: likedTotal } = useSavedTracks(1, isAuthenticated);
@@ -120,14 +119,15 @@ export const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
     }
   }, [selectedFilter, isAuthenticated, likedTracks, likedTotal, playlists, shows, albums]);
 
+  const { showLoginModal, showFeatureNotImplementedModal } = useModal();
+
   const handleCreatePlaylist = useCallback(() => {
     if (!isAuthenticated) {
-      setShowLoginPrompt(true);
+      showLoginModal();
     } else {
-      // Show feature not implemented for authenticated users
-      setShowFeatureNotImplemented(true);
+      showFeatureNotImplementedModal();
     }
-  }, [isAuthenticated]);
+  }, [isAuthenticated, showLoginModal, showFeatureNotImplementedModal]);
 
   const handleBrowsePodcasts = useCallback(() => {
     router.push('/podcasts');
@@ -162,10 +162,6 @@ export const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
             onFilterClick={handleFilterClick}
             onLibraryItemClick={handleLibraryItemClick}
             router={router}
-            showLoginPrompt={showLoginPrompt}
-            setShowLoginPrompt={setShowLoginPrompt}
-            showFeatureNotImplemented={showFeatureNotImplemented}
-            setShowFeatureNotImplemented={setShowFeatureNotImplemented}
           >
             {children}
           </AppLayoutContent>
@@ -188,10 +184,6 @@ interface AppLayoutContentProps {
   onLibraryItemClick: (item: LibraryItem) => void;
   router: AppRouterInstance;
   children: React.ReactNode;
-  showLoginPrompt: boolean;
-  setShowLoginPrompt: (show: boolean) => void;
-  showFeatureNotImplemented: boolean;
-  setShowFeatureNotImplemented: (show: boolean) => void;
 }
 
 const AppLayoutContent: React.FC<AppLayoutContentProps> = ({
@@ -206,18 +198,10 @@ const AppLayoutContent: React.FC<AppLayoutContentProps> = ({
   onLibraryItemClick,
   router,
   children,
-  showLoginPrompt,
-  setShowLoginPrompt,
-  showFeatureNotImplemented,
-  setShowFeatureNotImplemented,
 }) => {
   const { currentTrack } = useMusicPlayerContext();
   const { isQueueOpen, openQueue, closeQueue } = useQueueDrawer();
-
-  const handleLoginFromPrompt = () => {
-    setShowLoginPrompt(false);
-    onLogin();
-  };
+  const { showLoginModal, showFeatureNotImplementedModal } = useModal();
 
   return (
     <Stack direction="column" className="h-screen bg-spotify-dark text-white overflow-hidden">
@@ -237,7 +221,7 @@ const AppLayoutContent: React.FC<AppLayoutContentProps> = ({
             if (query.trim()) {
               // Use setTimeout to avoid Enter key event propagating to modal
               setTimeout(() => {
-                setShowLoginPrompt(true);
+                showLoginModal();
               }, 0);
             }
             return;
@@ -292,10 +276,10 @@ const AppLayoutContent: React.FC<AppLayoutContentProps> = ({
           <AuthenticatedSideBar
             libraryItems={libraryItems}
             onAddClick={onCreatePlaylist}
-            onExpandClick={() => setShowFeatureNotImplemented(true)}
+            onExpandClick={showFeatureNotImplementedModal}
             onFilterClick={onFilterClick}
             onLibraryItemClick={onLibraryItemClick}
-            onSearch={() => setShowFeatureNotImplemented(true)}
+            onSearch={showFeatureNotImplementedModal}
           />
         ) : (
           <UnauthenticatedSideBar
@@ -400,51 +384,6 @@ const AppLayoutContent: React.FC<AppLayoutContentProps> = ({
       </Stack>
 
       <MusicPlayer onQueueClick={openQueue} />
-
-      {/* Login Prompt Modal */}
-      {showLoginPrompt && (
-        <Modal
-          open={showLoginPrompt}
-          onClose={() => setShowLoginPrompt(false)}
-          size={ModalSize.Small}
-          title="Connect with Spotify"
-          description="Log in with your Spotify account to experience all features including search, playlists, library, and personalized recommendations."
-          actions={[
-            {
-              label: 'Connect with Spotify',
-              onClick: handleLoginFromPrompt,
-              variant: 'primary',
-            },
-          ]}
-          showCloseButton={true}
-          closeOnBackdropClick={false}
-          closeOnEscape={true}
-        />
-      )}
-
-      {/* Feature Not Implemented Modal */}
-      {showFeatureNotImplemented && (
-        <Modal
-          open={showFeatureNotImplemented}
-          onClose={() => setShowFeatureNotImplemented(false)}
-          size={ModalSize.Small}
-          title="Feature Not Implemented"
-          description="This feature is not implemented in this portfolio demo. Please visit the official Spotify website to experience the full functionality."
-          actions={[
-            {
-              label: 'Visit Spotify',
-              onClick: () => {
-                window.open('https://open.spotify.com', '_blank');
-                setShowFeatureNotImplemented(false);
-              },
-              variant: 'primary',
-            },
-          ]}
-          showCloseButton={true}
-          closeOnBackdropClick={true}
-          closeOnEscape={true}
-        />
-      )}
     </Stack>
   );
 };

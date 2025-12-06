@@ -12,24 +12,18 @@ import { CategoryCard } from 'spotify-design-system/dist/components/molecules/Ca
 import { faChevronRight } from '@fortawesome/free-solid-svg-icons';
 import React, { useState } from 'react';
 import categoriesData from '../data/categoriesData.json';
-import { AuthModals } from '@/components';
 import { useSpotify } from '@/hooks/useSpotify';
-import { useCardModal } from '@/hooks/useCardModal';
 import { getBestImageUrlByWidth } from '@/utils/imageHelpers';
+import { useModal } from '@/contexts';
 
 
 export default function PodcastsPage() {
   const { login } = useSpotify();
-  const { showCardModal, openCardModal, closeCardModal } = useCardModal();
+  const { showCardModal } = useModal();
 
   const sections = categoriesData.data.browse.sections.items.filter(
     (section) => section.data.title?.transformedLabel
   );
-
-  const handleLogin = () => {
-    login();
-    closeCardModal();
-  };
 
   return (
     <>
@@ -65,7 +59,7 @@ export default function PodcastsPage() {
                         title={card.title.transformedLabel}
                         backgroundColor={card.backgroundColor.hex}
                         overlayImageUrl={imageUrl}
-                        onClick={() => openCardModal(card.title.transformedLabel, imageUrl)}
+                        onClick={() => showCardModal(card.title.transformedLabel, imageUrl)}
                         aria-label={`Browse ${card.title.transformedLabel}`}
                       />
                     );
@@ -79,7 +73,7 @@ export default function PodcastsPage() {
                   variant={ButtonVariant.Text}
                   size={ButtonSize.Medium}
                   onClick={() =>
-                    openCardModal(firstCard.title.transformedLabel, firstImageUrl)
+                    showCardModal(firstCard.title.transformedLabel, firstImageUrl)
                   }
                   icon={<Icon icon={faChevronRight} size="sm" />}
                   style={{ fontWeight: 700 }}
@@ -90,13 +84,6 @@ export default function PodcastsPage() {
           );
         })}
       </div>
-
-      {/* Unified Authentication Modal */}
-      <AuthModals
-        showCardModal={showCardModal}
-        onCloseCardModal={closeCardModal}
-        onLogin={handleLogin}
-      />
     </>
   );
 }

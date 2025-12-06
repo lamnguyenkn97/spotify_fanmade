@@ -11,14 +11,13 @@ import {
   Pill,
   Image,
   colors,
-  Modal,
-  ModalSize,
   Skeleton,
   borderRadius,
 } from 'spotify-design-system';
 import { faPlus, faSearch, faExpand, faBars, faHeart, faVolumeHigh } from '@fortawesome/free-solid-svg-icons';
 import { useRouter } from 'next/navigation';
 import { LibraryItem } from '@/types';
+import { useModal } from '@/contexts';
 
 enum LibraryFilter {
   PLAYLISTS = 'Playlists',
@@ -36,11 +35,11 @@ enum SortOption {
 
 export default function LibraryPage() {
   const router = useRouter();
+  const { showFeatureNotImplementedModal } = useModal();
   const [selectedFilter, setSelectedFilter] = useState<LibraryFilter>(LibraryFilter.PLAYLISTS);
   const [sortOption, setSortOption] = useState<SortOption>(SortOption.RECENTS);
   const [items, setItems] = useState<LibraryItem[]>([]);
   const [loading, setLoading] = useState(true);
-  const [showFeatureNotImplemented, setShowFeatureNotImplemented] = useState(false);
 
   useEffect(() => {
     fetchLibraryItems();
@@ -133,7 +132,7 @@ export default function LibraryPage() {
   };
 
   const handleCreate = () => {
-    setShowFeatureNotImplemented(true);
+    showFeatureNotImplementedModal();
   };
 
 
@@ -285,27 +284,6 @@ export default function LibraryPage() {
         </Stack>
       )}
 
-      {/* Feature Not Implemented Modal */}
-      <Modal
-        open={showFeatureNotImplemented}
-        onClose={() => setShowFeatureNotImplemented(false)}
-        size={ModalSize.Small}
-        title="Feature Not Implemented"
-        description="This feature is not implemented in this portfolio demo. Please visit the official Spotify website to experience the full functionality."
-        actions={[
-          {
-            label: 'Visit Spotify',
-            onClick: () => {
-              window.open('https://open.spotify.com', '_blank');
-              setShowFeatureNotImplemented(false);
-            },
-            variant: 'primary',
-          },
-        ]}
-        showCloseButton={true}
-        closeOnBackdropClick={true}
-        closeOnEscape={true}
-      />
     </Stack>
   );
 }

@@ -1,17 +1,16 @@
 'use client';
 
 import React, { useEffect, Suspense } from 'react';
-import { UnauthenticatedHomePage, AuthenticatedHomePage, AuthModals } from '@/components';
+import { UnauthenticatedHomePage, AuthenticatedHomePage } from '@/components';
 import { useSpotify } from '@/hooks/useSpotify';
-import { useCardModal } from '@/hooks/useCardModal';
 import { useSearchParams } from 'next/navigation';
 import { Stack, Skeleton } from 'spotify-design-system';
-import { useToast } from '@/contexts/ToastContext';
+import { useToast, useModal } from '@/contexts';
 
 function HomeContent() {
   const searchParams = useSearchParams();
   const { user, isAuthenticated, login } = useSpotify();
-  const { showCardModal, openCardModal, closeCardModal } = useCardModal();
+  const { showCardModal } = useModal();
   const toast = useToast();
 
   // Handle error from URL parameters (OAuth callback errors)
@@ -35,24 +34,13 @@ function HomeContent() {
     }
   }, [searchParams, toast]);
 
-  const handleLogin = () => {
-    login();
-    closeCardModal();
-  };
-
   return (
     <>
       {isAuthenticated && user ? (
         <AuthenticatedHomePage user={user} />
       ) : (
-        <UnauthenticatedHomePage onCardClick={openCardModal} onLogin={handleLogin} />
+        <UnauthenticatedHomePage onCardClick={showCardModal} onLogin={login} />
       )}
-      {/* Unified Authentication Modal */}
-      <AuthModals
-        showCardModal={showCardModal}
-        onCloseCardModal={closeCardModal}
-        onLogin={handleLogin}
-      />
     </>
   );
 }
