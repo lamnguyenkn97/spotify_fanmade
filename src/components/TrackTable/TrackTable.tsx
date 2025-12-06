@@ -164,13 +164,14 @@ export const TrackTable: React.FC<TrackTableProps> = ({ tracks, onTrackClick }) 
                           direction="row"
                           align="center"
                           justify="center"
-                          className="w-4 h-4 rounded-sm"
-                          style={{ backgroundColor: colors.grey.grey2 }}
+                          className="w-4 h-4 rounded-sm text-[9px] font-bold"
+                          style={{ 
+                            backgroundColor: colors.grey.grey2,
+                            color: colors.primary.white,
+                          }}
                           title="Explicit"
                         >
-                          <Typography variant="caption" size="sm" color="primary" weight="bold">
-                            E
-                          </Typography>
+                          E
                         </Stack>
                       )}
                       {/* Music video indicator */}
