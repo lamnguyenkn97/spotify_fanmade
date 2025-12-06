@@ -147,7 +147,7 @@ export const TrackTable: React.FC<TrackTableProps> = ({ tracks, onTrackClick }) 
               const isHovered = hoveredIndex === row.index;
 
               return (
-                <Stack direction="row" align="center" justify="center" style={{ width: '48px' }}>
+                <Stack direction="row" align="center" justify="center" className="w-12">
                   {isCurrentlyPlaying && !isHovered ? (
                     <Equalizer size="sm" isPlaying={isPlaying} />
                   ) : isHovered && isCurrentlyPlaying ? (
@@ -207,12 +207,8 @@ export const TrackTable: React.FC<TrackTableProps> = ({ tracks, onTrackClick }) 
                           direction="row"
                           align="center"
                           justify="center"
-                          style={{
-                            width: '16px',
-                            height: '16px',
-                            backgroundColor: colors.grey.grey2,
-                            borderRadius: '2px',
-                          }}
+                          className="w-4 h-4 rounded-sm"
+                          style={{ backgroundColor: colors.grey.grey2 }}
                           title="Explicit"
                         >
                           <Typography variant="caption" size="sm" color="primary" weight="bold">
@@ -227,12 +223,8 @@ export const TrackTable: React.FC<TrackTableProps> = ({ tracks, onTrackClick }) 
                             direction="row"
                             align="center"
                             justify="center"
-                            style={{
-                              width: '16px',
-                              height: '16px',
-                              backgroundColor: colors.grey.grey2,
-                              borderRadius: '2px',
-                            }}
+                            className="w-4 h-4 rounded-sm"
+                            style={{ backgroundColor: colors.grey.grey2 }}
                             title="Music video"
                           >
                             <Icon icon={faPlay} size="sm" color="primary" />
@@ -285,21 +277,7 @@ export const TrackTable: React.FC<TrackTableProps> = ({ tracks, onTrackClick }) 
               return (
                 <div
                   onClick={(e) => handleAddToQueue(e, row.track)}
-                  style={{
-                    cursor: 'pointer',
-                    padding: '8px 12px',
-                    borderRadius: '4px',
-                    transition: 'background-color 0.15s ease',
-                    display: 'inline-flex',
-                    alignItems: 'center',
-                    gap: '8px',
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.1)';
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.backgroundColor = 'transparent';
-                  }}
+                  className="cursor-pointer px-3 py-2 rounded inline-flex items-center gap-2 hover:bg-white/10 transition-colors duration-150"
                 >
                   <Icon icon={faListUl} size="sm" color="muted" />
                   <Typography variant="body" size="sm" color="muted" weight="medium">

@@ -292,7 +292,7 @@ export const AuthenticatedHomePage: React.FC<AuthenticatedHomePageProps> = ({ us
             Made for you
           </Typography>
           <Stack direction="row" spacing="md" className="flex-wrap">
-            <Stack style={{ width: '400px', flexShrink: 0 }}>
+            <Stack className="w-[400px] flex-shrink-0">
               <HorizontalTileCard
                 title="Liked Songs"
                 image={likedTracks[0]?.track?.album?.images?.[0]?.url || ''}
@@ -314,7 +314,7 @@ export const AuthenticatedHomePage: React.FC<AuthenticatedHomePageProps> = ({ us
           </Typography>
           <Stack direction="row" spacing="md" className="flex-wrap">
             {userPlaylists.map((playlist) => (
-              <Stack key={playlist.id} style={{ width: '400px', flexShrink: 0 }}>
+              <Stack key={playlist.id} className="w-[400px] flex-shrink-0">
                 <HorizontalTileCard
                   title={playlist.name}
                   image={getBestImageUrl(playlist.images)}
@@ -341,7 +341,7 @@ export const AuthenticatedHomePage: React.FC<AuthenticatedHomePageProps> = ({ us
             className="overflow-x-auto overflow-y-visible pb-4 -mx-6 px-6 scrollbar-hide"
           >
             {recentTracks.slice(0, NUMBER_OF_DISPLAYED_ITEMS).map((item) => (
-              <Stack key={item.track.id} direction="column" className="flex-shrink-0" style={{ width: '180px' }}>
+              <Stack key={item.track.id} direction="column" className="flex-shrink-0 w-[180px]">
                 <Card
                   title={item.track.name}
                   subtitle={item.track.artists[0]?.name || 'Unknown Artist'}
@@ -380,7 +380,7 @@ export const AuthenticatedHomePage: React.FC<AuthenticatedHomePageProps> = ({ us
             className="overflow-x-auto overflow-y-visible pb-4 -mx-6 px-6 scrollbar-hide"
           >
             {topArtists.slice(0, NUMBER_OF_DISPLAYED_ITEMS).map((artist) => (
-              <Stack key={artist.id} direction="column" className="flex-shrink-0" style={{ width: '180px' }}>
+              <Stack key={artist.id} direction="column" className="flex-shrink-0 w-[180px]">
                 <Card
                   title={artist.name}
                   subtitle="Artist"
@@ -406,7 +406,7 @@ export const AuthenticatedHomePage: React.FC<AuthenticatedHomePageProps> = ({ us
             className="overflow-x-auto overflow-y-visible pb-4 -mx-6 px-6 scrollbar-hide"
           >
             {topAlbums.slice(0, NUMBER_OF_DISPLAYED_ITEMS).map((album) => (
-              <Stack key={album.id} direction="column" className="flex-shrink-0" style={{ width: '180px' }}>
+              <Stack key={album.id} direction="column" className="flex-shrink-0 w-[180px]">
                 <Card
                   title={album.name}
                   subtitle={album.artist_name || album.artists?.[0]?.name || 'Unknown Artist'}
@@ -428,7 +428,7 @@ export const AuthenticatedHomePage: React.FC<AuthenticatedHomePageProps> = ({ us
           </Typography>
           <Stack direction="row" spacing="md" className="flex-wrap">
             {userShows.map((show) => (
-              <Stack key={show.id} style={{ width: '400px', flexShrink: 0 }}>
+              <Stack key={show.id} className="w-[400px] flex-shrink-0">
                 <HorizontalTileCard
                   title={show.name}
                   image={getBestImageUrl(show.images)}

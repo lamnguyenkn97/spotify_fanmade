@@ -22,7 +22,7 @@ export const CallToActionCard: React.FC<{
         variant={ButtonVariant.White}
         size={ButtonSize.Medium}
         onClick={onButtonClick}
-        style={{ fontWeight: 700 }}
+        className="font-bold"
       />
     </Stack>
   );

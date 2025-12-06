@@ -165,7 +165,7 @@ function SearchPageContent() {
             <img
               src={row.albumImage}
               alt={row.album}
-              style={{ width: '40px', height: '40px', borderRadius: '4px' }}
+              className="w-10 h-10 rounded"
             />
           )}
           <Stack direction="column" spacing="xs">
@@ -181,12 +181,8 @@ function SearchPageContent() {
               direction="row"
               align="center"
               justify="center"
-              style={{
-                width: '16px',
-                height: '16px',
-                backgroundColor: colors.grey.grey2,
-                borderRadius: '2px',
-              }}
+              className="w-4 h-4 rounded-sm"
+              style={{ backgroundColor: colors.grey.grey2 }}
               title="Explicit"
             >
               <Typography variant="caption" size="sm" color="primary" weight="bold">
@@ -214,7 +210,7 @@ function SearchPageContent() {
       width: '60px',
       align: 'right' as const,
       renderCell: (row: TrackTableRow) => (
-        <Typography variant="body" size="sm" color="muted" style={{ textAlign: 'right' }}>
+        <Typography variant="body" size="sm" color="muted" className="text-right">
           {row.duration}
         </Typography>
       ),
@@ -225,12 +221,8 @@ function SearchPageContent() {
       <Stack
         direction="column"
         spacing="lg"
-        className="pb-8"
-        style={{
-          padding: '24px 32px',
-          minHeight: '100vh',
-          backgroundColor: colors.primary.black,
-        }}
+        className="pb-8 px-8 pt-6 min-h-screen"
+        style={{ backgroundColor: colors.primary.black }}
       >
 
       {loading && (
@@ -271,7 +263,7 @@ function SearchPageContent() {
                     variant="body"
                     size="sm"
                     color="primary"
-                    style={{ cursor: 'pointer' }}
+                    className="cursor-pointer"
                     onClick={() => {
                     }}
                   >
@@ -300,7 +292,7 @@ function SearchPageContent() {
                     variant="body"
                     size="sm"
                     color="primary"
-                    style={{ cursor: 'pointer' }}
+                    className="cursor-pointer"
                   >
                     See all ({results.artistsTotal})
                   </Typography>
@@ -317,8 +309,7 @@ function SearchPageContent() {
                     <Stack
                       key={artist.id}
                       direction="column"
-                      className="flex-shrink-0"
-                      style={{ width: '180px', cursor: 'pointer' }}
+                      className="flex-shrink-0 w-[180px] cursor-pointer"
                       onClick={() => handleArtistClick(artist.id)}
                     >
                       <Card
@@ -346,7 +337,7 @@ function SearchPageContent() {
                     variant="body"
                     size="sm"
                     color="primary"
-                    style={{ cursor: 'pointer' }}
+                    className="cursor-pointer"
                   >
                     See all ({results.albumsTotal})
                   </Typography>
@@ -363,8 +354,7 @@ function SearchPageContent() {
                     <Stack
                       key={album.id}
                       direction="column"
-                      className="flex-shrink-0"
-                      style={{ width: '180px', cursor: 'pointer' }}
+                      className="flex-shrink-0 w-[180px] cursor-pointer"
                       onClick={() => handleAlbumClick(album.id)}
                     >
                       <Card
@@ -392,7 +382,7 @@ function SearchPageContent() {
                     variant="body"
                     size="sm"
                     color="primary"
-                    style={{ cursor: 'pointer' }}
+                    className="cursor-pointer"
                   >
                     See all ({results.playlistsTotal})
                   </Typography>
@@ -409,8 +399,7 @@ function SearchPageContent() {
                     <Stack
                       key={playlist.id}
                       direction="column"
-                      className="flex-shrink-0"
-                      style={{ width: '180px', cursor: 'pointer' }}
+                      className="flex-shrink-0 w-[180px] cursor-pointer"
                       onClick={() => handlePlaylistClick(playlist.id)}
                     >
                       <Card
@@ -438,7 +427,7 @@ function SearchPageContent() {
                     variant="body"
                     size="sm"
                     color="primary"
-                    style={{ cursor: 'pointer' }}
+                    className="cursor-pointer"
                   >
                     See all ({results.showsTotal})
                   </Typography>
@@ -455,8 +444,7 @@ function SearchPageContent() {
                     <Stack
                       key={show.id}
                       direction="column"
-                      className="flex-shrink-0"
-                      style={{ width: '180px', cursor: 'pointer' }}
+                      className="flex-shrink-0 w-[180px] cursor-pointer"
                       onClick={() => handleShowClick(show.id)}
                     >
                       <Card
@@ -484,7 +472,7 @@ function SearchPageContent() {
                     variant="body"
                     size="sm"
                     color="primary"
-                    style={{ cursor: 'pointer' }}
+                    className="cursor-pointer"
                   >
                     See all ({results.episodesTotal})
                   </Typography>
@@ -499,15 +487,15 @@ function SearchPageContent() {
                       direction="row"
                       spacing="md"
                       align="center"
-                      style={{ cursor: 'pointer', padding: '8px', borderRadius: '4px' }}
+                      className="cursor-pointer p-2 rounded hover:bg-grey-grey1"
                       onClick={() => handleShowClick(episode.show?.id || '')}
                     >
                       <img
                         src={getBestImageUrl(episode.images || [])}
                         alt={episode.name || 'Episode'}
-                        style={{ width: '60px', height: '60px', borderRadius: '4px' }}
+                        className="w-15 h-15 rounded"
                       />
-                      <Stack direction="column" spacing="xs" style={{ flex: 1 }}>
+                      <Stack direction="column" spacing="xs" className="flex-1">
                         <Typography variant="body" size="sm" weight="medium" color="primary">
                           {episode.name || 'Unknown Episode'}
                         </Typography>
@@ -540,7 +528,7 @@ export default function SearchPage() {
             {[1, 2, 3, 4, 5].map((i) => (
               <Stack key={i} direction="row" spacing="md" align="center">
                 <Skeleton variant="rectangular" width="40px" height="40px" />
-                <Stack direction="column" spacing="xs" style={{ flex: 1 }}>
+                <Stack direction="column" spacing="xs" className="flex-1">
                   <Skeleton variant="text" width="40%" height="16px" />
                   <Skeleton variant="text" width="30%" height="14px" />
                 </Stack>

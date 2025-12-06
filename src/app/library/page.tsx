@@ -224,9 +224,9 @@ export default function LibraryPage() {
       {loading ? (
         <Stack direction="column" spacing="xs">
           {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => (
-            <Stack key={i} direction="row" spacing="md" align="center" style={{ padding: '8px' }}>
+            <Stack key={i} direction="row" spacing="md" align="center" className="p-2">
               <Skeleton variant="rectangular" width="48px" height="48px" />
-              <Stack direction="column" spacing="xs" style={{ flex: 1 }}>
+              <Stack direction="column" spacing="xs" className="flex-1">
                 <Skeleton variant="text" width="60%" height="16px" />
                 <Skeleton variant="text" width="40%" height="14px" />
               </Stack>
@@ -248,14 +248,10 @@ export default function LibraryPage() {
               spacing="md"
               align="center"
               onClick={() => handleItemClick(item)}
-              style={{
-                padding: '8px',
-                borderRadius: '4px',
-                cursor: 'pointer',
-              }}
+              className="p-2 rounded cursor-pointer hover:bg-grey-grey1"
             >
               {/* Thumbnail */}
-              <Stack style={{ width: '48px', height: '48px', flexShrink: 0 }}>
+              <Stack className="w-12 h-12 flex-shrink-0">
                 {item.image ? (
                   <Image src={item.image} alt={item.name} size="sm" />
                 ) : (
@@ -263,12 +259,8 @@ export default function LibraryPage() {
                     direction="row"
                     align="center"
                     justify="center"
-                    style={{
-                      width: '48px',
-                      height: '48px',
-                      backgroundColor: colors.grey.grey2,
-                      borderRadius: '4px',
-                    }}
+                    className="w-12 h-12 rounded"
+                    style={{ backgroundColor: colors.grey.grey2 }}
                   >
                     {item.type === 'playlist' && (
                       <Icon icon={faHeart} size="sm" color="primary" />
@@ -278,7 +270,7 @@ export default function LibraryPage() {
               </Stack>
 
               {/* Item Details */}
-              <Stack direction="column" spacing="xs" style={{ flex: 1, minWidth: 0 }}>
+              <Stack direction="column" spacing="xs" className="flex-1 min-w-0">
                 <Typography variant="body" size="sm" weight="medium" color="primary">
                   {item.name}
                 </Typography>
@@ -288,7 +280,7 @@ export default function LibraryPage() {
                       icon={faHeart}
                       size="sm"
                       color={colors.primary.brand}
-                      style={{ flexShrink: 0 }}
+                      className="flex-shrink-0"
                     />
                   )}
                   <Typography variant="caption" size="sm" color="muted">

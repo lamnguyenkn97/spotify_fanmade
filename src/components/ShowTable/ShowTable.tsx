@@ -41,8 +41,8 @@ export const ShowTable: React.FC<ShowTableProps> = ({ shows, onShowClick }) => {
         direction="row"
         spacing="lg"
         align="center"
-        className="px-2 py-2 border-b border-gray-800"
-        style={{ gridTemplateColumns: '40px 1fr 30% 150px', display: 'grid' }}
+        className="px-2 py-2 border-b border-gray-800 grid"
+        style={{ gridTemplateColumns: '40px 1fr 30% 150px' }}
       >
         <Stack direction="row" align="center">
           <Typography variant="caption" size="sm" color="muted" weight="bold">
@@ -74,8 +74,8 @@ export const ShowTable: React.FC<ShowTableProps> = ({ shows, onShowClick }) => {
             direction="row"
             spacing="lg"
             align="center"
-            className="px-2 py-2 hover:bg-gray-800/50 rounded group cursor-pointer"
-            style={{ gridTemplateColumns: '40px 1fr 30% 150px', display: 'grid' }}
+            className="px-2 py-2 hover:bg-gray-800/50 rounded group cursor-pointer grid"
+            style={{ gridTemplateColumns: '40px 1fr 30% 150px' }}
             onMouseEnter={() => setHoveredIndex(item.index!)}
             onMouseLeave={() => setHoveredIndex(null)}
             onClick={() => onShowClick(item.id)}

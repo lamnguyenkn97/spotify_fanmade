@@ -181,7 +181,7 @@ export default function ArtistPage() {
             <Stack key={i} direction="row" spacing="md" align="center">
               <Skeleton variant="text" width="30px" height="20px" />
               <Skeleton variant="rectangular" width="40px" height="40px" />
-              <Stack direction="column" spacing="xs" style={{ flex: 1 }}>
+              <Stack direction="column" spacing="xs" className="flex-1">
                 <Skeleton variant="text" width="40%" height="16px" />
                 <Skeleton variant="text" width="30%" height="14px" />
               </Stack>
@@ -363,12 +363,8 @@ export default function ArtistPage() {
                               direction="row"
                               align="center"
                               justify="center"
-                              style={{
-                                width: '16px',
-                                height: '16px',
-                                backgroundColor: colors.grey.grey2,
-                                borderRadius: '2px',
-                              }}
+                              className="w-4 h-4 rounded-sm"
+                              style={{ backgroundColor: colors.grey.grey2 }}
                               title="Explicit"
                             >
                               <Typography variant="caption" size="sm" color="primary" weight="bold">
@@ -383,12 +379,8 @@ export default function ArtistPage() {
                                 direction="row"
                                 align="center"
                                 justify="center"
-                                style={{
-                                  width: '16px',
-                                  height: '16px',
-                                  backgroundColor: colors.grey.grey2,
-                                  borderRadius: '2px',
-                                }}
+                                className="w-4 h-4 rounded-sm"
+                                style={{ backgroundColor: colors.grey.grey2 }}
                                 title="Music video"
                               >
                                 <Icon icon={faPlay} size="sm" color="primary" />
@@ -488,8 +480,7 @@ export default function ArtistPage() {
                 <Stack
                   key={album.id}
                   direction="column"
-                  className="flex-shrink-0"
-                  style={{ width: '180px' }}
+                  className="flex-shrink-0 w-[180px]"
                 >
                   <Card
                     title={album.name}

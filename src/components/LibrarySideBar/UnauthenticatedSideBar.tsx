@@ -106,7 +106,7 @@ export const UnauthenticatedSideBar: React.FC<UnauthenticatedLibraryProps> = ({
     .replace(/\s+/g, ' ');
 
   return (
-    <Stack direction="column" className={containerClasses} style={{ width: '280px', flexShrink: 0 }}>
+    <Stack direction="column" className={`${containerClasses} w-[280px] flex-shrink-0`}>
       <SidebarHeader onAddClick={onAddClick} />
       <SidebarContent onCreatePlaylist={onCreatePlaylist} onBrowsePodcasts={onBrowsePodcasts} />
       <ProjectBadges />

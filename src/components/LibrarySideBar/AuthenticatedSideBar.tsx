@@ -96,9 +96,8 @@ export const AuthenticatedSideBar: React.FC<AuthenticatedSideBarProps> = ({
       onLibraryItemClick={handleLibraryItemClick}
       onSearch={handleSearch}
       showLogo={showLogo}
+      className="w-[450px] min-w-[450px]"
       style={{
-        width: '450px',
-        minWidth: '450px',
       }}
     />
   );

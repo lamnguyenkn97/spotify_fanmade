@@ -38,7 +38,7 @@ export const ContentSections: React.FC<ContentSectionsProps> = ({
                     if (!cardProps) return null;
 
                     return (
-                      <div key={itemIndex} className="flex-shrink-0" style={{ width: '180px' }}>
+                      <div key={itemIndex} className="flex-shrink-0 w-[180px]">
                         <Card
                           {...cardProps}
                           size="md"
