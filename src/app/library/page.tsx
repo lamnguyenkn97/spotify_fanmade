@@ -148,10 +148,6 @@ export default function LibraryPage() {
     setShowFeatureNotImplemented(true);
   };
 
-  const getBestImageUrl = (images: Array<{ url: string }> | undefined): string => {
-    if (!images || images.length === 0) return '';
-    return images[0]?.url || '';
-  };
 
   return (
     <Stack direction="column" spacing="lg" className="pb-8">

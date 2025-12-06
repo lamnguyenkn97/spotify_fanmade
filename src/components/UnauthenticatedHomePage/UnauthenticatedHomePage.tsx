@@ -2,26 +2,13 @@
 import React, { useState, useEffect } from 'react';
 import { Card, Stack, Typography, Button, ButtonVariant, ButtonSize, Skeleton } from 'spotify-design-system';
 import homepageData from '@/app/data/homepageData.json';
+import { getBestImageUrlByWidth } from '@/utils/imageHelpers';
 
 interface UnauthenticatedHomePageProps {
   onCardClick: (card: any) => void;
   onLogin?: () => void;
 }
 
-// Helper to extract image URL
-const getBestImageUrl = (sources: any[] = []) => {
-  if (!sources || sources.length === 0) return '';
-  const hasWidth = sources.some((s) => s.width != null);
-  if (hasWidth) {
-    return (
-      sources.find((source) => source.width && source.width >= 300)?.url ||
-      sources.find((source) => source.width && source.width >= 64)?.url ||
-      sources[0]?.url ||
-      ''
-    );
-  }
-  return sources[0]?.url || '';
-};
 
 // Helper to extract card props
 const getCardProps = (item: any) => {
@@ -33,25 +20,25 @@ const getCardProps = (item: any) => {
       title: data.name || 'Unknown Track',
       subtitle: data.artists?.items?.[0]?.profile?.name || 'Unknown Artist',
       variant: 'default' as const,
-      imageUrl: getBestImageUrl(data.albumOfTrack?.coverArt?.sources),
+      imageUrl: getBestImageUrlByWidth(data.albumOfTrack?.coverArt?.sources),
     },
     ArtistResponseWrapper: {
       title: data.profile?.name || 'Unknown Artist',
       subtitle: undefined,
       variant: 'artist' as const,
-      imageUrl: getBestImageUrl(data.visuals?.avatarImage?.sources),
+      imageUrl: getBestImageUrlByWidth(data.visuals?.avatarImage?.sources),
     },
     AlbumResponseWrapper: {
       title: data.name || 'Unknown Album',
       subtitle: data.artists?.items?.[0]?.profile?.name || 'Unknown Artist',
       variant: 'default' as const,
-      imageUrl: getBestImageUrl(data.coverArt?.sources),
+      imageUrl: getBestImageUrlByWidth(data.coverArt?.sources),
     },
     PlaylistResponseWrapper: {
       title: data.name || 'Unknown Playlist',
       subtitle: data.description || 'Playlist',
       variant: 'default' as const,
-      imageUrl: getBestImageUrl(data.images?.items?.[0]?.sources || data.images?.items),
+      imageUrl: getBestImageUrlByWidth(data.images?.items?.[0]?.sources || data.images?.items),
     },
     CategoryResponseWrapper: {
       title: data.name || 'Category',

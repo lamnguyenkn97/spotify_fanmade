@@ -19,6 +19,7 @@ import { faPlay, faShuffle, faEllipsis } from '@fortawesome/free-solid-svg-icons
 import { faClock } from '@fortawesome/free-regular-svg-icons';
 import { useRouter } from 'next/navigation';
 import { DiscographyFilterType, AlbumType, SpotifyArtistData } from '@/types';
+import { formatDuration } from '@/utils/formatHelpers';
 
 interface ArtistDataExtended {
   id: string;
@@ -217,12 +218,6 @@ export default function ArtistPage() {
     );
   }
 
-  const formatDuration = (ms: number): string => {
-    const seconds = Math.floor(ms / 1000);
-    const mins = Math.floor(seconds / 60);
-    const secs = seconds % 60;
-    return `${mins}:${secs.toString().padStart(2, '0')}`;
-  };
 
   interface TrackTableRow {
     id: string;

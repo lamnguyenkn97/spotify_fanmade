@@ -11,13 +11,7 @@ import { useLikedTracks } from '@/hooks/useLikedTracks';
 import { formatRelativeTime } from '@/utils/dateHelpers';
 import { useToast } from '@/contexts/ToastContext';
 import { SpotifyTrack, TrackTableRow, TrackTableProps } from '@/types';
-
-const formatDuration = (ms: number): string => {
-  const seconds = Math.floor(ms / 1000);
-  const mins = Math.floor(seconds / 60);
-  const secs = seconds % 60;
-  return `${mins}:${secs.toString().padStart(2, '0')}`;
-};
+import { formatDuration } from '@/utils/formatHelpers';
 
 export const TrackTable: React.FC<TrackTableProps> = ({ tracks, onTrackClick }) => {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);

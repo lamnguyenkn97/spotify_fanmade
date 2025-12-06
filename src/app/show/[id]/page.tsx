@@ -21,6 +21,7 @@ import { faClock } from '@fortawesome/free-regular-svg-icons';
 import { useMusicPlayerContext } from '@/contexts/MusicPlayerContext';
 import { useToast } from '@/contexts/ToastContext';
 import { SpotifyShow, EpisodeTableRow } from '@/types';
+import { formatDuration } from '@/utils/formatHelpers';
 
 export default function ShowPage() {
   const params = useParams();
@@ -102,12 +103,6 @@ export default function ShowPage() {
     await handleEpisodeClick(firstEpisode.id);
   };
 
-  const formatDuration = (ms: number): string => {
-    const seconds = Math.floor(ms / 1000);
-    const mins = Math.floor(seconds / 60);
-    const secs = seconds % 60;
-    return `${mins}:${secs.toString().padStart(2, '0')}`;
-  };
 
   const formatDate = (dateString: string): string => {
     const date = new Date(dateString);

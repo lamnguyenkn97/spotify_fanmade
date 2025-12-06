@@ -12,6 +12,8 @@ import {
   borderRadius,
 } from 'spotify-design-system';
 import { SpotifySearchResults, TrackTableRow } from '@/types';
+import { getBestImageUrl } from '@/utils/imageHelpers';
+import { formatDuration } from '@/utils/formatHelpers';
 
 function SearchPageContent() {
   const router = useRouter();
@@ -63,16 +65,6 @@ function SearchPageContent() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchParams]);
 
-  const formatDuration = (ms: number) => {
-    const minutes = Math.floor(ms / 60000);
-    const seconds = Math.floor((ms % 60000) / 1000);
-    return `${minutes}:${seconds.toString().padStart(2, '0')}`;
-  };
-
-  const getBestImageUrl = (images: any[]) => {
-    if (!images || images.length === 0) return '';
-    return images[0]?.url || '';
-  };
 
   const handleTrackClick = (track: any) => {
     // Navigate to album/playlist page if available

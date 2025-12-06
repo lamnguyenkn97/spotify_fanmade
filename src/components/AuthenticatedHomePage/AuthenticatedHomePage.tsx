@@ -159,15 +159,6 @@ export const AuthenticatedHomePage: React.FC<AuthenticatedHomePageProps> = ({ us
     return 'Good evening';
   };
 
-  const getBestImageUrl = (images: Array<{ url: string; height: number; width: number }>) => {
-    if (!images || images.length === 0) return '';
-    // Get medium-sized image (around 300px) or fallback to first available
-    return (
-      images.find((img) => img.height && img.height >= 200 && img.height <= 400)?.url ||
-      images[0]?.url ||
-      ''
-    );
-  };
 
   const handleTrackClick = async (track: SpotifyTrackWithContext['track']) => {
     // Convert the track to CurrentTrack format and play it

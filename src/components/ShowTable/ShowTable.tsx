@@ -4,15 +4,7 @@ import React, { useState } from 'react';
 import { Stack, Typography, Icon, Image, colors, borderRadius } from 'spotify-design-system';
 import { faPlay } from '@fortawesome/free-solid-svg-icons';
 import { ShowTableProps } from '@/types';
-
-const getBestImageUrl = (images: Array<{ url: string; height: number; width: number }>) => {
-  if (!images || images.length === 0) return '';
-  return (
-    images.find((img) => img.height && img.height >= 200 && img.height <= 400)?.url ||
-    images[0]?.url ||
-    ''
-  );
-};
+import { getBestImageUrl } from '@/utils/imageHelpers';
 
 export const ShowTable: React.FC<ShowTableProps> = ({ shows, onShowClick }) => {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);

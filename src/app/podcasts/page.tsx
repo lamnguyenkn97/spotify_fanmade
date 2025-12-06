@@ -15,15 +15,8 @@ import categoriesData from '../data/categoriesData.json';
 import { AuthModals } from '@/components';
 import { useSpotify } from '@/hooks/useSpotify';
 import { useCardModal } from '@/hooks/useCardModal';
+import { getBestImageUrlByWidth } from '@/utils/imageHelpers';
 
-// Helper: Extract best quality image URL from sources
-const getBestImageUrl = (sources: any[] = []) => {
-  return (
-    sources.find((source) => source.width >= 300)?.url ||
-    sources.find((source) => source.width >= 64)?.url ||
-    sources[0]?.url
-  );
-};
 
 export default function PodcastsPage() {
   const { login } = useSpotify();
@@ -48,7 +41,7 @@ export default function PodcastsPage() {
           )[0];
           const firstCard = firstItem?.content.data.data.cardRepresentation;
           const firstImageUrl = firstCard?.artwork?.sources
-            ? getBestImageUrl(firstCard.artwork.sources)
+            ? getBestImageUrlByWidth(firstCard.artwork.sources)
             : undefined;
 
           return (
@@ -63,7 +56,7 @@ export default function PodcastsPage() {
                   .map((item, itemIndex) => {
                     const card = item.content.data.data.cardRepresentation;
                     const imageUrl = card.artwork?.sources
-                      ? getBestImageUrl(card.artwork.sources)
+                      ? getBestImageUrlByWidth(card.artwork.sources)
                       : undefined;
 
                     return (
