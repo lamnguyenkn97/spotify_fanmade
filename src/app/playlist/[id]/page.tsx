@@ -79,7 +79,8 @@ export default function PlaylistPage() {
             owner: {
               id: 'current-user',
               display_name: 'You',
-            },
+              external_urls: { spotify: '' },
+            } as any, // Type assertion for liked songs special case
             tracks: {
               total: likedData.total || likedData.items?.length || 0,
               items: (likedData.items || []).map((item: any) => ({

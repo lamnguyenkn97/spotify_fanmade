@@ -18,6 +18,7 @@ import {
 } from 'spotify-design-system';
 import { faPlus, faSearch, faExpand, faBars, faHeart, faVolumeHigh } from '@fortawesome/free-solid-svg-icons';
 import { useRouter } from 'next/navigation';
+import { LibraryItem } from '@/types';
 
 enum LibraryFilter {
   PLAYLISTS = 'Playlists',
@@ -31,19 +32,6 @@ enum SortOption {
   RECENTLY_ADDED = 'Recently added',
   ALPHABETICAL = 'Alphabetical',
   CREATOR = 'Creator',
-}
-
-interface LibraryItem {
-  id: string;
-  name: string;
-  type: 'playlist' | 'artist' | 'album' | 'podcast' | 'show';
-  image?: string;
-  subtitle: string;
-  isPinned?: boolean;
-  isPlaying?: boolean;
-  owner?: string;
-  trackCount?: number;
-  dateAdded?: string;
 }
 
 export default function LibraryPage() {
@@ -71,7 +59,7 @@ export default function LibraryPage() {
             const playlistsData = await playlistsRes.json();
             data = playlistsData.items?.map((playlist: any) => ({
               id: playlist.id,
-              name: playlist.name,
+              title: playlist.name,
               type: 'playlist' as const,
               image: playlist.images?.[0]?.url,
               subtitle: `Playlist • ${playlist.owner?.display_name || 'Spotify'}`,
@@ -87,7 +75,7 @@ export default function LibraryPage() {
             const showsData = await showsRes.json();
             data = showsData.items?.map((item: any) => ({
               id: item.show?.id || item.id,
-              name: item.show?.name || item.name,
+              title: item.show?.name || item.name,
               type: 'show' as const,
               image: item.show?.images?.[0]?.url || item.images?.[0]?.url,
               subtitle: `Podcast • ${item.show?.publisher || item.publisher || 'Show'}`,
@@ -101,7 +89,7 @@ export default function LibraryPage() {
             const artistsData = await artistsRes.json();
             data = artistsData.items?.map((artist: any) => ({
               id: artist.id,
-              name: artist.name,
+              title: artist.name,
               type: 'artist' as const,
               image: artist.images?.[0]?.url,
               subtitle: 'Artist',
@@ -115,7 +103,7 @@ export default function LibraryPage() {
             const albumsData = await albumsRes.json();
             data = albumsData.items?.map((item: any) => ({
               id: item.album?.id || item.id,
-              name: item.album?.name || item.name,
+              title: item.album?.name || item.name,
               type: 'album' as const,
               image: item.album?.images?.[0]?.url || item.images?.[0]?.url,
               subtitle: `Album • ${item.album?.artists?.map((a: any) => a.name).join(', ') || 'Unknown'}`,
@@ -251,7 +239,7 @@ export default function LibraryPage() {
               {/* Thumbnail */}
               <Stack className="w-12 h-12 flex-shrink-0">
                 {item.image ? (
-                  <Image src={item.image} alt={item.name} size="sm" />
+                  <Image src={item.image} alt={item.title} size="sm" />
                 ) : (
                   <Stack
                     direction="row"
@@ -270,7 +258,7 @@ export default function LibraryPage() {
               {/* Item Details */}
               <Stack direction="column" spacing="xs" className="flex-1 min-w-0">
                 <Typography variant="body" size="sm" weight="medium" color="primary">
-                  {item.name}
+                  {item.title}
                 </Typography>
                 <Stack direction="row" spacing="xs" align="center">
                   {item.isPinned && (

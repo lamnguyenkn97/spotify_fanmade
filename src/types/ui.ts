@@ -47,8 +47,7 @@ export interface EpisodeTableRow {
 
 export interface LibraryItem {
   id: string;
-  name?: string; // For library/page
-  title?: string; // For AppLayout
+  title: string; // Primary display title
   subtitle: string;
   image?: string;
   type: 'playlist' | 'artist' | 'album' | 'show' | 'podcast';
