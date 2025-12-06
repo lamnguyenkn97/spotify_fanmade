@@ -17,22 +17,27 @@
 
 ## 🎬 Demo Access
 
-### Live Demo Options
+### Automated Request System
 
-**Option 1: Request Access (Instant)**
-- 🌐 Visit [spotify-fanmade.vercel.app](https://spotify-fanmade.vercel.app)
-- Click **"Request Demo Access"** button
-- Enter your Spotify account email
-- I'll add you within 24 hours and send confirmation
-- **Slots available:** 12 remaining (13/25 used)
+**How to Get Access:**
 
-**Option 2: Watch Demo Video**
-- 🎥 **[View Full Demo Video](#)** *(Coming soon - shows all authenticated features)*
-- No login required, see everything immediately
+1. 🌐 Visit [spotify-fanmade.vercel.app](https://spotify-fanmade.vercel.app)
+2. Click **"Request Demo"** button
+3. Enter your Spotify account email + optional message
+4. System automatically emails me your request via Resend
+5. I add you to both:
+   - Spotify Developer Dashboard (User Management)
+   - App's approved users list (`src/config/approvedUsers.ts`)
+6. You receive confirmation within 24 hours
+7. Login with Spotify OAuth - auto-approved users bypass the request modal
 
-**Option 3: Manual Email Request**
-- 📧 Email [your-email@example.com](mailto:your-email@example.com) with your Spotify account email
-- Alternative if the form doesn't work
+**Watch Demo Instead:**
+- 🎥 **[View Full Demo Video](#)** *(Coming soon)*
+- See all authenticated features without login
+
+**Direct Email (Backup):**
+- 📧 [lamnguyen.hcmut@gmail.com](mailto:lamnguyen.hcmut@gmail.com)
+- Include your Spotify account email
 
 ### Why Login is Restricted
 
@@ -83,6 +88,11 @@ This is an independent educational project for portfolio demonstration.
 - Recently played history and top artists
 - Multi-entity search (tracks, artists, albums, playlists, podcasts)
 - Filter system for library items
+
+### Access Control
+- Automated demo request system with email notifications
+- Approved users bypass request modal for seamless OAuth login
+- Configurable user allowlist for development mode compliance
 
 ### UI/UX
 - Dynamic gradient backgrounds extracted from album artwork
@@ -263,11 +273,15 @@ npm run dev
 
 **1. Set environment variables in Vercel:**
 ```env
+# Required
 SPOTIFY_CLIENT_ID             # From Spotify Developer Dashboard
 SPOTIFY_CLIENT_SECRET         # From Spotify Developer Dashboard
 SPOTIFY_REDIRECT_URI          # https://your-app.vercel.app/api/auth/callback
 NEXT_PUBLIC_APP_URL           # https://your-app.vercel.app
 SESSION_SECRET                # Generate: openssl rand -base64 32
+
+# Optional - Demo Request Emails
+RESEND_API_KEY                # From resend.com (enables email notifications)
 ```
 
 **2. Update Spotify redirect URIs:**
@@ -276,13 +290,35 @@ SESSION_SECRET                # Generate: openssl rand -base64 32
 - Add: `https://your-app.vercel.app/api/auth/callback`
 - Click **Save**
 
-**3. Add users to allowlist:**
-- In your Spotify app dashboard: Settings → User Management
-- Add Spotify email addresses for each user who should have access
-- Save changes
+**3. Configure demo request email (Optional):**
+```env
+RESEND_API_KEY                # From resend.com (free tier: 3k emails/month)
+```
+- Sign up at [resend.com](https://resend.com)
+- Get API key from dashboard
+- Enables automated email notifications for demo requests
+- Without this, requests are logged to console only
 
-**4. Deploy from GitHub:**
-- Vercel will auto-deploy when you push to main branch
+**4. Add users to allowlist:**
+
+**Method 1: Spotify Developer Dashboard**
+- Settings → User Management
+- Add Spotify email addresses
+- Required for OAuth access
+
+**Method 2: Auto-approved Users (Bypass Request Modal)**
+- Edit `src/config/approvedUsers.ts`
+- Add emails to `APPROVED_USERS` array
+- These users skip the "Request Demo" modal and go straight to OAuth login
+```typescript
+export const APPROVED_USERS = [
+  'admin@example.com',
+  'user@example.com',
+];
+```
+
+**5. Deploy from GitHub:**
+- Vercel auto-deploys on push to main branch
 
 ---
 
