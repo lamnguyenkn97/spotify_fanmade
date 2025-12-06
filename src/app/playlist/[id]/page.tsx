@@ -2,13 +2,12 @@
 
 import React, { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
-import { Stack, Typography, Skeleton } from 'spotify-design-system';
+import { Stack, Typography, Skeleton, MessageText, Button, ButtonVariant } from 'spotify-design-system';
 import { PlaylistHeader, TrackTable } from '@/components';
 import { extractColorsFromImage, ExtractedColors } from '@/utils/colorExtractor';
 import { useMusicPlayerContext } from '@/contexts/MusicPlayerContext';
 import { convertTracksToQueue } from '@/utils/trackHelpers';
-import { useToast } from '@/contexts/ToastContext';
-import { useAuthUser } from '@/hooks/api';
+import { useAuthUser, loginWithSpotify } from '@/hooks/api';
 
 interface PlaylistData {
   id: string;
@@ -42,9 +41,9 @@ export default function PlaylistPage() {
   const [playlist, setPlaylist] = useState<SpotifyPlaylist | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [needsAuth, setNeedsAuth] = useState(false);
   const [gradientColors, setGradientColors] = useState<ExtractedColors | null>(null);
   const { playTrack, setQueue, toggleShuffle, isShuffled } = useMusicPlayerContext();
-  const toast = useToast();
   const { isAuthenticated } = useAuthUser();
 
   useEffect(() => {
@@ -59,11 +58,8 @@ export default function PlaylistPage() {
         if (params.id === 'liked-songs') {
           // Check authentication before fetching liked songs
           if (!isAuthenticated) {
-            setError('Please log in to view your liked songs');
+            setNeedsAuth(true);
             setLoading(false);
-            toast.warning('Please log in to view your liked songs');
-            // Redirect to home after showing message
-            setTimeout(() => router.push('/'), 2000);
             return;
           }
 
@@ -147,7 +143,7 @@ export default function PlaylistPage() {
     };
 
     fetchPlaylist();
-  }, [params.id, isAuthenticated, router, toast]);
+  }, [params.id, isAuthenticated, router]);
 
   const handlePlayPlaylist = async () => {
     if (!playlist || playlist.tracks.items.length === 0) return;
@@ -164,7 +160,7 @@ export default function PlaylistPage() {
       try {
         await playTrack(queue[0]);
       } catch (error) {
-        toast.warning('Playback requires Spotify Premium or tracks with previews available.');
+        // Error handling is done in the music player
       }
     }
   };
@@ -200,7 +196,7 @@ export default function PlaylistPage() {
       try {
         await playTrack(shuffled[0]);
       } catch (error) {
-        toast.warning('Playback requires Spotify Premium or tracks with previews available.');
+        // Error handling is done in the music player
       }
       
       // Ensure shuffle state is on (in case it wasn't already)
@@ -271,15 +267,38 @@ export default function PlaylistPage() {
     );
   }
 
+  // Show auth required message for liked songs
+  if (needsAuth) {
+    return (
+      <Stack direction="column" spacing="lg" align="center" justify="center" className="p-8 min-h-screen">
+        <Stack direction="column" spacing="md" align="center" className="max-w-md">
+          <Typography variant="heading" size="xl" color="inverse">
+            Login Required
+          </Typography>
+          <MessageText type="warning">
+            You need to log in with your Spotify account to view your liked songs.
+          </MessageText>
+          <Button 
+            variant={ButtonVariant.Primary} 
+            onClick={loginWithSpotify}
+            className="mt-4"
+          >
+            Connect with Spotify
+          </Button>
+        </Stack>
+      </Stack>
+    );
+  }
+
   if (error || !playlist) {
     return (
       <Stack direction="column" spacing="lg" className="p-8">
         <Typography variant="heading" size="xl" color="inverse">
           Failed to load playlist
         </Typography>
-        <Typography variant="body" color="muted">
-          {error}
-        </Typography>
+        <MessageText type="error">
+          {error || 'Unable to load playlist. Please try again.'}
+        </MessageText>
       </Stack>
     );
   }
