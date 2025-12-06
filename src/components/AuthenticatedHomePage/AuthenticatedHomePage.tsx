@@ -1,12 +1,13 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { Button, ButtonSize, ButtonVariant, Card, Stack, Typography, HorizontalTileCard, Skeleton } from 'spotify-design-system';
 import { useRouter } from 'next/navigation';
 import { TimeRange, NUMBER_OF_DISPLAYED_ITEMS, SpotifyUser, SpotifyTrackWithContext, SpotifyPlaylist, SpotifyArtist, SpotifyAlbum, SpotifyShow } from '@/types';
 import { useMusicPlayerContext } from '@/contexts/MusicPlayerContext';
 import { convertTrackToCurrentTrack } from '@/utils/trackHelpers';
 import { useToast } from '@/contexts/ToastContext';
+import { getBestImageUrl } from '@/utils/imageHelpers';
 import {
   useRecentlyPlayed,
   useSavedTracks,
