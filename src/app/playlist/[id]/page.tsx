@@ -270,8 +270,8 @@ export default function PlaylistPage() {
   // Show auth required message for liked songs
   if (needsAuth) {
     return (
-      <Stack direction="column" spacing="lg" align="center" justify="center" className="p-8 min-h-screen">
-        <Stack direction="column" spacing="md" align="center" className="max-w-md">
+      <Stack direction="column" spacing="lg" className="p-8">
+        <Stack direction="column" spacing="md" className="max-w-md">
           <Typography variant="heading" size="xl" color="inverse">
             Login Required
           </Typography>
@@ -281,7 +281,6 @@ export default function PlaylistPage() {
           <Button 
             variant={ButtonVariant.Primary} 
             onClick={loginWithSpotify}
-            className="mt-4"
           >
             Connect with Spotify
           </Button>
