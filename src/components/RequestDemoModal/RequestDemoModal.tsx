@@ -15,6 +15,7 @@ export const RequestDemoModal: React.FC<RequestDemoModalProps> = ({ isOpen, onCl
   const [loading, setLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState('');
+  const [isAlreadyApproved, setIsAlreadyApproved] = useState(false);
 
   const handleSubmit = async () => {
     if (!email || !email.includes('@')) {
@@ -26,6 +27,25 @@ export const RequestDemoModal: React.FC<RequestDemoModalProps> = ({ isOpen, onCl
     setError('');
 
     try {
+      // First, check if user is already approved
+      const checkResponse = await fetch('/api/check-approval', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email }),
+      });
+
+      const { approved } = await checkResponse.json();
+
+      if (approved) {
+        // User is already approved! Redirect to OAuth login
+        setIsAlreadyApproved(true);
+        setTimeout(() => {
+          window.location.href = '/api/auth/login';
+        }, 2000);
+        return;
+      }
+
+      // User not approved yet, submit request
       const response = await fetch('/api/request-demo', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -63,9 +83,18 @@ export const RequestDemoModal: React.FC<RequestDemoModalProps> = ({ isOpen, onCl
   };
 
   return (
-    <Modal open={isOpen} onClose={handleClose} title={submitted ? 'Request Submitted!' : 'Request Demo Access'}>
+    <Modal open={isOpen} onClose={handleClose} title={isAlreadyApproved ? 'Already Approved!' : submitted ? 'Request Submitted!' : 'Request Demo Access'}>
       <Stack direction="column" spacing="lg" className="p-6">
-        {submitted ? (
+        {isAlreadyApproved ? (
+          <Stack direction="column" spacing="md" align="center" className="py-8">
+            <Typography variant="body" color="primary" className="text-center text-lg">
+              ✅ Great news! You're already approved!
+            </Typography>
+            <Typography variant="body" color="secondary" className="text-center">
+              Redirecting you to Spotify login...
+            </Typography>
+          </Stack>
+        ) : submitted ? (
           <Stack direction="column" spacing="md" align="center" className="py-8">
             <Typography variant="body" color="primary" className="text-center text-lg">
               ✅ Thank you for your interest!
