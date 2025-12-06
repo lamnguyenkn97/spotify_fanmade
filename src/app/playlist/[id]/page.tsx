@@ -61,7 +61,7 @@ export default function PlaylistPage() {
           if (!isAuthenticated) {
             setError('Please log in to view your liked songs');
             setLoading(false);
-            toast.toast.warning('Please log in to view your liked songs');
+            toast.warning('Please log in to view your liked songs');
             // Redirect to home after showing message
             setTimeout(() => router.push('/'), 2000);
             return;
