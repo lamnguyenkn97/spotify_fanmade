@@ -11,3 +11,4 @@ export { MusicPlayer } from './MusicPlayer';
 export { QueueDrawer } from './QueueDrawer';
 export { PlaylistHeaderSkeleton, TrackListSkeleton, ActionButtonsSkeleton } from './Skeletons';
 export { ErrorBoundary } from './ErrorBoundary';
+export { RequestDemoModal } from './RequestDemoModal';

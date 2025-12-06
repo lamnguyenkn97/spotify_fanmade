@@ -19,18 +19,20 @@
 
 ### Live Demo Options
 
-**Option 1: Watch Demo Video (Recommended)**
+**Option 1: Request Access (Instant)**
+- 🌐 Visit [spotify-fanmade.vercel.app](https://spotify-fanmade.vercel.app)
+- Click **"Request Demo Access"** button
+- Enter your Spotify account email
+- I'll add you within 24 hours and send confirmation
+- **Slots available:** 12 remaining (13/25 used)
+
+**Option 2: Watch Demo Video**
 - 🎥 **[View Full Demo Video](#)** *(Coming soon - shows all authenticated features)*
 - No login required, see everything immediately
 
-**Option 2: Request Access for Testing**
+**Option 3: Manual Email Request**
 - 📧 Email [your-email@example.com](mailto:your-email@example.com) with your Spotify account email
-- I'll add you to the allowlist within 24 hours
-- **Slots available:** 12 remaining (13/25 used)
-
-**Option 3: Explore Unauthenticated Version**
-- 🌐 Visit [spotify-fanmade.vercel.app](https://spotify-fanmade.vercel.app)
-- See the UI, design system, and static content
+- Alternative if the form doesn't work
 
 ### Why Login is Restricted
 
