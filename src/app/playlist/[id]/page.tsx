@@ -8,6 +8,7 @@ import { extractColorsFromImage, ExtractedColors } from '@/utils/colorExtractor'
 import { useMusicPlayerContext } from '@/contexts/MusicPlayerContext';
 import { convertTracksToQueue } from '@/utils/trackHelpers';
 import { useAuthUser, loginWithSpotify } from '@/hooks/api';
+import { SpotifyPlaylist } from '@/types';
 
 interface PlaylistData {
   id: string;
@@ -76,6 +77,7 @@ export default function PlaylistPage() {
             description: 'Your liked songs',
             images: likedData.items?.[0]?.track?.album?.images || [],
             owner: {
+              id: 'current-user',
               display_name: 'You',
             },
             tracks: {

@@ -70,7 +70,7 @@ export default function ShowPage() {
     if (!show) return;
 
     // Find the episode in the show's episodes
-    const episode = show.episodes.items.find((ep) => ep.id === episodeId);
+    const episode = show.episodes?.items?.find((ep) => ep.id === episodeId);
     if (!episode) {
 
       return;
@@ -96,7 +96,7 @@ export default function ShowPage() {
   };
 
   const handlePlayShow = async () => {
-    if (!show || !show.episodes || show.episodes.items.length === 0) return;
+    if (!show || !show.episodes || !show.episodes.items || show.episodes.items.length === 0) return;
 
     // Play the first episode
     const firstEpisode = show.episodes.items[0];
@@ -231,7 +231,7 @@ export default function ShowPage() {
       )}
 
       {/* All Episodes Section */}
-      {show.episodes.items.length > 0 && (
+      {show.episodes?.items && show.episodes.items.length > 0 && (
         <Stack direction="column" spacing="md">
           <Typography variant="heading" size="xl" weight="bold" color="primary">
             All Episodes
@@ -333,7 +333,7 @@ export default function ShowPage() {
                   width: '60px',
                 },
               ]}
-              data={show.episodes.items.map((episode, index) => {
+              data={(show.episodes?.items || []).map((episode, index) => {
                 const status = getEpisodeStatus(episode);
                 const isFinished = status === 'Finished';
 
