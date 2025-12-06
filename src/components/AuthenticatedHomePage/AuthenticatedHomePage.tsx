@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 import { TimeRange, NUMBER_OF_DISPLAYED_ITEMS } from '@/types';
 import { useMusicPlayerContext } from '@/contexts/MusicPlayerContext';
 import { convertTrackToCurrentTrack } from '@/utils/trackHelpers';
+import { useToast } from '@/contexts/ToastContext';
 
 interface User {
   displayName: string;
@@ -71,6 +72,7 @@ interface AuthenticatedHomePageProps {
 export const AuthenticatedHomePage: React.FC<AuthenticatedHomePageProps> = ({ user }) => {
   const router = useRouter();
   const { playTrack } = useMusicPlayerContext();
+  const toast = useToast();
   const [recentTracks, setRecentTracks] = useState<Track[]>([]);
   const [likedTracks, setLikedTracks] = useState<Track[]>([]);
   const [userPlaylists, setUserPlaylists] = useState<Playlist[]>([]);
@@ -181,7 +183,17 @@ export const AuthenticatedHomePage: React.FC<AuthenticatedHomePageProps> = ({ us
       preview_url: track.preview_url || null,
       external_urls: track.external_urls,
     });
-    await playTrack(currentTrack);
+    
+    try {
+      await playTrack(currentTrack);
+    } catch (error) {
+      // Show user-friendly error message
+      if (!track.preview_url) {
+        toast.warning('This track requires Spotify Premium for full playback. Preview not available.');
+      } else {
+        toast.error('Unable to play this track. Please try again.');
+      }
+    }
   };
 
   const handlePlaylistClick = (playlistId: string) => {

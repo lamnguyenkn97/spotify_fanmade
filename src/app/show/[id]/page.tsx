@@ -19,6 +19,7 @@ import {
 import { faPlay, faEllipsis, faCheckCircle } from '@fortawesome/free-solid-svg-icons';
 import { faClock } from '@fortawesome/free-regular-svg-icons';
 import { useMusicPlayerContext } from '@/contexts/MusicPlayerContext';
+import { useToast } from '@/contexts/ToastContext';
 
 interface ShowData {
   id: string;
@@ -66,6 +67,7 @@ interface EpisodeTableRow {
 export default function ShowPage() {
   const params = useParams();
   const { playTrack } = useMusicPlayerContext();
+  const toast = useToast();
   const [show, setShow] = useState<ShowData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -130,7 +132,7 @@ export default function ShowPage() {
     try {
       await playTrack(episodeAsTrack);
     } catch (error) {
-
+      toast.warning('This episode requires Spotify Premium for playback. Podcasts typically don\'t have preview clips.');
     }
   };
 

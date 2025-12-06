@@ -7,6 +7,7 @@ import { PlaylistHeader, TrackTable } from '@/components';
 import { extractColorsFromImage, ExtractedColors } from '@/utils/colorExtractor';
 import { useMusicPlayerContext } from '@/contexts/MusicPlayerContext';
 import { convertTracksToQueue } from '@/utils/trackHelpers';
+import { useToast } from '@/contexts/ToastContext';
 
 interface PlaylistData {
   id: string;
@@ -41,6 +42,7 @@ export default function PlaylistPage() {
   const [error, setError] = useState<string | null>(null);
   const [gradientColors, setGradientColors] = useState<ExtractedColors | null>(null);
   const { playTrack, setQueue, toggleShuffle, isShuffled } = useMusicPlayerContext();
+  const toast = useToast();
 
   useEffect(() => {
     if (!params.id) return;
@@ -146,7 +148,11 @@ export default function PlaylistPage() {
     
     // Play the first track
     if (queue.length > 0) {
-      await playTrack(queue[0]);
+      try {
+        await playTrack(queue[0]);
+      } catch (error) {
+        toast.warning('Playback requires Spotify Premium or tracks with previews available.');
+      }
     }
   };
 
@@ -177,7 +183,12 @@ export default function PlaylistPage() {
         [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
       }
       setQueue(shuffled);
-      await playTrack(shuffled[0]);
+      
+      try {
+        await playTrack(shuffled[0]);
+      } catch (error) {
+        toast.warning('Playback requires Spotify Premium or tracks with previews available.');
+      }
       
       // Ensure shuffle state is on (in case it wasn't already)
       if (!isShuffled) {

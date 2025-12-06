@@ -9,6 +9,7 @@ import { useQueueDrawer } from '@/contexts/QueueDrawerContext';
 import { convertTrackToCurrentTrack, convertTracksToQueue } from '@/utils/trackHelpers';
 import { useLikedTracks } from '@/hooks/useLikedTracks';
 import { formatRelativeTime } from '@/utils/dateHelpers';
+import { useToast } from '@/contexts/ToastContext';
 
 interface Track {
   id: string;
@@ -60,6 +61,7 @@ export const TrackTable: React.FC<TrackTableProps> = ({ tracks, onTrackClick }) 
   const { playTrack, pause, resume, setQueue, currentTrack, isPlaying, addToQueue } =
     useMusicPlayerContext();
   const { openQueue } = useQueueDrawer();
+  const toast = useToast();
 
   // Get track IDs for checking liked status (read-only, no toggle functionality)
   const trackIds = React.useMemo(() => tracks.map((item) => item.track.id), [tracks]);
@@ -91,7 +93,17 @@ export const TrackTable: React.FC<TrackTableProps> = ({ tracks, onTrackClick }) 
     } else {
       // Different track - set up queue starting from this track, then play it
       setPlaylistQueue(trackIndex);
-      await playTrack(trackToPlay);
+      
+      try {
+        await playTrack(trackToPlay);
+      } catch (error) {
+        // Show user-friendly error message based on the issue
+        if (!track.preview_url) {
+          toast.warning('This track requires Spotify Premium for full playback. Preview not available.');
+        } else {
+          toast.error('Unable to play this track. Please try again.');
+        }
+      }
     }
 
     onTrackClick?.(track);
