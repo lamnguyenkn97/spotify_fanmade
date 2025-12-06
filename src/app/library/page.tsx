@@ -14,6 +14,7 @@ import {
   Modal,
   ModalSize,
   Skeleton,
+  borderRadius,
 } from 'spotify-design-system';
 import { faPlus, faSearch, faExpand, faBars, faHeart, faVolumeHigh } from '@fortawesome/free-solid-svg-icons';
 import { useRouter } from 'next/navigation';
