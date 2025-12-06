@@ -58,8 +58,7 @@ const ProjectBadges: React.FC = () => {
           key={index}
           direction="row"
           align="center"
-          className="px-2 py-1 text-xs font-medium border border-spotify-green text-spotify-green bg-transparent"
-          style={{ borderRadius: borderRadius.round }}
+          className="px-2 py-1 text-xs font-medium border border-spotify-green text-spotify-green bg-transparent rounded-full"
         >
           {badge.label}
         </Stack>
