@@ -30,7 +30,7 @@ export const ContentSections: React.FC<ContentSectionsProps> = ({
             </Stack>
 
             <div className="overflow-x-auto overflow-y-visible pb-4 -mx-6 px-6 scrollbar-hide">
-              <div className="flex gap-4 min-w-max">
+              <Stack direction="row" spacing="md" className="min-w-max">
                 {section.sectionItems.items
                   .filter((item: any) => item.content?.data)
                   .map((item: any, itemIndex: number) => {
@@ -38,7 +38,7 @@ export const ContentSections: React.FC<ContentSectionsProps> = ({
                     if (!cardProps) return null;
 
                     return (
-                      <div key={itemIndex} className="flex-shrink-0 w-[180px]">
+                      <Stack key={itemIndex} className="flex-shrink-0 w-[180px]">
                         <Card
                           {...cardProps}
                           size="md"
@@ -46,10 +46,10 @@ export const ContentSections: React.FC<ContentSectionsProps> = ({
                           onPlayClick={() => {}}
                           onClick={() => onCardClick(cardProps.title, cardProps.imageUrl)}
                         />
-                      </div>
+                      </Stack>
                     );
                   })}
-              </div>
+              </Stack>
             </div>
           </Stack>
         );

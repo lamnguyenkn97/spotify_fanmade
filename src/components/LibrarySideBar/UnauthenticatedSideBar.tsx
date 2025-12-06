@@ -53,12 +53,14 @@ const ProjectBadges: React.FC = () => {
   return (
     <Stack direction="row" spacing="xs" className="flex-wrap px-4 py-3 mx-4 mt-auto">
       {badges.map((badge, index) => (
-        <span
+        <Stack
           key={index}
-          className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium border border-spotify-green text-spotify-green bg-transparent"
+          direction="row"
+          align="center"
+          className="px-2 py-1 rounded-full text-xs font-medium border border-spotify-green text-spotify-green bg-transparent"
         >
           {badge.label}
-        </span>
+        </Stack>
       ))}
     </Stack>
   );

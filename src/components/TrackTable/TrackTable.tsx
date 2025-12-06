@@ -275,15 +275,18 @@ export const TrackTable: React.FC<TrackTableProps> = ({ tracks, onTrackClick }) 
             label: '',
             renderCell: (row: TrackTableRow) => {
               return (
-                <div
+                <Stack
+                  direction="row"
+                  align="center"
+                  spacing="xs"
                   onClick={(e) => handleAddToQueue(e, row.track)}
-                  className="cursor-pointer px-3 py-2 rounded inline-flex items-center gap-2 hover:bg-white/10 transition-colors duration-150"
+                  className="cursor-pointer px-3 py-2 rounded hover:bg-white/10 transition-colors duration-150"
                 >
                   <Icon icon={faListUl} size="sm" color="muted" />
                   <Typography variant="body" size="sm" color="muted" weight="medium">
                     Add to queue
                   </Typography>
-                </div>
+                </Stack>
               );
             },
             width: '150px',
