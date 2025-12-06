@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { Resend } from 'resend';
 
 export async function POST(request: NextRequest) {
   try {
@@ -8,13 +9,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Invalid email' }, { status: 400 });
     }
 
-    // TODO: You can implement email sending here using:
-    // - Resend (https://resend.com) - recommended, free tier
-    // - SendGrid
-    // - Nodemailer
-    // - Or save to Google Sheets via API
-    
-    // For now, just log the request
+    // Log to console
     console.log('Demo Access Request:', {
       email,
       name: name || 'Not provided',
@@ -22,20 +17,35 @@ export async function POST(request: NextRequest) {
       timestamp: new Date().toISOString(),
     });
 
-    // Example with Resend (uncomment when you set it up):
-    // const resend = new Resend(process.env.RESEND_API_KEY);
-    // await resend.emails.send({
-    //   from: 'Demo Requests <noreply@yourdomain.com>',
-    //   to: 'your-email@example.com',
-    //   subject: 'New Spotify Demo Access Request',
-    //   html: `
-    //     <h2>New Demo Access Request</h2>
-    //     <p><strong>Email:</strong> ${email}</p>
-    //     <p><strong>Name:</strong> ${name || 'Not provided'}</p>
-    //     <p><strong>Message:</strong> ${message || 'No message'}</p>
-    //     <p><strong>Time:</strong> ${new Date().toLocaleString()}</p>
-    //   `,
-    // });
+    // Send email notification via Resend
+    if (process.env.RESEND_API_KEY) {
+      try {
+        const resend = new Resend(process.env.RESEND_API_KEY);
+        await resend.emails.send({
+          from: 'Spotify Demo <onboarding@resend.dev>',
+          to: 'lamnguyen.hcmut@gmail.com',
+          subject: '🎵 New Spotify Demo Access Request',
+          html: `
+            <h2>New Demo Access Request</h2>
+            <p><strong>Email:</strong> ${email}</p>
+            <p><strong>Name:</strong> ${name || 'Not provided'}</p>
+            <p><strong>Message:</strong> ${message || 'No message'}</p>
+            <p><strong>Time:</strong> ${new Date().toLocaleString()}</p>
+            <hr />
+            <h3>Next Steps:</h3>
+            <ol>
+              <li>Add to Spotify Developer Dashboard → User Management</li>
+              <li>Add "${email}" to src/config/approvedUsers.ts</li>
+              <li>Deploy changes</li>
+              <li>Reply to user</li>
+            </ol>
+          `,
+        });
+      } catch (emailError) {
+        console.error('Failed to send email:', emailError);
+        // Don't fail the request if email fails
+      }
+    }
 
     return NextResponse.json({ 
       success: true,
