@@ -31,16 +31,6 @@ interface AppLayoutProps {
   children: React.ReactNode;
 }
 
-interface LibraryItem {
-  id: string;
-  title: string;
-  type: 'playlist' | 'artist' | 'album' | 'podcast' | 'show';
-  image?: string;
-  subtitle: string;
-  pinned?: boolean;
-  isPlaying?: boolean;
-}
-
 export const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
   const router = useRouter();
   const { user, isAuthenticated, login, logout } = useSpotify();

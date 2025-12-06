@@ -47,11 +47,13 @@ export interface EpisodeTableRow {
 
 export interface LibraryItem {
   id: string;
-  name: string;
+  name?: string; // For library/page
+  title?: string; // For AppLayout
   subtitle: string;
   image?: string;
-  type: 'playlist' | 'artist' | 'album' | 'show';
+  type: 'playlist' | 'artist' | 'album' | 'show' | 'podcast';
   isPinned?: boolean;
+  pinned?: boolean; // Alternative name used in AppLayout
   isPlaying?: boolean;
   trackCount?: number;
   dateAdded?: string;
