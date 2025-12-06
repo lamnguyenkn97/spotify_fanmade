@@ -9,7 +9,7 @@
 [![React](https://img.shields.io/badge/React_18-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)](https://reactjs.org/)
 [![NPM Package](https://img.shields.io/badge/NPM_Published-CB3837?style=for-the-badge&logo=npm&logoColor=white)](https://www.npmjs.com/package/spotify-design-system)
 
-[🎵 **Live Demo**](#) • [📦 **NPM Package**](https://www.npmjs.com/package/spotify-design-system) • [📚 **Documentation**](https://spotify-storybook.vercel.app)
+[🎵 **Live Demo**](https://spotify-fanmade.vercel.app) • [📦 **NPM Package**](https://www.npmjs.com/package/spotify-design-system) • [📚 **Documentation**](https://spotify-storybook.vercel.app)
 
 </div>
 
@@ -334,7 +334,7 @@ src/utils/
 
 | Resource | Link |
 |----------|------|
-| 🎵 **Live Application** | *[Your Vercel URL]* |
+| 🎵 **Live Application** | [spotify-fanmade.vercel.app](https://spotify-fanmade.vercel.app) |
 | 📦 **NPM Package** | [npmjs.com/package/spotify-design-system](https://www.npmjs.com/package/spotify-design-system) |
 | 📚 **Storybook Docs** | [spotify-storybook.vercel.app](https://spotify-storybook.vercel.app) |
 | 🔧 **Design System Repo** | [github.com/lamnguyenkn97/spotify_design_system](https://github.com/lamnguyenkn97/spotify_design_system) |
