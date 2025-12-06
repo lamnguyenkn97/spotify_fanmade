@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Modal, Stack, Typography, Input, Button, ButtonVariant, ButtonSize } from 'spotify-design-system';
 
 interface RequestDemoModalProps {
@@ -16,6 +16,24 @@ export const RequestDemoModal: React.FC<RequestDemoModalProps> = ({ isOpen, onCl
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState('');
   const [isAlreadyApproved, setIsAlreadyApproved] = useState(false);
+  const emailInputRef = useRef<HTMLInputElement>(null);
+  const nameInputRef = useRef<HTMLInputElement>(null);
+  const [activeField, setActiveField] = useState<'email' | 'name' | null>(null);
+
+  // Restore focus after re-render
+  useEffect(() => {
+    if (!isOpen || loading || submitted || isAlreadyApproved) return;
+    
+    const timer = setTimeout(() => {
+      if (activeField === 'email') {
+        emailInputRef.current?.focus();
+      } else if (activeField === 'name') {
+        nameInputRef.current?.focus();
+      }
+    }, 0);
+
+    return () => clearTimeout(timer);
+  }, [email, name, isOpen, loading, submitted, isAlreadyApproved, activeField]);
 
   const handleSubmit = async () => {
     if (!email || !email.includes('@')) {
@@ -121,21 +139,25 @@ export const RequestDemoModal: React.FC<RequestDemoModalProps> = ({ isOpen, onCl
             </Typography>
 
             <Input
+              ref={emailInputRef}
               label="Spotify Email"
               type="email"
               placeholder="your.email@example.com"
               value={email}
               onValueChange={setEmail}
+              onFocus={() => setActiveField('email')}
               disabled={loading}
               fullWidth
             />
 
             <Input
+              ref={nameInputRef}
               label="Name (Optional)"
               type="text"
               placeholder="Your name"
               value={name}
               onValueChange={setName}
+              onFocus={() => setActiveField('name')}
               disabled={loading}
               fullWidth
             />
