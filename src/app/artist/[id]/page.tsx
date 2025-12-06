@@ -356,18 +356,11 @@ export default function ArtistPage() {
                           </Typography>
                           {/* Explicit indicator */}
                           {row.explicit && (
-                            <Stack
-                              direction="row"
-                              align="center"
-                              justify="center"
-                              className="w-4 h-4 rounded-sm"
-                              style={{ backgroundColor: colors.grey.grey2 }}
+                            <Pill 
+                              label="E" 
+                              size="sm"
                               title="Explicit"
-                            >
-                              <Typography variant="caption" size="sm" color="primary" weight="bold">
-                                E
-                              </Typography>
-                            </Stack>
+                            />
                           )}
                           {/* Music video indicator */}
                           {row.hasVideo && (
