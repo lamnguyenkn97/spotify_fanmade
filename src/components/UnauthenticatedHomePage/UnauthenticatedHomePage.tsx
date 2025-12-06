@@ -107,67 +107,19 @@ export const UnauthenticatedHomePage: React.FC<UnauthenticatedHomePageProps> = (
 
   useEffect(() => {
     const fetchHomepageData = async () => {
-      try {
-        // Always load static data first
-        const staticSections = homepageData.data.home.sectionContainer.sections.items.filter(
-          (section: any) => {
-            const items = section.sectionItems?.items || [];
-            const firstItem = items.find((item: any) => item.content?.data);
-            return firstItem !== undefined && items.length > 0;
-          }
-        );
-
-        // Try to fetch fresh data from Spotify API
-        const response = await fetch('/api/spotify/homepage-feed');
-        
-        if (response.ok) {
-          const data = await response.json();
-          
-          if (data.data?.home?.sectionContainer?.sections?.items) {
-            const apiSections = data.data.home.sectionContainer.sections.items.filter(
-              (section: any) => {
-                const items = section.sectionItems?.items || [];
-                const validItems = items.filter((item: any) => {
-                  const hasContent = item.content && (item.content.data || item.content.__typename);
-                  return hasContent;
-                });
-                return validItems.length > 0;
-              }
-            );
-            
-            // Merge API sections with static sections
-            // API sections first, then static sections (avoid duplicates by title)
-            const apiTitles = new Set(
-              apiSections.map((s: any) => s.data?.title?.transformedLabel).filter(Boolean)
-            );
-            const uniqueStaticSections = staticSections.filter(
-              (s: any) => !apiTitles.has(s.data?.title?.transformedLabel)
-            );
-            
-            const mergedSections = [...apiSections, ...uniqueStaticSections];
-            
-            setSections(mergedSections);
-            setUsingFallback(false);
-          } else {
-            throw new Error('Invalid data structure');
-          }
-        } else {
-          throw new Error('API request failed');
+      // For unauthenticated users, load static data immediately
+      // No API call needed - this is a portfolio demo showcase
+      const filteredSections = homepageData.data.home.sectionContainer.sections.items.filter(
+        (section: any) => {
+          const items = section.sectionItems?.items || [];
+          const firstItem = items.find((item: any) => item.content?.data);
+          return firstItem !== undefined && items.length > 0;
         }
-      } catch (error) {
-        // Fallback to static data only
-        const filteredSections = homepageData.data.home.sectionContainer.sections.items.filter(
-          (section: any) => {
-            const items = section.sectionItems?.items || [];
-            const firstItem = items.find((item: any) => item.content?.data);
-            return firstItem !== undefined && items.length > 0;
-          }
-        );
-        setSections(filteredSections);
-        setUsingFallback(true);
-      } finally {
-        setLoading(false);
-      }
+      );
+      
+      setSections(filteredSections);
+      setUsingFallback(false);
+      setLoading(false);
     };
 
     fetchHomepageData();
