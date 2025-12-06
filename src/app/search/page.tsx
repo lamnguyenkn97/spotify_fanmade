@@ -9,6 +9,7 @@ import {
   Table,
   colors,
   Skeleton,
+  borderRadius,
 } from 'spotify-design-system';
 
 interface SearchResults {
@@ -487,7 +488,8 @@ function SearchPageContent() {
                       direction="row"
                       spacing="md"
                       align="center"
-                      className="cursor-pointer p-2 rounded hover:bg-grey-grey1"
+                      className="cursor-pointer p-2 hover:bg-grey-grey1"
+                      style={{ borderRadius: borderRadius.md }}
                       onClick={() => handleShowClick(episode.show?.id || '')}
                     >
                       <img

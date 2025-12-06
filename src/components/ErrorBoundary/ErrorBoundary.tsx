@@ -1,7 +1,7 @@
 'use client';
 
 import React, { Component, ReactNode } from 'react';
-import { Stack, Typography, Button, ButtonVariant, ButtonSize } from 'spotify-design-system';
+import { Stack, Typography, Button, ButtonVariant, ButtonSize, borderRadius } from 'spotify-design-system';
 
 interface Props {
   children: ReactNode;
@@ -68,7 +68,8 @@ export class ErrorBoundary extends Component<Props, State> {
               <Stack
                 direction="column"
                 spacing="sm"
-                className="mt-4 p-4 bg-spotify-grey rounded-lg text-left w-full"
+                className="mt-4 p-4 bg-spotify-grey text-left w-full"
+                style={{ borderRadius: borderRadius.lg }}
               >
                 <Typography variant="body" size="sm" color="muted" className="font-mono">
                   {this.state.error.toString()}

@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Stack, Typography, Icon, Image, colors } from 'spotify-design-system';
+import { Stack, Typography, Icon, Image, colors, borderRadius } from 'spotify-design-system';
 import { faPlay } from '@fortawesome/free-solid-svg-icons';
 
 interface PlaylistItem {
@@ -79,8 +79,8 @@ export const PlaylistTable: React.FC<PlaylistTableProps> = ({ playlists, onPlayl
             direction="row"
             spacing="lg"
             align="center"
-            className="px-2 py-2 hover:bg-gray-800/50 rounded group cursor-pointer grid"
-            style={{ gridTemplateColumns: '40px 1fr 30% 150px' }}
+            className="px-2 py-2 hover:bg-gray-800/50 group cursor-pointer grid"
+            style={{ gridTemplateColumns: '40px 1fr 30% 150px', borderRadius: borderRadius.md }}
             onMouseEnter={() => setHoveredIndex(item.index!)}
             onMouseLeave={() => setHoveredIndex(null)}
             onClick={() => onPlaylistClick(item.id)}

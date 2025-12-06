@@ -13,6 +13,7 @@ import {
   Table,
   Image,
   Skeleton,
+  borderRadius,
 } from 'spotify-design-system';
 import { faPlay, faShuffle, faEllipsis } from '@fortawesome/free-solid-svg-icons';
 import { faClock } from '@fortawesome/free-regular-svg-icons';
@@ -292,11 +293,12 @@ export default function ArtistPage() {
             />
             <button
               onClick={handleFollow}
-              className={`px-6 py-2 rounded-full font-bold text-sm border-2 transition-colors ${
+              className={`px-6 py-2 font-bold text-sm border-2 transition-colors ${
                 isFollowing
                   ? 'bg-transparent border-white text-white hover:border-gray-400 hover:text-gray-400'
                   : 'bg-transparent border-gray-400 text-white hover:border-white'
               }`}
+              style={{ borderRadius: borderRadius.round }}
             >
               {isFollowing ? 'Following' : 'Follow'}
             </button>

@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { MusicPlayer as DesignSystemMusicPlayer } from 'spotify-design-system';
+import { MusicPlayer as DesignSystemMusicPlayer, borderRadius, shadows } from 'spotify-design-system';
 import { useMusicPlayerContext } from '@/contexts/MusicPlayerContext';
 
 interface MusicPlayerProps {
@@ -100,7 +100,8 @@ export const MusicPlayer: React.FC<MusicPlayerProps> = ({ className, onQueueClic
         onVolumeChange={setVolume}
         volume={volume}
         onQueue={onQueueClick}
-        className="rounded-lg w-full min-h-[74px] shadow-[0_8px_32px_rgba(0,0,0,0.3)]"
+        className="w-full min-h-[74px]"
+        style={{ borderRadius: borderRadius.lg, boxShadow: shadows.xl }}
       />
     </div>
   );

@@ -248,7 +248,8 @@ export default function LibraryPage() {
               spacing="md"
               align="center"
               onClick={() => handleItemClick(item)}
-              className="p-2 rounded cursor-pointer hover:bg-grey-grey1"
+              className="p-2 cursor-pointer hover:bg-grey-grey1"
+              style={{ borderRadius: borderRadius.md }}
             >
               {/* Thumbnail */}
               <Stack className="w-12 h-12 flex-shrink-0">

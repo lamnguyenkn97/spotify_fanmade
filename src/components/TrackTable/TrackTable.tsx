@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Stack, Typography, Icon, Image, colors, Table, Equalizer } from 'spotify-design-system';
+import { Stack, Typography, Icon, Image, colors, Table, Equalizer, borderRadius } from 'spotify-design-system';
 import { faPlay, faPause, faCheckCircle, faListUl } from '@fortawesome/free-solid-svg-icons';
 import { faClock } from '@fortawesome/free-regular-svg-icons';
 import { useMusicPlayerContext } from '@/contexts/MusicPlayerContext';
@@ -279,7 +279,8 @@ export const TrackTable: React.FC<TrackTableProps> = ({ tracks, onTrackClick }) 
                   align="center"
                   spacing="xs"
                   onClick={(e) => handleAddToQueue(e, row.track)}
-                  className="cursor-pointer px-3 py-2 rounded hover:bg-white/10 transition-colors duration-150"
+                  className="cursor-pointer px-3 py-2 hover:bg-white/10 transition-colors duration-150"
+                  style={{ borderRadius: borderRadius.md }}
                 >
                   <Icon icon={faListUl} size="sm" color="muted" />
                   <Typography variant="body" size="sm" color="muted" weight="medium">
