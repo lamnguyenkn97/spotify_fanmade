@@ -37,7 +37,7 @@ interface PlaylistData {
 
 export default function PlaylistPage() {
   const params = useParams();
-  const [playlist, setPlaylist] = useState<PlaylistData | null>(null);
+  const [playlist, setPlaylist] = useState<SpotifyPlaylist | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [gradientColors, setGradientColors] = useState<ExtractedColors | null>(null);

@@ -10,44 +10,7 @@ import { convertTrackToCurrentTrack, convertTracksToQueue } from '@/utils/trackH
 import { useLikedTracks } from '@/hooks/useLikedTracks';
 import { formatRelativeTime } from '@/utils/dateHelpers';
 import { useToast } from '@/contexts/ToastContext';
-
-interface Track {
-  id: string;
-  name: string;
-  artists: Array<{ name: string }>;
-  album: {
-    name: string;
-    images: Array<{ url: string }>;
-  };
-  duration_ms: number;
-  explicit?: boolean;
-  external_urls?: {
-    spotify?: string;
-  };
-  preview_url?: string | null;
-}
-
-interface TrackTableRow {
-  id: string;
-  index: number;
-  trackNumber: number;
-  title: string;
-  artists: string;
-  album: string;
-  albumImage?: string;
-  duration: string;
-  explicit?: boolean;
-  hasVideo?: boolean;
-  isLiked?: boolean;
-  dateAdded?: string;
-  track: Track;
-  addToQueue?: string; // Action column placeholder
-}
-
-interface TrackTableProps {
-  tracks: Array<{ track: Track; added_at?: string }>;
-  onTrackClick?: (track: Track) => void;
-}
+import { SpotifyTrack, TrackTableRow, TrackTableProps } from '@/types';
 
 const formatDuration = (ms: number): string => {
   const seconds = Math.floor(ms / 1000);

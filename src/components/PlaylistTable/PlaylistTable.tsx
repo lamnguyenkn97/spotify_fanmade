@@ -3,24 +3,7 @@
 import React, { useState } from 'react';
 import { Stack, Typography, Icon, Image, colors, borderRadius } from 'spotify-design-system';
 import { faPlay } from '@fortawesome/free-solid-svg-icons';
-
-interface PlaylistItem {
-  id: string;
-  name: string;
-  images: Array<{ url: string; height: number; width: number }>;
-  tracks: {
-    total: number;
-  };
-  owner: {
-    display_name: string;
-  };
-  index?: number;
-}
-
-interface PlaylistTableProps {
-  playlists: PlaylistItem[];
-  onPlaylistClick: (playlistId: string) => void;
-}
+import { PlaylistTableProps } from '@/types';
 
 const getBestImageUrl = (images: Array<{ url: string; height: number; width: number }>) => {
   if (!images || images.length === 0) return '';

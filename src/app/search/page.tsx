@@ -11,42 +11,13 @@ import {
   Skeleton,
   borderRadius,
 } from 'spotify-design-system';
-
-interface SearchResults {
-  tracks: any[];
-  artists: any[];
-  albums: any[];
-  playlists: any[];
-  shows: any[];
-  episodes: any[];
-  tracksTotal: number;
-  artistsTotal: number;
-  albumsTotal: number;
-  playlistsTotal: number;
-  showsTotal: number;
-  episodesTotal: number;
-}
-
-interface TrackTableRow {
-  id: string;
-  index: number;
-  trackNumber: number;
-  title: string;
-  artists: string;
-  album: string;
-  albumImage?: string;
-  duration: string;
-  explicit: boolean;
-  track: any;
-  // Column placeholders for Table component
-  [key: string]: any;
-}
+import { SpotifySearchResults, TrackTableRow } from '@/types';
 
 function SearchPageContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [query, setQuery] = useState(searchParams.get('q') || '');
-  const [results, setResults] = useState<SearchResults | null>(null);
+  const [results, setResults] = useState<SpotifySearchResults | null>(null);
   const [loading, setLoading] = useState(false);
   const [hoveredTrackIndex, setHoveredTrackIndex] = useState<number | null>(null);
 

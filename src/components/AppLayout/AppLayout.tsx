@@ -25,12 +25,7 @@ import { MusicPlayer } from '@/components/MusicPlayer';
 import { QueueDrawer } from '@/components/QueueDrawer';
 import { Modal, ModalSize } from 'spotify-design-system';
 import { FOOTER_DATA } from '@/config/footerData';
-
-interface SpotifyUser {
-  displayName: string;
-  email: string;
-  images?: Array<{ url: string }>;
-}
+import { SpotifyUser, LibraryItem } from '@/types';
 
 interface AppLayoutProps {
   children: React.ReactNode;

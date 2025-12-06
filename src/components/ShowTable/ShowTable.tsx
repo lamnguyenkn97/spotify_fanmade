@@ -3,19 +3,7 @@
 import React, { useState } from 'react';
 import { Stack, Typography, Icon, Image, colors, borderRadius } from 'spotify-design-system';
 import { faPlay } from '@fortawesome/free-solid-svg-icons';
-
-interface ShowItem {
-  id: string;
-  name: string;
-  images: Array<{ url: string; height: number; width: number }>;
-  publisher?: string;
-  index?: number;
-}
-
-interface ShowTableProps {
-  shows: ShowItem[];
-  onShowClick: (showId: string) => void;
-}
+import { ShowTableProps } from '@/types';
 
 const getBestImageUrl = (images: Array<{ url: string; height: number; width: number }>) => {
   if (!images || images.length === 0) return '';

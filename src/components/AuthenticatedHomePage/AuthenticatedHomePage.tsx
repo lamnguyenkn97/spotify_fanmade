@@ -65,7 +65,7 @@ interface Show {
 }
 
 interface AuthenticatedHomePageProps {
-  user: User;
+  user: SpotifyUser;
 }
 
 
@@ -73,12 +73,12 @@ export const AuthenticatedHomePage: React.FC<AuthenticatedHomePageProps> = ({ us
   const router = useRouter();
   const { playTrack } = useMusicPlayerContext();
   const toast = useToast();
-  const [recentTracks, setRecentTracks] = useState<Track[]>([]);
-  const [likedTracks, setLikedTracks] = useState<Track[]>([]);
-  const [userPlaylists, setUserPlaylists] = useState<Playlist[]>([]);
-  const [topArtists, setTopArtists] = useState<Artist[]>([]);
-  const [topAlbums, setTopAlbums] = useState<Album[]>([]);
-  const [userShows, setUserShows] = useState<Show[]>([]);
+  const [recentTracks, setRecentTracks] = useState<SpotifyTrackWithContext[]>([]);
+  const [likedTracks, setLikedTracks] = useState<SpotifyTrackWithContext[]>([]);
+  const [userPlaylists, setUserPlaylists] = useState<SpotifyPlaylist[]>([]);
+  const [topArtists, setTopArtists] = useState<SpotifyArtist[]>([]);
+  const [topAlbums, setTopAlbums] = useState<SpotifyAlbum[]>([]);
+  const [userShows, setUserShows] = useState<SpotifyShow[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [recentTracksPermissionError, setRecentTracksPermissionError] = useState(false);
@@ -169,7 +169,7 @@ export const AuthenticatedHomePage: React.FC<AuthenticatedHomePageProps> = ({ us
     );
   };
 
-  const handleTrackClick = async (track: Track['track']) => {
+  const handleTrackClick = async (track: SpotifyTrackWithContext['track']) => {
     // Convert the track to CurrentTrack format and play it
     const currentTrack = convertTrackToCurrentTrack({
       id: track.id,

@@ -2,12 +2,7 @@
 
 import React from 'react';
 import { Card, Typography, Stack } from 'spotify-design-system';
-
-interface ContentSectionsProps {
-  sections: any[];
-  onCardClick: (title: string, imageUrl?: string) => void;
-  getCardProps: (item: any) => any;
-}
+import { ContentSectionsProps } from '@/types';
 
 export const ContentSections: React.FC<ContentSectionsProps> = ({
   sections,

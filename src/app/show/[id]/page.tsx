@@ -20,55 +20,13 @@ import { faPlay, faEllipsis, faCheckCircle } from '@fortawesome/free-solid-svg-i
 import { faClock } from '@fortawesome/free-regular-svg-icons';
 import { useMusicPlayerContext } from '@/contexts/MusicPlayerContext';
 import { useToast } from '@/contexts/ToastContext';
-
-interface ShowData {
-  id: string;
-  name: string;
-  description?: string;
-  images: Array<{ url: string }>;
-  publisher?: string;
-  total_episodes: number;
-  media_type: string;
-  episodes: {
-    total: number;
-    items: Array<{
-      id: string;
-      name: string;
-      description?: string;
-      images: Array<{ url: string }>;
-      release_date: string;
-      duration_ms: number;
-      external_urls?: {
-        spotify?: string;
-      };
-      resume_point?: {
-        fully_played: boolean;
-        resume_position_ms: number;
-      };
-    }>;
-  };
-}
-
-interface EpisodeTableRow {
-  id: string;
-  index: number;
-  trackNumber: number;
-  title: string;
-  showName: string;
-  description?: string;
-  episodeImage?: string;
-  showImage?: string;
-  date: string;
-  duration: string;
-  isFinished: boolean;
-  status: string;
-}
+import { SpotifyShow, EpisodeTableRow } from '@/types';
 
 export default function ShowPage() {
   const params = useParams();
   const { playTrack } = useMusicPlayerContext();
   const toast = useToast();
-  const [show, setShow] = useState<ShowData | null>(null);
+  const [show, setShow] = useState<SpotifyShow | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [isFollowing, setIsFollowing] = useState(false);

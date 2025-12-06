@@ -18,9 +18,9 @@ import {
 import { faPlay, faShuffle, faEllipsis } from '@fortawesome/free-solid-svg-icons';
 import { faClock } from '@fortawesome/free-regular-svg-icons';
 import { useRouter } from 'next/navigation';
-import { DiscographyFilterType, AlbumType } from '@/types';
+import { DiscographyFilterType, AlbumType, SpotifyArtistData } from '@/types';
 
-interface ArtistData {
+interface ArtistDataExtended {
   id: string;
   name: string;
   images: Array<{ url: string }>;
@@ -61,7 +61,7 @@ interface ArtistData {
 export default function ArtistPage() {
   const params = useParams();
   const router = useRouter();
-  const [artist, setArtist] = useState<ArtistData | null>(null);
+  const [artist, setArtist] = useState<SpotifyArtistData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [isFollowing, setIsFollowing] = useState(false);

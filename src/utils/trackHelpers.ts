@@ -1,19 +1,5 @@
 import { CurrentTrack } from '@/hooks/useMusicPlayer';
-
-interface SpotifyTrack {
-  id: string;
-  name: string;
-  artists: Array<{ name: string }>;
-  album: {
-    name: string;
-    images: Array<{ url: string }>;
-  };
-  duration_ms: number;
-  preview_url?: string | null;
-  external_urls?: {
-    spotify?: string;
-  };
-}
+import { SpotifyTrack } from '@/types';
 
 /**
  * Convert a Spotify track object to CurrentTrack format for the music player

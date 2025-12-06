@@ -1,35 +1,9 @@
 import { useState, useEffect } from 'react';
-
-interface User {
-  id: string;
-  displayName: string;
-  email: string;
-  images: Array<{ url: string }>;
-  product: string;
-}
-
-interface PlaylistOwner {
-  id: string;
-  display_name: string;
-}
-
-interface PlaylistTracks {
-  total: number;
-  href: string;
-}
-
-interface Playlist {
-  id: string;
-  name: string;
-  description: string;
-  images: Array<{ url: string }>;
-  owner: PlaylistOwner;
-  tracks: PlaylistTracks;
-  public: boolean;
-}
+import { SpotifyUser, SpotifyPlaylist } from '@/types';
 
 export const useSpotify = () => {
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<SpotifyUser | null>(null);
+  const [playlists, setPlaylists] = useState<SpotifyPlaylist[]>([]);
   const [loading, setLoading] = useState(true);
 
   // Check authentication status on mount

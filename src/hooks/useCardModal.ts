@@ -1,9 +1,5 @@
 import { useState } from 'react';
-
-interface SelectedCard {
-  title: string;
-  imageUrl?: string;
-}
+import { SelectedCard } from '@/types';
 
 /**
  * Custom hook to manage card click modal state

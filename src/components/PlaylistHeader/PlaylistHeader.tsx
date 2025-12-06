@@ -4,26 +4,7 @@ import React from 'react';
 import { Banner, colors, Icon, Stack, Typography } from 'spotify-design-system';
 import { faBars, faPlay, faShuffle } from '@fortawesome/free-solid-svg-icons';
 import { useMusicPlayerContext } from '@/contexts/MusicPlayerContext';
-
-interface PlaylistHeaderProps {
-  playlist: {
-    name: string;
-    description?: string;
-    images: Array<{ url: string }>;
-    owner: {
-      display_name: string;
-    };
-    tracks: {
-      total: number;
-    };
-  };
-  onPlay?: () => void;
-  onShuffle?: () => void;
-  gradientColors?: {
-    color1: string;
-    color2: string;
-  };
-}
+import { PlaylistHeaderProps } from '@/types';
 
 export const PlaylistHeader: React.FC<PlaylistHeaderProps> = ({
   playlist,
