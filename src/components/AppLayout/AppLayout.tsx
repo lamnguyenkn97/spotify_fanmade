@@ -54,63 +54,68 @@ export const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
   const libraryItems = useMemo((): LibraryItem[] => {
     if (!isAuthenticated) return [];
 
-    switch (selectedFilter) {
-      case LibraryFilter.PLAYLISTS: {
-        const items: LibraryItem[] = [];
-        
-        // Add "Liked Songs" as first item if user has liked tracks
-        if (likedTotal > 0 && likedTracks.length > 0) {
-          const firstTrack = likedTracks[0]?.track;
-          items.push({
-            id: 'liked-songs',
-            title: 'Liked Songs',
+    try {
+      switch (selectedFilter) {
+        case LibraryFilter.PLAYLISTS: {
+          const items: LibraryItem[] = [];
+          
+          // Add "Liked Songs" as first item if user has liked tracks
+          if (likedTotal > 0 && likedTracks && likedTracks.length > 0) {
+            const firstTrack = likedTracks[0]?.track;
+            items.push({
+              id: 'liked-songs',
+              title: 'Liked Songs',
+              type: 'playlist' as const,
+              image: firstTrack?.album?.images?.[0]?.url || '',
+              subtitle: `Playlist • ${likedTotal} songs`,
+              pinned: true,
+            });
+          }
+
+          // Add regular playlists
+          const playlistItems = (playlists || []).map((playlist: any) => ({
+            id: playlist.id,
+            title: playlist.name,
             type: 'playlist' as const,
-            image: firstTrack?.album?.images?.[0]?.url || '',
-            subtitle: `Playlist • ${likedTotal} songs`,
-            pinned: true,
-          });
+            image: playlist.images?.[0]?.url,
+            subtitle: `Playlist • ${playlist.owner?.display_name || 'Spotify'}${
+              playlist.tracks?.total ? ` • ${playlist.tracks.total} songs` : ''
+            }`,
+            pinned: false,
+          }));
+
+          return [...items, ...playlistItems];
         }
 
-        // Add regular playlists
-        const playlistItems = playlists.map((playlist: any) => ({
-          id: playlist.id,
-          title: playlist.name,
-          type: 'playlist' as const,
-          image: playlist.images?.[0]?.url,
-          subtitle: `Playlist • ${playlist.owner?.display_name || 'Spotify'}${
-            playlist.tracks?.total ? ` • ${playlist.tracks.total} songs` : ''
-          }`,
-          pinned: false,
-        }));
+        case LibraryFilter.PODCASTS_AND_SHOWS:
+          return (shows || []).map((item: any) => ({
+            id: item.show?.id || item.id,
+            title: item.show?.name || item.name,
+            type: 'show' as const,
+            image: item.show?.images?.[0]?.url || item.images?.[0]?.url,
+            subtitle: `Podcast • ${item.show?.publisher || item.publisher || 'Show'}`,
+          }));
 
-        return [...items, ...playlistItems];
+        case LibraryFilter.ARTISTS:
+          // Note: We don't have a useMyArtists hook yet, so this will be empty
+          // TODO: Add useMyArtists hook to useSpotifyApi.ts
+          return [];
+
+        case LibraryFilter.ALBUMS:
+          return (albums || []).map((item: any) => ({
+            id: item.album?.id || item.id,
+            title: item.album?.name || item.name,
+            type: 'album' as const,
+            image: item.album?.images?.[0]?.url || item.images?.[0]?.url,
+            subtitle: `Album • ${item.album?.artists?.map((a: any) => a.name).join(', ') || 'Unknown'}`,
+          }));
+
+        default:
+          return [];
       }
-
-      case LibraryFilter.PODCASTS_AND_SHOWS:
-        return shows.map((item: any) => ({
-          id: item.show?.id || item.id,
-          title: item.show?.name || item.name,
-          type: 'show' as const,
-          image: item.show?.images?.[0]?.url || item.images?.[0]?.url,
-          subtitle: `Podcast • ${item.show?.publisher || item.publisher || 'Show'}`,
-        }));
-
-      case LibraryFilter.ARTISTS:
-        // Note: We don't have a useMyArtists hook yet, so this will be empty
-        // TODO: Add useMyArtists hook to useSpotifyApi.ts
-        return [];
-
-      case LibraryFilter.ALBUMS:
-        return albums.map((item: any) => ({
-          id: item.album?.id || item.id,
-          title: item.album?.name || item.name,
-          type: 'album' as const,
-          image: item.album?.images?.[0]?.url || item.images?.[0]?.url,
-          subtitle: `Album • ${item.album?.artists?.map((a: any) => a.name).join(', ') || 'Unknown'}`,
-        }));
-
-      default:
-        return [];
+    } catch (err) {
+      // Silently handle any transformation errors
+      return [];
     }
   }, [selectedFilter, isAuthenticated, likedTracks, likedTotal, playlists, shows, albums]);
 
