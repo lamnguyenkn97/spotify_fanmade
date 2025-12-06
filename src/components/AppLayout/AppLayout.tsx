@@ -34,6 +34,7 @@ import {
   useMyAlbums,
 } from '@/hooks/api';
 import { useModal } from '@/contexts';
+import { RequestDemoModal } from '@/components';
 
 interface AppLayoutProps {
   children: React.ReactNode;
@@ -43,6 +44,7 @@ export const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
   const router = useRouter();
   const { user, isAuthenticated, login, logout } = useSpotify();
   const [selectedFilter, setSelectedFilter] = useState<LibraryFilter>(LibraryFilter.PLAYLISTS);
+  const [showRequestDemoModal, setShowRequestDemoModal] = useState(false);
 
   // Fetch all library data with SWR hooks
   const { tracks: likedTracks, total: likedTotal } = useSavedTracks(1, isAuthenticated);
@@ -147,6 +149,16 @@ export const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
     }
   }, [router]);
 
+  // Handle login click - show Request Demo modal for unauthenticated users
+  const handleLoginClick = useCallback(() => {
+    if (isAuthenticated) {
+      // User is already logged in, do nothing
+      return;
+    }
+    // Show Request Demo modal instead of direct OAuth
+    setShowRequestDemoModal(true);
+  }, [isAuthenticated]);
+
   return (
     <ThemeProvider>
       <MusicPlayerProvider>
@@ -155,7 +167,7 @@ export const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
             isAuthenticated={isAuthenticated}
             user={user}
             libraryItems={libraryItems}
-            onLogin={login}
+            onLogin={handleLoginClick}
             onLogout={logout}
             onCreatePlaylist={handleCreatePlaylist}
             onBrowsePodcasts={handleBrowsePodcasts}
@@ -165,6 +177,10 @@ export const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
           >
             {children}
           </AppLayoutContent>
+          <RequestDemoModal 
+            isOpen={showRequestDemoModal} 
+            onClose={() => setShowRequestDemoModal(false)} 
+          />
         </QueueDrawerProvider>
       </MusicPlayerProvider>
     </ThemeProvider>
