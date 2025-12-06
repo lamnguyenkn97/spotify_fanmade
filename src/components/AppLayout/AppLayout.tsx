@@ -26,6 +26,7 @@ import { QueueDrawer } from '@/components/QueueDrawer';
 import { Modal, ModalSize } from 'spotify-design-system';
 import { FOOTER_DATA } from '@/config/footerData';
 import { SpotifyUser, LibraryItem } from '@/types';
+import { apiClient } from '@/lib/api-client';
 
 interface AppLayoutProps {
   children: React.ReactNode;
@@ -52,84 +53,69 @@ export const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
       switch (filter) {
         case LibraryFilter.PLAYLISTS:
           // First, add "Liked Songs" as a special playlist
-          const likedTracksRes = await fetch('/api/spotify/my-saved-tracks?limit=1');
-          if (likedTracksRes.ok) {
-            const likedTracksData = await likedTracksRes.json();
-            if (likedTracksData.total > 0) {
-              const firstTrack = likedTracksData.items?.[0]?.track;
-              data.push({
-                id: 'liked-songs',
-                title: 'Liked Songs',
-                type: 'playlist' as const,
-                image: firstTrack?.album?.images?.[0]?.url || '',
-                subtitle: `Playlist • ${likedTracksData.total} songs`,
-                pinned: true, // Always pin Liked Songs at the top
-              });
-            }
+          const likedTracksRes = await apiClient.get<{ items: any[]; total: number }>('/api/spotify/my-saved-tracks?limit=1');
+          if (likedTracksRes && likedTracksRes.total > 0) {
+            const firstTrack = likedTracksRes.items?.[0]?.track;
+            data.push({
+              id: 'liked-songs',
+              title: 'Liked Songs',
+              type: 'playlist' as const,
+              image: firstTrack?.album?.images?.[0]?.url || '',
+              subtitle: `Playlist • ${likedTracksRes.total} songs`,
+              pinned: true, // Always pin Liked Songs at the top
+            });
           }
 
           // Then fetch regular playlists
-          const playlistsRes = await fetch('/api/spotify/my-playlists');
-          if (playlistsRes.ok) {
-            const playlistsData = await playlistsRes.json();
-            const playlists =
-              playlistsData.items?.map((playlist: any) => ({
-                id: playlist.id,
-                title: playlist.name,
-                type: 'playlist' as const,
-                image: playlist.images?.[0]?.url,
-                subtitle: `Playlist • ${playlist.owner?.display_name || 'Spotify'}${
-                  playlist.tracks?.total ? ` • ${playlist.tracks.total} songs` : ''
-                }`,
-                pinned: false,
-              })) || [];
-            data = [...data, ...playlists];
-          }
+          const playlistsData = await apiClient.get<{ items: any[] }>('/api/spotify/my-playlists');
+          const playlists =
+            playlistsData.items?.map((playlist: any) => ({
+              id: playlist.id,
+              title: playlist.name,
+              type: 'playlist' as const,
+              image: playlist.images?.[0]?.url,
+              subtitle: `Playlist • ${playlist.owner?.display_name || 'Spotify'}${
+                playlist.tracks?.total ? ` • ${playlist.tracks.total} songs` : ''
+              }`,
+              pinned: false,
+            })) || [];
+          data = [...data, ...playlists];
           break;
 
         case LibraryFilter.PODCASTS_AND_SHOWS:
-          const showsRes = await fetch('/api/spotify/my-shows');
-          if (showsRes.ok) {
-            const showsData = await showsRes.json();
-            data =
-              showsData.items?.map((item: any) => ({
-                id: item.show?.id || item.id,
-                title: item.show?.name || item.name,
-                type: 'show' as const,
-                image: item.show?.images?.[0]?.url || item.images?.[0]?.url,
-                subtitle: `Podcast • ${item.show?.publisher || item.publisher || 'Show'}`,
-              })) || [];
-          }
+          const showsData = await apiClient.get<{ items: any[] }>('/api/spotify/my-shows');
+          data =
+            showsData.items?.map((item: any) => ({
+              id: item.show?.id || item.id,
+              title: item.show?.name || item.name,
+              type: 'show' as const,
+              image: item.show?.images?.[0]?.url || item.images?.[0]?.url,
+              subtitle: `Podcast • ${item.show?.publisher || item.publisher || 'Show'}`,
+            })) || [];
           break;
 
         case LibraryFilter.ARTISTS:
-          const artistsRes = await fetch('/api/spotify/my-artists');
-          if (artistsRes.ok) {
-            const artistsData = await artistsRes.json();
-            data =
-              artistsData.items?.map((artist: any) => ({
-                id: artist.id,
-                title: artist.name,
-                type: 'artist' as const,
-                image: artist.images?.[0]?.url,
-                subtitle: 'Artist',
-              })) || [];
-          }
+          const artistsData = await apiClient.get<{ items: any[] }>('/api/spotify/my-artists');
+          data =
+            artistsData.items?.map((artist: any) => ({
+              id: artist.id,
+              title: artist.name,
+              type: 'artist' as const,
+              image: artist.images?.[0]?.url,
+              subtitle: 'Artist',
+            })) || [];
           break;
 
         case LibraryFilter.ALBUMS:
-          const albumsRes = await fetch('/api/spotify/my-albums');
-          if (albumsRes.ok) {
-            const albumsData = await albumsRes.json();
-            data =
-              albumsData.items?.map((item: any) => ({
-                id: item.album?.id || item.id,
-                title: item.album?.name || item.name,
-                type: 'album' as const,
-                image: item.album?.images?.[0]?.url || item.images?.[0]?.url,
-                subtitle: `Album • ${item.album?.artists?.map((a: any) => a.name).join(', ') || 'Unknown'}`,
-              })) || [];
-          }
+          const albumsData = await apiClient.get<{ items: any[] }>('/api/spotify/my-albums');
+          data =
+            albumsData.items?.map((item: any) => ({
+              id: item.album?.id || item.id,
+              title: item.album?.name || item.name,
+              type: 'album' as const,
+              image: item.album?.images?.[0]?.url || item.images?.[0]?.url,
+              subtitle: `Album • ${item.album?.artists?.map((a: any) => a.name).join(', ') || 'Unknown'}`,
+            })) || [];
           break;
       }
 

@@ -3,66 +3,18 @@
 import React, { useEffect, useState } from 'react';
 import { Button, ButtonSize, ButtonVariant, Card, Stack, Typography, HorizontalTileCard, Skeleton } from 'spotify-design-system';
 import { useRouter } from 'next/navigation';
-import { TimeRange, NUMBER_OF_DISPLAYED_ITEMS } from '@/types';
+import { TimeRange, NUMBER_OF_DISPLAYED_ITEMS, SpotifyUser, SpotifyTrackWithContext, SpotifyPlaylist, SpotifyArtist, SpotifyAlbum, SpotifyShow } from '@/types';
 import { useMusicPlayerContext } from '@/contexts/MusicPlayerContext';
 import { convertTrackToCurrentTrack } from '@/utils/trackHelpers';
 import { useToast } from '@/contexts/ToastContext';
-
-interface User {
-  displayName: string;
-  email: string;
-}
-
-interface Track {
-  track: {
-    id: string;
-    name: string;
-    artists: Array<{ name: string }>;
-    album: {
-      name: string;
-      images: Array<{ url: string; height: number; width: number }>;
-    };
-    duration_ms?: number;
-    preview_url?: string | null;
-    external_urls?: {
-      spotify?: string;
-    };
-  };
-  played_at: string;
-}
-
-interface Playlist {
-  id: string;
-  name: string;
-  images: Array<{ url: string; height: number; width: number }>;
-  tracks: {
-    total: number;
-  };
-  owner: {
-    display_name: string;
-  };
-}
-
-interface Artist {
-  id: string;
-  name: string;
-  images: Array<{ url: string; height: number; width: number }>;
-}
-
-interface Album {
-  id: string;
-  name: string;
-  images: Array<{ url: string; height: number; width: number }>;
-  artist_name?: string;
-  artists?: Array<{ name: string }>;
-}
-
-interface Show {
-  id: string;
-  name: string;
-  images: Array<{ url: string; height: number; width: number }>;
-  publisher?: string;
-}
+import {
+  useRecentlyPlayed,
+  useSavedTracks,
+  useMyPlaylists,
+  useTopArtists,
+  useTopAlbums,
+  useMyShows,
+} from '@/hooks/api';
 
 interface AuthenticatedHomePageProps {
   user: SpotifyUser;
@@ -73,84 +25,26 @@ export const AuthenticatedHomePage: React.FC<AuthenticatedHomePageProps> = ({ us
   const router = useRouter();
   const { playTrack } = useMusicPlayerContext();
   const toast = useToast();
-  const [recentTracks, setRecentTracks] = useState<SpotifyTrackWithContext[]>([]);
-  const [likedTracks, setLikedTracks] = useState<SpotifyTrackWithContext[]>([]);
-  const [userPlaylists, setUserPlaylists] = useState<SpotifyPlaylist[]>([]);
-  const [topArtists, setTopArtists] = useState<SpotifyArtist[]>([]);
-  const [topAlbums, setTopAlbums] = useState<SpotifyAlbum[]>([]);
-  const [userShows, setUserShows] = useState<SpotifyShow[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [recentTracksPermissionError, setRecentTracksPermissionError] = useState(false);
 
-  useEffect(() => {
-    fetchPersonalizedData();
-  }, []);
+  // Use SWR hooks for data fetching
+  const { tracks: recentTracks, isLoading: recentLoading, hasPermissionError: recentTracksPermissionError } = useRecentlyPlayed(50);
+  const { tracks: likedTracksRaw, isLoading: likedLoading } = useSavedTracks(20);
+  const { playlists: userPlaylists, isLoading: playlistsLoading } = useMyPlaylists();
+  const { artists: topArtists, isLoading: artistsLoading } = useTopArtists({ time_range: TimeRange.SHORT_TERM });
+  const { albums: topAlbums, isLoading: albumsLoading } = useTopAlbums({ time_range: TimeRange.SHORT_TERM });
+  const { shows: rawShows, isLoading: showsLoading } = useMyShows();
 
-  const fetchPersonalizedData = async () => {
-    setLoading(true);
-    setError(null);
+  // Transform liked tracks to match SpotifyTrackWithContext format
+  const likedTracks: SpotifyTrackWithContext[] = likedTracksRaw.map((item) => ({
+    track: item.track,
+    played_at: item.added_at || new Date().toISOString(),
+  }));
 
-    try {
-      const [recentResponse, likedTracksResponse, playlistsResponse, artistsResponse, albumsResponse, showsResponse] = await Promise.all([
-        fetch('/api/spotify/recently-played'),
-        fetch('/api/spotify/my-saved-tracks?limit=20'),
-        fetch('/api/spotify/my-playlists'),
-        fetch(`/api/spotify/top-artists?time_range=${TimeRange.SHORT_TERM}`),
-        fetch(`/api/spotify/top-albums?time_range=${TimeRange.SHORT_TERM}`),
-        fetch('/api/spotify/my-shows'),
-      ]);
+  // Extract shows from the saved shows format
+  const userShows: SpotifyShow[] = rawShows.map((item: any) => item.show || item);
 
-      const handleResponse = async <T,>(
-        response: Response,
-        setter: (data: T[]) => void,
-        transform?: (data: any) => T[]
-      ) => {
-        if (response.ok) {
-          const data = await response.json();
-          const items = transform ? transform(data) : data?.items || [];
-          setter(items);
-        }
-      };
-
-      if (recentResponse.ok) {
-        const recentData = await recentResponse.json();
-        setRecentTracks(recentData?.items || []);
-        setRecentTracksPermissionError(false);
-      } else {
-        const errorData = await recentResponse.json().catch(() => ({ error: 'Unknown error' }));
-        if (errorData?.error?.status === 401 || errorData?.status === 401) {
-          setRecentTracksPermissionError(true);
-        }
-      }
-
-      if (likedTracksResponse.ok) {
-        const likedData = await likedTracksResponse.json();
-        // Transform saved tracks to match Track[] format
-        const transformedLikedTracks = (likedData?.items || []).map((item: any) => ({
-          track: item.track,
-          played_at: item.added_at || new Date().toISOString(),
-        }));
-        setLikedTracks(transformedLikedTracks);
-      }
-
-      await handleResponse(playlistsResponse, setUserPlaylists);
-      await handleResponse(artistsResponse, setTopArtists);
-      await handleResponse(albumsResponse, setTopAlbums);
-      await handleResponse(showsResponse, setUserShows, (data) => 
-        data?.items?.map((item: any) => item.show) || []
-      );
-
-      const allFailed = !recentResponse.ok && !likedTracksResponse.ok && !playlistsResponse.ok && !artistsResponse.ok && !albumsResponse.ok && !showsResponse.ok;
-      if (allFailed) {
-        throw new Error('Failed to fetch all data');
-      }
-    } catch (err: any) {
-      setError(err.message || 'Failed to load your data');
-    } finally {
-      setLoading(false);
-    }
-  };
+  // Overall loading state
+  const loading = recentLoading || likedLoading || playlistsLoading || artistsLoading || albumsLoading || showsLoading;
 
   const getGreeting = () => {
     const hour = new Date().getHours();

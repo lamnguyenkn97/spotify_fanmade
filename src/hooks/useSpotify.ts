@@ -1,64 +1,21 @@
-import { useState, useEffect } from 'react';
-import { SpotifyUser, SpotifyPlaylist } from '@/types';
+/**
+ * Legacy useSpotify hook - now uses SWR-based API client
+ * This hook maintains backward compatibility while using the new API layer
+ */
+
+import { useAuthUser, loginWithSpotify, logout as logoutUser } from './api/useAuth';
+import { apiClient } from '@/lib/api-client';
+import { SpotifyPlaylist } from '@/types';
 
 export const useSpotify = () => {
-  const [user, setUser] = useState<SpotifyUser | null>(null);
-  const [playlists, setPlaylists] = useState<SpotifyPlaylist[]>([]);
-  const [loading, setLoading] = useState(true);
+  const { user, isAuthenticated, isLoading } = useAuthUser();
 
-  // Check authentication status on mount
-  useEffect(() => {
-    checkAuth();
-  }, []);
-
-  const checkAuth = async () => {
+  // Legacy helper functions that aren't using SWR
+  const getPlaylists = async (): Promise<SpotifyPlaylist[]> => {
     try {
-      const response = await fetch('/api/auth/me');
-      if (response.ok) {
-        const userData = await response.json();
-        setUser(userData);
-      }
-    } catch (error) {
-      // Failed to check auth status, user remains unauthenticated
-      setUser(null);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const login = async () => {
-    try {
-      const response = await fetch('/api/auth/login');
-      const data = await response.json();
-      if (data.url) {
-        window.location.href = data.url;
-      }
-    } catch (error) {
-      // Failed to initiate login, silently fail
-      // User will remain on current page
-    }
-  };
-
-  const logout = async () => {
-    try {
-      await fetch('/api/auth/logout', { method: 'POST' });
-      setUser(null);
-      window.location.href = '/';
-    } catch (error) {
-      // Failed to logout on server, but clear local state anyway
-      setUser(null);
-      window.location.href = '/';
-    }
-  };
-
-  const getPlaylists = async (): Promise<Playlist[]> => {
-    try {
-      const response = await fetch('/api/playlists');
-      if (!response.ok) throw new Error('Failed to fetch playlists');
-      const data = await response.json();
+      const data = await apiClient.get<{ items: SpotifyPlaylist[] }>('/api/playlists');
       return data.items;
     } catch (error) {
-      // Failed to fetch playlists, return empty array
       return [];
     }
   };
@@ -67,38 +24,32 @@ export const useSpotify = () => {
     name: string,
     description?: string,
     isPublic?: boolean
-  ): Promise<Playlist | null> => {
+  ): Promise<SpotifyPlaylist | null> => {
     try {
-      const response = await fetch('/api/playlists', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, description, isPublic }),
+      return await apiClient.post<SpotifyPlaylist>('/api/playlists', {
+        name,
+        description,
+        isPublic,
       });
-      if (!response.ok) throw new Error('Failed to create playlist');
-      return await response.json();
     } catch (error) {
-      // Failed to create playlist, return null
       return null;
     }
   };
 
-  const getPlaylist = async (id: string): Promise<Playlist | null> => {
+  const getPlaylist = async (id: string): Promise<SpotifyPlaylist | null> => {
     try {
-      const response = await fetch(`/api/playlists/${id}`);
-      if (!response.ok) throw new Error('Failed to fetch playlist');
-      return await response.json();
+      return await apiClient.get<SpotifyPlaylist>(`/api/playlists/${id}`);
     } catch (error) {
-      // Failed to fetch playlist, return null
       return null;
     }
   };
 
   return {
     user,
-    loading,
-    isAuthenticated: !!user,
-    login,
-    logout,
+    loading: isLoading,
+    isAuthenticated,
+    login: loginWithSpotify,
+    logout: logoutUser,
     getPlaylists,
     createPlaylist,
     getPlaylist,
