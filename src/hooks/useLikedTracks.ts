@@ -30,7 +30,7 @@ export const useLikedTracks = (trackIds?: string[]): UseLikedTracksReturn => {
         setLikedTrackIds(likedIds);
       }
     } catch (error) {
-      console.error('Error checking liked status:', error);
+
     }
   }, []);
 

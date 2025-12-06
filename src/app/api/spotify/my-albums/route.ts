@@ -4,7 +4,7 @@ import SpotifyWebApi from 'spotify-web-api-node';
 
 export async function GET(request: NextRequest) {
   try {
-    const cookieStore = cookies();
+    const cookieStore = await cookies();
     const accessToken = cookieStore.get('spotify_access_token')?.value;
 
     if (!accessToken) {
@@ -59,7 +59,7 @@ export async function GET(request: NextRequest) {
       total: allAlbums.length,
     });
   } catch (error) {
-    console.error('Error fetching albums:', error);
+
     return NextResponse.json(
       { error: 'Failed to fetch albums', details: error instanceof Error ? error.message : "Unknown error" },
       { status: 500 }

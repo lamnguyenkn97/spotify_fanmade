@@ -4,17 +4,13 @@ import React from 'react';
 import { Sidebar, SidebarVariant, SidebarPosition, QueueItem } from 'spotify-design-system';
 import { useMusicPlayerContext } from '@/contexts/MusicPlayerContext';
 import { CurrentTrack } from '@/hooks/useMusicPlayer';
+import { formatDuration } from '@/utils/formatHelpers';
 
 interface QueueDrawerProps {
   isOpen: boolean;
   onClose: () => void;
 }
 
-const formatDuration = (ms: number): string => {
-  const minutes = Math.floor(ms / 60000);
-  const seconds = Math.floor((ms % 60000) / 1000);
-  return `${minutes}:${String(seconds).padStart(2, '0')}`;
-};
 
 export const QueueDrawer: React.FC<QueueDrawerProps> = ({ isOpen, onClose }) => {
   const { currentTrack, queue, playTrack, removeFromQueue, setQueue } = useMusicPlayerContext();

@@ -87,7 +87,6 @@ export const AuthenticatedSideBar: React.FC<AuthenticatedSideBarProps> = ({
     }
   };
 
-  // Wrap onViewToggle to match Sidebar's signature (viewType: 'list' | 'grid') => void
   return (
     <Sidebar
       libraryItems={mappedLibraryItems as any}
@@ -97,9 +96,8 @@ export const AuthenticatedSideBar: React.FC<AuthenticatedSideBarProps> = ({
       onLibraryItemClick={handleLibraryItemClick}
       onSearch={handleSearch}
       showLogo={showLogo}
+      className="w-[450px] min-w-[450px]"
       style={{
-        width: '450px',
-        minWidth: '450px',
       }}
     />
   );

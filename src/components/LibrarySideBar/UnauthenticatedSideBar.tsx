@@ -2,6 +2,7 @@
 
 import React from 'react';
 import {
+  borderRadius,
   Button,
   ButtonSize,
   ButtonVariant,
@@ -41,6 +42,30 @@ const SidebarHeader: React.FC<{ onAddClick: () => void }> = ({ onAddClick }) => 
     />
   </Stack>
 );
+
+const ProjectBadges: React.FC = () => {
+  const badges = [
+    { label: 'Portfolio Project' },
+    { label: 'Fanmade' },
+    { label: 'TypeScript' },
+    { label: 'Custom Design System' },
+  ];
+
+  return (
+    <Stack direction="row" spacing="xs" className="flex-wrap px-4 py-3 mx-4 mt-auto">
+      {badges.map((badge, index) => (
+        <Stack
+          key={index}
+          direction="row"
+          align="center"
+          className="px-2 py-1 text-xs font-medium border border-spotify-green text-spotify-green bg-transparent rounded-full"
+        >
+          {badge.label}
+        </Stack>
+      ))}
+    </Stack>
+  );
+};
 
 const SidebarContent: React.FC<
   Pick<UnauthenticatedLibraryProps, 'onCreatePlaylist' | 'onBrowsePodcasts'>
@@ -84,9 +109,10 @@ export const UnauthenticatedSideBar: React.FC<UnauthenticatedLibraryProps> = ({
     .replace(/\s+/g, ' ');
 
   return (
-    <Stack direction="column" className={containerClasses} style={{ width: '280px', flexShrink: 0 }}>
+    <Stack direction="column" className={`${containerClasses} w-[280px] flex-shrink-0`}>
       <SidebarHeader onAddClick={onAddClick} />
       <SidebarContent onCreatePlaylist={onCreatePlaylist} onBrowsePodcasts={onBrowsePodcasts} />
+      <ProjectBadges />
     </Stack>
   );
 };

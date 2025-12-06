@@ -1,154 +1,51 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
-import { Button, ButtonSize, ButtonVariant, Card, Stack, Typography, HorizontalTileCard } from 'spotify-design-system';
+import React from 'react';
+import { Button, ButtonSize, ButtonVariant, Card, Stack, Typography, HorizontalTileCard, Skeleton } from 'spotify-design-system';
 import { useRouter } from 'next/navigation';
-import { TimeRange, NUMBER_OF_DISPLAYED_ITEMS } from '@/types';
+import { TimeRange, NUMBER_OF_DISPLAYED_ITEMS, SpotifyUser, SpotifyTrackWithContext, SpotifyPlaylist, SpotifyArtist, SpotifyAlbum, SpotifyShow } from '@/types';
 import { useMusicPlayerContext } from '@/contexts/MusicPlayerContext';
 import { convertTrackToCurrentTrack } from '@/utils/trackHelpers';
-
-interface User {
-  displayName: string;
-  email: string;
-}
-
-interface Track {
-  track: {
-    id: string;
-    name: string;
-    artists: Array<{ name: string }>;
-    album: {
-      name: string;
-      images: Array<{ url: string; height: number; width: number }>;
-    };
-    duration_ms?: number;
-    preview_url?: string | null;
-    external_urls?: {
-      spotify?: string;
-    };
-  };
-  played_at: string;
-}
-
-interface Playlist {
-  id: string;
-  name: string;
-  images: Array<{ url: string; height: number; width: number }>;
-  tracks: {
-    total: number;
-  };
-  owner: {
-    display_name: string;
-  };
-}
-
-interface Artist {
-  id: string;
-  name: string;
-  images: Array<{ url: string; height: number; width: number }>;
-}
-
-interface Album {
-  id: string;
-  name: string;
-  images: Array<{ url: string; height: number; width: number }>;
-  artist_name?: string;
-  artists?: Array<{ name: string }>;
-}
-
-interface Show {
-  id: string;
-  name: string;
-  images: Array<{ url: string; height: number; width: number }>;
-  publisher?: string;
-}
+import { useToast } from '@/contexts/ToastContext';
+import { getBestImageUrl } from '@/utils/imageHelpers';
+import {
+  useRecentlyPlayed,
+  useSavedTracks,
+  useMyPlaylists,
+  useTopArtists,
+  useTopAlbums,
+  useMyShows,
+} from '@/hooks/api';
 
 interface AuthenticatedHomePageProps {
-  user: User;
+  user: SpotifyUser;
 }
 
 
 export const AuthenticatedHomePage: React.FC<AuthenticatedHomePageProps> = ({ user }) => {
   const router = useRouter();
   const { playTrack } = useMusicPlayerContext();
-  const [recentTracks, setRecentTracks] = useState<Track[]>([]);
-  const [likedTracks, setLikedTracks] = useState<Track[]>([]);
-  const [userPlaylists, setUserPlaylists] = useState<Playlist[]>([]);
-  const [topArtists, setTopArtists] = useState<Artist[]>([]);
-  const [topAlbums, setTopAlbums] = useState<Album[]>([]);
-  const [userShows, setUserShows] = useState<Show[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [recentTracksPermissionError, setRecentTracksPermissionError] = useState(false);
+  const toast = useToast();
 
-  useEffect(() => {
-    fetchPersonalizedData();
-  }, []);
+  // Use SWR hooks for data fetching
+  const { tracks: recentTracks, isLoading: recentLoading, hasPermissionError: recentTracksPermissionError } = useRecentlyPlayed(50);
+  const { tracks: likedTracksRaw, isLoading: likedLoading } = useSavedTracks(20);
+  const { playlists: userPlaylists, isLoading: playlistsLoading } = useMyPlaylists();
+  const { artists: topArtists, isLoading: artistsLoading } = useTopArtists({ time_range: TimeRange.SHORT_TERM });
+  const { albums: topAlbums, isLoading: albumsLoading } = useTopAlbums({ time_range: TimeRange.SHORT_TERM });
+  const { shows: rawShows, isLoading: showsLoading } = useMyShows();
 
-  const fetchPersonalizedData = async () => {
-    setLoading(true);
-    setError(null);
+  // Transform liked tracks to match SpotifyTrackWithContext format
+  const likedTracks: SpotifyTrackWithContext[] = likedTracksRaw.map((item) => ({
+    track: item.track,
+    played_at: item.added_at || new Date().toISOString(),
+  }));
 
-    try {
-      const [recentResponse, likedTracksResponse, playlistsResponse, artistsResponse, albumsResponse, showsResponse] = await Promise.all([
-        fetch('/api/spotify/recently-played'),
-        fetch('/api/spotify/my-saved-tracks?limit=20'),
-        fetch('/api/spotify/my-playlists'),
-        fetch(`/api/spotify/top-artists?time_range=${TimeRange.SHORT_TERM}`),
-        fetch(`/api/spotify/top-albums?time_range=${TimeRange.SHORT_TERM}`),
-        fetch('/api/spotify/my-shows'),
-      ]);
+  // Extract shows from the saved shows format
+  const userShows: SpotifyShow[] = rawShows.map((item: any) => item.show || item);
 
-      const handleResponse = async <T,>(
-        response: Response,
-        setter: (data: T[]) => void,
-        transform?: (data: any) => T[]
-      ) => {
-        if (response.ok) {
-          const data = await response.json();
-          const items = transform ? transform(data) : data?.items || [];
-          setter(items);
-        }
-      };
-
-      if (recentResponse.ok) {
-        const recentData = await recentResponse.json();
-        setRecentTracks(recentData?.items || []);
-        setRecentTracksPermissionError(false);
-      } else {
-        const errorData = await recentResponse.json().catch(() => ({ error: 'Unknown error' }));
-        if (errorData?.error?.status === 401 || errorData?.status === 401) {
-          setRecentTracksPermissionError(true);
-        }
-      }
-
-      if (likedTracksResponse.ok) {
-        const likedData = await likedTracksResponse.json();
-        // Transform saved tracks to match Track[] format
-        const transformedLikedTracks = (likedData?.items || []).map((item: any) => ({
-          track: item.track,
-          played_at: item.added_at || new Date().toISOString(),
-        }));
-        setLikedTracks(transformedLikedTracks);
-      }
-
-      await handleResponse(playlistsResponse, setUserPlaylists);
-      await handleResponse(artistsResponse, setTopArtists);
-      await handleResponse(albumsResponse, setTopAlbums);
-      await handleResponse(showsResponse, setUserShows, (data) => 
-        data?.items?.map((item: any) => item.show) || []
-      );
-
-      const allFailed = !recentResponse.ok && !likedTracksResponse.ok && !playlistsResponse.ok && !artistsResponse.ok && !albumsResponse.ok && !showsResponse.ok;
-      if (allFailed) {
-        throw new Error('Failed to fetch all data');
-      }
-    } catch (err: any) {
-      setError(err.message || 'Failed to load your data');
-    } finally {
-      setLoading(false);
-    }
-  };
+  // Overall loading state
+  const loading = recentLoading || likedLoading || playlistsLoading || artistsLoading || albumsLoading || showsLoading;
 
   const getGreeting = () => {
     const hour = new Date().getHours();
@@ -157,17 +54,8 @@ export const AuthenticatedHomePage: React.FC<AuthenticatedHomePageProps> = ({ us
     return 'Good evening';
   };
 
-  const getBestImageUrl = (images: Array<{ url: string; height: number; width: number }>) => {
-    if (!images || images.length === 0) return '';
-    // Get medium-sized image (around 300px) or fallback to first available
-    return (
-      images.find((img) => img.height && img.height >= 200 && img.height <= 400)?.url ||
-      images[0]?.url ||
-      ''
-    );
-  };
 
-  const handleTrackClick = async (track: Track['track']) => {
+  const handleTrackClick = async (track: SpotifyTrackWithContext['track']) => {
     // Convert the track to CurrentTrack format and play it
     const currentTrack = convertTrackToCurrentTrack({
       id: track.id,
@@ -181,7 +69,17 @@ export const AuthenticatedHomePage: React.FC<AuthenticatedHomePageProps> = ({ us
       preview_url: track.preview_url || null,
       external_urls: track.external_urls,
     });
-    await playTrack(currentTrack);
+    
+    try {
+      await playTrack(currentTrack);
+    } catch (error) {
+      // Show user-friendly error message
+      if (!track.preview_url) {
+        toast.warning('This track requires Spotify Premium for full playback. Preview not available.');
+      } else {
+        toast.error('Unable to play this track. Please try again.');
+      }
+    }
   };
 
   const handlePlaylistClick = (playlistId: string) => {
@@ -203,32 +101,49 @@ export const AuthenticatedHomePage: React.FC<AuthenticatedHomePageProps> = ({ us
   if (loading) {
     return (
       <Stack direction="column" spacing="lg" className="p-6">
-        <Typography variant="heading" color="primary">
-          Loading your music...
-        </Typography>
-        {/* TODO: Add skeleton loaders */}
+        {/* Greeting Skeleton */}
+        <Skeleton variant="text" width="40%" height="36px" />
+
+        {/* Made for you - Liked Songs Skeleton */}
+        <Stack direction="column" spacing="md">
+          <Skeleton variant="text" width="20%" height="28px" />
+          <Skeleton variant="rectangular" width="400px" height="80px" />
+        </Stack>
+
+        {/* Your Playlists Skeleton */}
+        <Stack direction="column" spacing="md">
+          <Skeleton variant="text" width="20%" height="28px" />
+          <Stack direction="row" spacing="md">
+            {[1, 2, 3].map((i) => (
+              <Skeleton key={i} variant="rectangular" width="400px" height="80px" />
+            ))}
+          </Stack>
+        </Stack>
+
+        {/* Recently Played Skeleton */}
+        <Stack direction="column" spacing="md">
+          <Skeleton variant="text" width="25%" height="28px" />
+          <Stack direction="row" spacing="md">
+            {[1, 2, 3, 4, 5].map((i) => (
+              <Skeleton key={i} variant="rectangular" width="180px" height="180px" />
+            ))}
+          </Stack>
+        </Stack>
+
+        {/* Top Artists Skeleton */}
+        <Stack direction="column" spacing="md">
+          <Skeleton variant="text" width="35%" height="28px" />
+          <Stack direction="row" spacing="md">
+            {[1, 2, 3, 4, 5].map((i) => (
+              <Skeleton key={i} variant="circular" width="180px" height="180px" />
+            ))}
+          </Stack>
+        </Stack>
       </Stack>
     );
   }
 
-  if (error) {
-    return (
-      <Stack direction="column" spacing="lg" className="p-6">
-        <Typography variant="heading" color="primary">
-          Oops! Something went wrong
-        </Typography>
-        <Typography variant="body" color="muted">
-          {error}
-        </Typography>
-        <Button
-          onClick={fetchPersonalizedData}
-          text="Try Again"
-          variant={ButtonVariant.Primary}
-          size={ButtonSize.Medium}
-        />
-      </Stack>
-    );
-  }
+  // No error state needed - SWR hooks handle errors gracefully
 
   return (
     <Stack direction="column" spacing="lg" className="p-6">
@@ -246,7 +161,7 @@ export const AuthenticatedHomePage: React.FC<AuthenticatedHomePageProps> = ({ us
             Made for you
           </Typography>
           <Stack direction="row" spacing="md" className="flex-wrap">
-            <Stack style={{ width: '400px', flexShrink: 0 }}>
+            <Stack className="w-[400px] flex-shrink-0">
               <HorizontalTileCard
                 title="Liked Songs"
                 image={likedTracks[0]?.track?.album?.images?.[0]?.url || ''}
@@ -268,7 +183,7 @@ export const AuthenticatedHomePage: React.FC<AuthenticatedHomePageProps> = ({ us
           </Typography>
           <Stack direction="row" spacing="md" className="flex-wrap">
             {userPlaylists.map((playlist) => (
-              <Stack key={playlist.id} style={{ width: '400px', flexShrink: 0 }}>
+              <Stack key={playlist.id} className="w-[400px] flex-shrink-0">
                 <HorizontalTileCard
                   title={playlist.name}
                   image={getBestImageUrl(playlist.images)}
@@ -295,7 +210,7 @@ export const AuthenticatedHomePage: React.FC<AuthenticatedHomePageProps> = ({ us
             className="overflow-x-auto overflow-y-visible pb-4 -mx-6 px-6 scrollbar-hide"
           >
             {recentTracks.slice(0, NUMBER_OF_DISPLAYED_ITEMS).map((item) => (
-              <Stack key={item.track.id} direction="column" className="flex-shrink-0" style={{ width: '180px' }}>
+              <Stack key={item.track.id} direction="column" className="flex-shrink-0 w-[180px]">
                 <Card
                   title={item.track.name}
                   subtitle={item.track.artists[0]?.name || 'Unknown Artist'}
@@ -334,7 +249,7 @@ export const AuthenticatedHomePage: React.FC<AuthenticatedHomePageProps> = ({ us
             className="overflow-x-auto overflow-y-visible pb-4 -mx-6 px-6 scrollbar-hide"
           >
             {topArtists.slice(0, NUMBER_OF_DISPLAYED_ITEMS).map((artist) => (
-              <Stack key={artist.id} direction="column" className="flex-shrink-0" style={{ width: '180px' }}>
+              <Stack key={artist.id} direction="column" className="flex-shrink-0 w-[180px]">
                 <Card
                   title={artist.name}
                   subtitle="Artist"
@@ -360,7 +275,7 @@ export const AuthenticatedHomePage: React.FC<AuthenticatedHomePageProps> = ({ us
             className="overflow-x-auto overflow-y-visible pb-4 -mx-6 px-6 scrollbar-hide"
           >
             {topAlbums.slice(0, NUMBER_OF_DISPLAYED_ITEMS).map((album) => (
-              <Stack key={album.id} direction="column" className="flex-shrink-0" style={{ width: '180px' }}>
+              <Stack key={album.id} direction="column" className="flex-shrink-0 w-[180px]">
                 <Card
                   title={album.name}
                   subtitle={album.artist_name || album.artists?.[0]?.name || 'Unknown Artist'}
@@ -382,7 +297,7 @@ export const AuthenticatedHomePage: React.FC<AuthenticatedHomePageProps> = ({ us
           </Typography>
           <Stack direction="row" spacing="md" className="flex-wrap">
             {userShows.map((show) => (
-              <Stack key={show.id} style={{ width: '400px', flexShrink: 0 }}>
+              <Stack key={show.id} className="w-[400px] flex-shrink-0">
                 <HorizontalTileCard
                   title={show.name}
                   image={getBestImageUrl(show.images)}

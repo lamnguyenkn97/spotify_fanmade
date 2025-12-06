@@ -9,6 +9,34 @@
 
 ---
 
+## ⚠️ Legal Disclaimer
+
+> **IMPORTANT:** This is an **independent portfolio project** created for **educational and demonstration purposes only**.
+
+**Trademark Notice:**
+- This project is **NOT affiliated with, endorsed by, or connected to Spotify AB** or any of its subsidiaries or affiliates.
+- "Spotify" is a **registered trademark** of Spotify AB (registration number EU008355043 and others).
+- All Spotify trademarks, service marks, trade names, logos, and other intellectual property are the property of Spotify AB.
+
+**Purpose & Usage:**
+- This project is a **non-commercial, educational demonstration** of full-stack web development skills.
+- Built as a **portfolio piece** to showcase technical abilities to potential employers and the development community.
+- All music data is accessed exclusively through the **official Spotify Web API** in accordance with [Spotify's Developer Terms of Service](https://developer.spotify.com/terms).
+- No music files are stored, hosted, or distributed by this application. All playback occurs through official Spotify infrastructure.
+
+**No Copyright Infringement Intended:**
+- This project does not reproduce, distribute, or claim ownership of any copyrighted material.
+- The user interface design is inspired by Spotify's aesthetic for educational purposes, demonstrating proficiency in UI/UX development.
+- Users must authenticate with their own Spotify accounts and have appropriate subscriptions for playback functionality.
+
+**Open Source:**
+- This code is provided under the MIT License for learning purposes.
+- Anyone using this code is responsible for ensuring their own compliance with applicable laws and terms of service.
+
+**If you are a representative of Spotify AB** and have concerns about this project, please contact me directly, and I will address them promptly.
+
+---
+
 ## 🎯 Project Highlights
 
 ### 🎨 **Custom Design System** - Published to NPM
@@ -472,16 +500,46 @@ This project demonstrates understanding of:
 
 ## 📝 License
 
-MIT License - feel free to use this code for learning or portfolio purposes.
+This project is licensed under the **MIT License** - see below for details.
+
+```
+MIT License
+
+Copyright (c) 2025 Lam Nguyen
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+```
+
+**Note:** This license applies to the code in this repository only. It does not grant any rights to use Spotify's trademarks, branding, or copyrighted materials. Users must comply with [Spotify's Developer Terms of Service](https://developer.spotify.com/terms) and [Brand Guidelines](https://developer.spotify.com/documentation/design) when using this code.
 
 ---
 
 ## 🙏 Acknowledgments
 
-- **Spotify** for the incredible API and design inspiration
-- **Next.js Team** for the amazing framework
-- **Vercel** for deployment platform
-- **Open Source Community** for the ecosystem
+- **Spotify AB** for providing the official Web API and design inspiration that made this educational project possible
+- **Next.js Team** at Vercel for the incredible React framework
+- **Vercel** for the deployment platform and infrastructure
+- **FontAwesome** for the comprehensive icon library
+- **Open Source Community** for the tools and libraries that power this project
+
+**Design Inspiration:**
+This project's UI/UX design is inspired by Spotify's web player interface as an exercise in recreating a professional, production-quality application. All design elements were recreated from scratch as a learning experience and do not use any proprietary Spotify code or assets.
 
 ---
 
@@ -521,9 +579,19 @@ This project demonstrates:
 
 <div align="center">
 
-**Built by Lam Nguyen** • [GitHub](https://github.com/lamnguyenkn97)
+**Built with ❤️ by Lam Nguyen** • [GitHub](https://github.com/lamnguyenkn97)
 
 *Showcasing full-stack development expertise through production-grade code*
+
+---
+
+**© 2025 Lam Nguyen**
+
+*Made with passion for music lovers*
+
+**Not affiliated with Spotify AB • Independent Portfolio Project**
+
+---
 
 ⭐ **Star this repo if you find it impressive!** ⭐
 

@@ -52,7 +52,7 @@ export async function GET(request: NextRequest) {
       saved: savedMap,
     });
   } catch (error: unknown) {
-    console.error('Error checking saved tracks:', error);
+
     const errorMessage = error instanceof Error ? error.message : 'Unknown error';
     return NextResponse.json(
       { error: 'Failed to check saved tracks', details: errorMessage },

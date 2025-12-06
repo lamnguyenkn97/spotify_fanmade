@@ -14,58 +14,20 @@ import {
   ButtonVariant,
   ButtonSize,
   Table,
+  Skeleton,
 } from 'spotify-design-system';
 import { faPlay, faEllipsis, faCheckCircle } from '@fortawesome/free-solid-svg-icons';
 import { faClock } from '@fortawesome/free-regular-svg-icons';
 import { useMusicPlayerContext } from '@/contexts/MusicPlayerContext';
-
-interface ShowData {
-  id: string;
-  name: string;
-  description?: string;
-  images: Array<{ url: string }>;
-  publisher?: string;
-  total_episodes: number;
-  media_type: string;
-  episodes: {
-    total: number;
-    items: Array<{
-      id: string;
-      name: string;
-      description?: string;
-      images: Array<{ url: string }>;
-      release_date: string;
-      duration_ms: number;
-      external_urls?: {
-        spotify?: string;
-      };
-      resume_point?: {
-        fully_played: boolean;
-        resume_position_ms: number;
-      };
-    }>;
-  };
-}
-
-interface EpisodeTableRow {
-  id: string;
-  index: number;
-  trackNumber: number;
-  title: string;
-  showName: string;
-  description?: string;
-  episodeImage?: string;
-  showImage?: string;
-  date: string;
-  duration: string;
-  isFinished: boolean;
-  status: string;
-}
+import { useToast } from '@/contexts/ToastContext';
+import { SpotifyShow, EpisodeTableRow } from '@/types';
+import { formatDuration } from '@/utils/formatHelpers';
 
 export default function ShowPage() {
   const params = useParams();
   const { playTrack } = useMusicPlayerContext();
-  const [show, setShow] = useState<ShowData | null>(null);
+  const toast = useToast();
+  const [show, setShow] = useState<SpotifyShow | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [isFollowing, setIsFollowing] = useState(false);
@@ -88,7 +50,7 @@ export default function ShowPage() {
         const data = await response.json();
         setShow(data);
       } catch (err: unknown) {
-        console.error('Error fetching show:', err);
+
         const errorMessage = err instanceof Error ? err.message : 'Failed to load show';
         setError(errorMessage);
       } finally {
@@ -108,9 +70,9 @@ export default function ShowPage() {
     if (!show) return;
 
     // Find the episode in the show's episodes
-    const episode = show.episodes.items.find((ep) => ep.id === episodeId);
+    const episode = show.episodes?.items?.find((ep) => ep.id === episodeId);
     if (!episode) {
-      console.error('Episode not found:', episodeId);
+
       return;
     }
 
@@ -129,31 +91,25 @@ export default function ShowPage() {
     try {
       await playTrack(episodeAsTrack);
     } catch (error) {
-      console.error('Error playing episode:', error);
+      toast.warning('This episode requires Spotify Premium for playback. Podcasts typically don\'t have preview clips.');
     }
   };
 
   const handlePlayShow = async () => {
-    if (!show || !show.episodes || show.episodes.items.length === 0) return;
+    if (!show || !show.episodes || !show.episodes.items || show.episodes.items.length === 0) return;
 
     // Play the first episode
     const firstEpisode = show.episodes.items[0];
     await handleEpisodeClick(firstEpisode.id);
   };
 
-  const formatDuration = (ms: number): string => {
-    const seconds = Math.floor(ms / 1000);
-    const mins = Math.floor(seconds / 60);
-    const secs = seconds % 60;
-    return `${mins}:${secs.toString().padStart(2, '0')}`;
-  };
 
   const formatDate = (dateString: string): string => {
     const date = new Date(dateString);
     return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
   };
 
-  const getEpisodeStatus = (episode: ShowData['episodes']['items'][0]): string => {
+  const getEpisodeStatus = (episode: NonNullable<SpotifyShow['episodes']>['items'][0]): string => {
     if (episode.resume_point?.fully_played) {
       return 'Finished';
     }
@@ -165,10 +121,40 @@ export default function ShowPage() {
 
   if (loading) {
     return (
-      <Stack direction="column" spacing="lg">
-        <Typography variant="heading" size="xl" color="inverse">
-          Loading show...
-        </Typography>
+      <Stack direction="column" spacing="lg" className="p-8">
+        {/* Show Header Skeleton */}
+        <Stack direction="row" spacing="lg" align="end">
+          <Skeleton variant="rectangular" width="232px" height="232px" />
+          <Stack direction="column" spacing="md">
+            <Skeleton variant="text" width="80px" height="20px" />
+            <Skeleton variant="text" width="350px" height="60px" />
+            <Skeleton variant="text" width="200px" height="20px" />
+          </Stack>
+        </Stack>
+
+        {/* Action Buttons Skeleton */}
+        <Stack direction="row" spacing="md" align="center">
+          <Skeleton variant="rectangular" width="120px" height="48px" />
+          <Skeleton variant="rectangular" width="48px" height="48px" />
+        </Stack>
+
+        {/* Episodes List Skeleton */}
+        <Stack direction="column" spacing="md">
+          <Skeleton variant="text" width="20%" height="28px" />
+          {[1, 2, 3, 4, 5, 6].map((i) => (
+            <Stack key={i} direction="row" spacing="md" align="center">
+              <Skeleton variant="rectangular" width="120px" height="120px" />
+              <Stack direction="column" spacing="xs" style={{ flex: 1 }}>
+                <Skeleton variant="text" width="60%" height="20px" />
+                <Skeleton variant="text" width="90%" height="16px" />
+                <Stack direction="row" spacing="xs" align="center">
+                  <Skeleton variant="text" width="80px" height="14px" />
+                  <Skeleton variant="text" width="80px" height="14px" />
+                </Stack>
+              </Stack>
+            </Stack>
+          ))}
+        </Stack>
       </Stack>
     );
   }
@@ -245,7 +231,7 @@ export default function ShowPage() {
       )}
 
       {/* All Episodes Section */}
-      {show.episodes.items.length > 0 && (
+      {show.episodes?.items && show.episodes.items.length > 0 && (
         <Stack direction="column" spacing="md">
           <Typography variant="heading" size="xl" weight="bold" color="primary">
             All Episodes
@@ -347,7 +333,7 @@ export default function ShowPage() {
                   width: '60px',
                 },
               ]}
-              data={show.episodes.items.map((episode, index) => {
+              data={(show.episodes?.items || []).map((episode, index) => {
                 const status = getEpisodeStatus(episode);
                 const isFinished = status === 'Finished';
 

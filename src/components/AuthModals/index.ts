@@ -1,2 +1,0 @@
-export { AuthModals } from './AuthModals';
-

@@ -1,86 +1,21 @@
-import { useState, useEffect } from 'react';
+/**
+ * Legacy useSpotify hook - now uses SWR-based API client
+ * This hook maintains backward compatibility while using the new API layer
+ */
 
-interface User {
-  id: string;
-  displayName: string;
-  email: string;
-  images: Array<{ url: string }>;
-  product: string;
-}
-
-interface PlaylistOwner {
-  id: string;
-  display_name: string;
-}
-
-interface PlaylistTracks {
-  total: number;
-  href: string;
-}
-
-interface Playlist {
-  id: string;
-  name: string;
-  description: string;
-  images: Array<{ url: string }>;
-  owner: PlaylistOwner;
-  tracks: PlaylistTracks;
-  public: boolean;
-}
+import { useAuthUser, loginWithSpotify, logout as logoutUser } from './api/useAuth';
+import { apiClient } from '@/lib/api-client';
+import { SpotifyPlaylist } from '@/types';
 
 export const useSpotify = () => {
-  const [user, setUser] = useState<User | null>(null);
-  const [loading, setLoading] = useState(true);
+  const { user, isAuthenticated, isLoading } = useAuthUser();
 
-  // Check authentication status on mount
-  useEffect(() => {
-    checkAuth();
-  }, []);
-
-  const checkAuth = async () => {
+  // Legacy helper functions that aren't using SWR
+  const getPlaylists = async (): Promise<SpotifyPlaylist[]> => {
     try {
-      const response = await fetch('/api/auth/me');
-      if (response.ok) {
-        const userData = await response.json();
-        setUser(userData);
-      }
-    } catch (error) {
-      console.error('Error checking auth:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const login = async () => {
-    try {
-      const response = await fetch('/api/auth/login');
-      const data = await response.json();
-      if (data.url) {
-        window.location.href = data.url;
-      }
-    } catch (error) {
-      console.error('Error during login:', error);
-    }
-  };
-
-  const logout = async () => {
-    try {
-      await fetch('/api/auth/logout', { method: 'POST' });
-      setUser(null);
-      window.location.href = '/';
-    } catch (error) {
-      console.error('Error during logout:', error);
-    }
-  };
-
-  const getPlaylists = async (): Promise<Playlist[]> => {
-    try {
-      const response = await fetch('/api/playlists');
-      if (!response.ok) throw new Error('Failed to fetch playlists');
-      const data = await response.json();
+      const data = await apiClient.get<{ items: SpotifyPlaylist[] }>('/api/playlists');
       return data.items;
     } catch (error) {
-      console.error('Error fetching playlists:', error);
       return [];
     }
   };
@@ -89,38 +24,32 @@ export const useSpotify = () => {
     name: string,
     description?: string,
     isPublic?: boolean
-  ): Promise<Playlist | null> => {
+  ): Promise<SpotifyPlaylist | null> => {
     try {
-      const response = await fetch('/api/playlists', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, description, isPublic }),
+      return await apiClient.post<SpotifyPlaylist>('/api/playlists', {
+        name,
+        description,
+        isPublic,
       });
-      if (!response.ok) throw new Error('Failed to create playlist');
-      return await response.json();
     } catch (error) {
-      console.error('Error creating playlist:', error);
       return null;
     }
   };
 
-  const getPlaylist = async (id: string): Promise<Playlist | null> => {
+  const getPlaylist = async (id: string): Promise<SpotifyPlaylist | null> => {
     try {
-      const response = await fetch(`/api/playlists/${id}`);
-      if (!response.ok) throw new Error('Failed to fetch playlist');
-      return await response.json();
+      return await apiClient.get<SpotifyPlaylist>(`/api/playlists/${id}`);
     } catch (error) {
-      console.error('Error fetching playlist:', error);
       return null;
     }
   };
 
   return {
     user,
-    loading,
-    isAuthenticated: !!user,
-    login,
-    logout,
+    loading: isLoading,
+    isAuthenticated,
+    login: loginWithSpotify,
+    logout: logoutUser,
     getPlaylists,
     createPlaylist,
     getPlaylist,

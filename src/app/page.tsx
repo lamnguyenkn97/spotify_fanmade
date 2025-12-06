@@ -1,143 +1,76 @@
 'use client';
 
-import React, { useState, useEffect, Suspense } from 'react';
-import homepageData from './data/homepageData.json';
-import {
-  UnauthenticatedHomePage,
-  AuthenticatedHomePage,
-  AuthModals,
-} from '@/components';
+import React, { useEffect, Suspense } from 'react';
+import { UnauthenticatedHomePage, AuthenticatedHomePage } from '@/components';
 import { useSpotify } from '@/hooks/useSpotify';
-import { useCardModal } from '@/hooks/useCardModal';
 import { useSearchParams } from 'next/navigation';
-
-// Helper: Extract best quality image URL from sources
-const getBestImageUrl = (sources: any[] = []) => {
-  if (!sources || sources.length === 0) return '';
-
-  // Handle sources with width/height properties
-  const hasWidth = sources.some((s) => s.width != null);
-  if (hasWidth) {
-    return (
-      sources.find((source) => source.width && source.width >= 300)?.url ||
-      sources.find((source) => source.width && source.width >= 64)?.url ||
-      sources[0]?.url ||
-      ''
-    );
-  }
-
-  // Handle sources without width (e.g., radio/chart images with null width)
-  return sources[0]?.url || '';
-};
-
-// Helper: Extract card props from different content types
-const getCardProps = (item: any) => {
-  const { __typename, data } = item.content;
-
-  const cardPropsMap = {
-    TrackResponseWrapper: {
-      title: data.name || 'Unknown Track',
-      subtitle: data.artists?.items?.[0]?.profile?.name || 'Unknown Artist',
-      variant: 'default' as const,
-      imageUrl: getBestImageUrl(data.albumOfTrack?.coverArt?.sources),
-    },
-    ArtistResponseWrapper: {
-      title: data.profile?.name || 'Unknown Artist',
-      subtitle: undefined,
-      variant: 'artist' as const,
-      imageUrl: getBestImageUrl(data.visuals?.avatarImage?.sources),
-    },
-    AlbumResponseWrapper: {
-      title: data.name || 'Unknown Album',
-      subtitle: data.artists?.items?.[0]?.profile?.name || 'Unknown Artist',
-      variant: 'default' as const,
-      imageUrl: getBestImageUrl(data.coverArt?.sources),
-    },
-    PlaylistResponseWrapper: {
-      title: data.name || 'Unknown Playlist',
-      subtitle: data.description || 'Playlist',
-      variant: 'default' as const,
-      imageUrl: getBestImageUrl(data.images?.items?.[0]?.sources || data.images?.items),
-    },
-  };
-
-  return cardPropsMap[__typename as keyof typeof cardPropsMap] || null;
-};
+import { Stack, Skeleton } from 'spotify-design-system';
+import { useToast, useModal } from '@/contexts';
 
 function HomeContent() {
   const searchParams = useSearchParams();
   const { user, isAuthenticated, login } = useSpotify();
-  const { showCardModal, selectedCard, openCardModal, closeCardModal } = useCardModal();
-  const [showCreatePlaylistDialog, setShowCreatePlaylistDialog] = useState(false);
+  const { showCardModal } = useModal();
+  const toast = useToast();
 
-  const sections = homepageData.data.home.sectionContainer.sections.items.filter((section: any) => {
-    const items = section.sectionItems?.items || [];
-    const firstItem = items.find((item: any) => item.content?.data);
-    return firstItem !== undefined && items.length > 0;
-  });
-  
   // Handle error from URL parameters (OAuth callback errors)
   useEffect(() => {
     const error = searchParams.get('error');
     const errorDescription = searchParams.get('error_description');
 
     if (error === 'access_denied') {
-      console.error('User denied authorization');
-      alert('You need to authorize the app to use Spotify features');
+      toast.warning('You need to authorize the app to use Spotify features');
       window.history.replaceState({}, '', '/');
     } else if (error === 'auth_failed' || errorDescription) {
-      console.error('Authentication failed:', errorDescription);
-      alert('Authentication failed. Please try again.');
+      toast.error('Authentication failed. Please try again.');
       window.history.replaceState({}, '', '/');
     }
 
     // Handle missing code (shouldn't happen but just in case)
     const code = searchParams.get('code');
     if (searchParams.get('missing_code') === 'true' || (code && !code.trim())) {
-      console.error('Authorization code was missing');
-      alert('Authentication error. Please try logging in again.');
+      toast.error('Authentication error. Please try logging in again.');
       window.history.replaceState({}, '', '/');
     }
-  }, [searchParams]);
-
-  const handleLogin = () => {
-    login();
-    closeCardModal();
-  };
-
-  const handleSignUpFree = () => {
-    login();
-    closeCardModal();
-  };
+  }, [searchParams, toast]);
 
   return (
     <>
       {isAuthenticated && user ? (
         <AuthenticatedHomePage user={user} />
       ) : (
-        <UnauthenticatedHomePage
-          sections={sections}
-          onCardClick={openCardModal}
-          getCardProps={getCardProps}
-        />
+        <UnauthenticatedHomePage onCardClick={showCardModal} onLogin={login} />
       )}
-      {/* All Authentication Modals */}
-      <AuthModals
-        showCreatePlaylistDialog={showCreatePlaylistDialog}
-        onCloseCreatePlaylist={() => setShowCreatePlaylistDialog(false)}
-        onLogin={handleLogin}
-        showCardModal={showCardModal}
-        selectedCard={selectedCard}
-        onCloseCardModal={closeCardModal}
-        onSignUpFree={handleSignUpFree}
-      />
     </>
   );
 }
 
 export default function Home() {
   return (
-    <Suspense fallback={<div>Loading...</div>}>
+    <Suspense
+      fallback={
+        <Stack direction="column" spacing="lg" className="p-6">
+          {/* Hero Banner Skeleton */}
+          <Stack direction="column" spacing="md" align="center" className="mb-8">
+            <Skeleton variant="text" width="60%" height="48px" />
+            <Skeleton variant="text" width="80%" height="24px" />
+            <Skeleton variant="rectangular" width="200px" height="48px" />
+          </Stack>
+
+          {/* Content Sections Skeleton */}
+          {[1, 2, 3].map((section) => (
+            <Stack key={section} direction="column" spacing="md">
+              <Skeleton variant="text" width="30%" height="32px" />
+              <Stack direction="row" spacing="md">
+                {[1, 2, 3, 4, 5].map((card) => (
+                  <Skeleton key={card} variant="rectangular" width="180px" height="180px" />
+                ))}
+              </Stack>
+            </Stack>
+          ))}
+        </Stack>
+      }
+    >
       <HomeContent />
     </Suspense>
   );

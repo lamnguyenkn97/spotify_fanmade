@@ -4,10 +4,11 @@ import SpotifyWebApi from 'spotify-web-api-node';
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const cookieStore = cookies();
+    const { id } = await params;
+    const cookieStore = await cookies();
     const accessToken = cookieStore.get('spotify_access_token')?.value;
 
     if (!accessToken) {
@@ -25,13 +26,13 @@ export async function GET(
     spotifyApi.setAccessToken(accessToken);
 
     // Get artist details
-    const artist = await spotifyApi.getArtist(params.id);
+    const artist = await spotifyApi.getArtist(id);
 
     // Get artist's top tracks
-    const topTracks = await spotifyApi.getArtistTopTracks(params.id, 'US');
+    const topTracks = await spotifyApi.getArtistTopTracks(id, 'US');
 
     // Get artist's albums (latest to oldest)
-    const albums = await spotifyApi.getArtistAlbums(params.id, {
+    const albums = await spotifyApi.getArtistAlbums(id, {
       limit: 50,
       include_groups: 'album,single,compilation',
     } as any); // Type issue with spotify-web-api-node library
@@ -83,7 +84,7 @@ export async function GET(
       })),
     });
   } catch (error) {
-    console.error('Error fetching artist:', error);
+
     return NextResponse.json(
       { error: 'Failed to fetch artist', details: error instanceof Error ? error.message : "Unknown error" },
       { status: 500 }

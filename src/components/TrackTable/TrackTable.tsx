@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Stack, Typography, Icon, Image, colors, Table, Equalizer } from 'spotify-design-system';
+import { Stack, Typography, Icon, Image, colors, Table, Equalizer, borderRadius } from 'spotify-design-system';
 import { faPlay, faPause, faCheckCircle, faListUl } from '@fortawesome/free-solid-svg-icons';
 import { faClock } from '@fortawesome/free-regular-svg-icons';
 import { useMusicPlayerContext } from '@/contexts/MusicPlayerContext';
@@ -9,57 +9,16 @@ import { useQueueDrawer } from '@/contexts/QueueDrawerContext';
 import { convertTrackToCurrentTrack, convertTracksToQueue } from '@/utils/trackHelpers';
 import { useLikedTracks } from '@/hooks/useLikedTracks';
 import { formatRelativeTime } from '@/utils/dateHelpers';
-
-interface Track {
-  id: string;
-  name: string;
-  artists: Array<{ name: string }>;
-  album: {
-    name: string;
-    images: Array<{ url: string }>;
-  };
-  duration_ms: number;
-  explicit?: boolean;
-  external_urls?: {
-    spotify?: string;
-  };
-  preview_url?: string | null;
-}
-
-interface TrackTableRow {
-  id: string;
-  index: number;
-  trackNumber: number;
-  title: string;
-  artists: string;
-  album: string;
-  albumImage?: string;
-  duration: string;
-  explicit?: boolean;
-  hasVideo?: boolean;
-  isLiked?: boolean;
-  dateAdded?: string;
-  track: Track;
-  addToQueue?: string; // Action column placeholder
-}
-
-interface TrackTableProps {
-  tracks: Array<{ track: Track; added_at?: string }>;
-  onTrackClick?: (track: Track) => void;
-}
-
-const formatDuration = (ms: number): string => {
-  const seconds = Math.floor(ms / 1000);
-  const mins = Math.floor(seconds / 60);
-  const secs = seconds % 60;
-  return `${mins}:${secs.toString().padStart(2, '0')}`;
-};
+import { useToast } from '@/contexts/ToastContext';
+import { SpotifyTrack, TrackTableRow, TrackTableProps } from '@/types';
+import { formatDuration } from '@/utils/formatHelpers';
 
 export const TrackTable: React.FC<TrackTableProps> = ({ tracks, onTrackClick }) => {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
   const { playTrack, pause, resume, setQueue, currentTrack, isPlaying, addToQueue } =
     useMusicPlayerContext();
   const { openQueue } = useQueueDrawer();
+  const toast = useToast();
 
   // Get track IDs for checking liked status (read-only, no toggle functionality)
   const trackIds = React.useMemo(() => tracks.map((item) => item.track.id), [tracks]);
@@ -78,7 +37,7 @@ export const TrackTable: React.FC<TrackTableProps> = ({ tracks, onTrackClick }) 
   );
 
   // Handle track click - play the track, or pause if already playing
-  const handleTrackClick = async (track: Track, trackIndex: number) => {
+  const handleTrackClick = async (track: SpotifyTrack, trackIndex: number) => {
     const trackToPlay = convertTrackToCurrentTrack(track);
 
     // If clicking the same track that's currently playing, toggle play/pause
@@ -91,13 +50,23 @@ export const TrackTable: React.FC<TrackTableProps> = ({ tracks, onTrackClick }) 
     } else {
       // Different track - set up queue starting from this track, then play it
       setPlaylistQueue(trackIndex);
-      await playTrack(trackToPlay);
+      
+      try {
+        await playTrack(trackToPlay);
+      } catch (error) {
+        // Show user-friendly error message based on the issue
+        if (!track.preview_url) {
+          toast.warning('This track requires Spotify Premium for full playback. Preview not available.');
+        } else {
+          toast.error('Unable to play this track. Please try again.');
+        }
+      }
     }
 
     onTrackClick?.(track);
   };
 
-  const handleAddToQueue = (e: React.MouseEvent, track: Track) => {
+  const handleAddToQueue = (e: React.MouseEvent, track: SpotifyTrack) => {
     e.stopPropagation();
     const trackToAdd = convertTrackToCurrentTrack(track);
     addToQueue(trackToAdd);
@@ -135,7 +104,7 @@ export const TrackTable: React.FC<TrackTableProps> = ({ tracks, onTrackClick }) 
               const isHovered = hoveredIndex === row.index;
 
               return (
-                <Stack direction="row" align="center" justify="center" style={{ width: '48px' }}>
+                <Stack direction="row" align="center" justify="center" className="w-12">
                   {isCurrentlyPlaying && !isHovered ? (
                     <Equalizer size="sm" isPlaying={isPlaying} />
                   ) : isHovered && isCurrentlyPlaying ? (
@@ -184,8 +153,7 @@ export const TrackTable: React.FC<TrackTableProps> = ({ tracks, onTrackClick }) 
                         variant="body"
                         size="sm"
                         weight="medium"
-                        color={isCurrentlyPlaying ? 'primary' : 'primary'}
-                        style={isCurrentlyPlaying ? { color: colors.primary.brand } : undefined}
+                        color={isCurrentlyPlaying ? 'brand' : 'primary'}
                       >
                         {row.title}
                       </Typography>
@@ -195,12 +163,8 @@ export const TrackTable: React.FC<TrackTableProps> = ({ tracks, onTrackClick }) 
                           direction="row"
                           align="center"
                           justify="center"
-                          style={{
-                            width: '16px',
-                            height: '16px',
-                            backgroundColor: colors.grey.grey2,
-                            borderRadius: '2px',
-                          }}
+                          className="w-4 h-4 rounded-sm"
+                          style={{ backgroundColor: colors.grey.grey2 }}
                           title="Explicit"
                         >
                           <Typography variant="caption" size="sm" color="primary" weight="bold">
@@ -215,12 +179,8 @@ export const TrackTable: React.FC<TrackTableProps> = ({ tracks, onTrackClick }) 
                             direction="row"
                             align="center"
                             justify="center"
-                            style={{
-                              width: '16px',
-                              height: '16px',
-                              backgroundColor: colors.grey.grey2,
-                              borderRadius: '2px',
-                            }}
+                            className="w-4 h-4 rounded-sm"
+                            style={{ backgroundColor: colors.grey.grey2 }}
                             title="Music video"
                           >
                             <Icon icon={faPlay} size="sm" color="primary" />
@@ -271,29 +231,19 @@ export const TrackTable: React.FC<TrackTableProps> = ({ tracks, onTrackClick }) 
             label: '',
             renderCell: (row: TrackTableRow) => {
               return (
-                <div
+                <Stack
+                  direction="row"
+                  align="center"
+                  spacing="xs"
                   onClick={(e) => handleAddToQueue(e, row.track)}
-                  style={{
-                    cursor: 'pointer',
-                    padding: '8px 12px',
-                    borderRadius: '4px',
-                    transition: 'background-color 0.15s ease',
-                    display: 'inline-flex',
-                    alignItems: 'center',
-                    gap: '8px',
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.1)';
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.backgroundColor = 'transparent';
-                  }}
+                  className="cursor-pointer px-3 py-2 hover:bg-white/10 transition-colors duration-150"
+                  style={{ borderRadius: borderRadius.md }}
                 >
                   <Icon icon={faListUl} size="sm" color="muted" />
                   <Typography variant="body" size="sm" color="muted" weight="medium">
                     Add to queue
                   </Typography>
-                </div>
+                </Stack>
               );
             },
             width: '150px',

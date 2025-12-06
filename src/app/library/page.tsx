@@ -11,9 +11,13 @@ import {
   Pill,
   Image,
   colors,
+  Skeleton,
+  borderRadius,
 } from 'spotify-design-system';
 import { faPlus, faSearch, faExpand, faBars, faHeart, faVolumeHigh } from '@fortawesome/free-solid-svg-icons';
 import { useRouter } from 'next/navigation';
+import { LibraryItem } from '@/types';
+import { useModal } from '@/contexts';
 
 enum LibraryFilter {
   PLAYLISTS = 'Playlists',
@@ -29,21 +33,9 @@ enum SortOption {
   CREATOR = 'Creator',
 }
 
-interface LibraryItem {
-  id: string;
-  name: string;
-  type: 'playlist' | 'artist' | 'album' | 'podcast' | 'show';
-  image?: string;
-  subtitle: string;
-  isPinned?: boolean;
-  isPlaying?: boolean;
-  owner?: string;
-  trackCount?: number;
-  dateAdded?: string;
-}
-
 export default function LibraryPage() {
   const router = useRouter();
+  const { showFeatureNotImplementedModal } = useModal();
   const [selectedFilter, setSelectedFilter] = useState<LibraryFilter>(LibraryFilter.PLAYLISTS);
   const [sortOption, setSortOption] = useState<SortOption>(SortOption.RECENTS);
   const [items, setItems] = useState<LibraryItem[]>([]);
@@ -66,11 +58,11 @@ export default function LibraryPage() {
             const playlistsData = await playlistsRes.json();
             data = playlistsData.items?.map((playlist: any) => ({
               id: playlist.id,
-              name: playlist.name,
+              title: playlist.name,
               type: 'playlist' as const,
               image: playlist.images?.[0]?.url,
               subtitle: `Playlist • ${playlist.owner?.display_name || 'Spotify'}`,
-              isPinned: Math.random() > 0.7, // Mock pinned status
+              isPinned: false,
               trackCount: playlist.tracks?.total || 0,
             })) || [];
           }
@@ -82,7 +74,7 @@ export default function LibraryPage() {
             const showsData = await showsRes.json();
             data = showsData.items?.map((item: any) => ({
               id: item.show?.id || item.id,
-              name: item.show?.name || item.name,
+              title: item.show?.name || item.name,
               type: 'show' as const,
               image: item.show?.images?.[0]?.url || item.images?.[0]?.url,
               subtitle: `Podcast • ${item.show?.publisher || item.publisher || 'Show'}`,
@@ -96,7 +88,7 @@ export default function LibraryPage() {
             const artistsData = await artistsRes.json();
             data = artistsData.items?.map((artist: any) => ({
               id: artist.id,
-              name: artist.name,
+              title: artist.name,
               type: 'artist' as const,
               image: artist.images?.[0]?.url,
               subtitle: 'Artist',
@@ -110,7 +102,7 @@ export default function LibraryPage() {
             const albumsData = await albumsRes.json();
             data = albumsData.items?.map((item: any) => ({
               id: item.album?.id || item.id,
-              name: item.album?.name || item.name,
+              title: item.album?.name || item.name,
               type: 'album' as const,
               image: item.album?.images?.[0]?.url || item.images?.[0]?.url,
               subtitle: `Album • ${item.album?.artists?.map((a: any) => a.name).join(', ') || 'Unknown'}`,
@@ -122,7 +114,8 @@ export default function LibraryPage() {
 
       setItems(data);
     } catch (error) {
-      console.error('Error fetching library items:', error);
+      // Failed to fetch library items, keep empty state
+      setItems([]);
     } finally {
       setLoading(false);
     }
@@ -139,13 +132,9 @@ export default function LibraryPage() {
   };
 
   const handleCreate = () => {
-    // TODO: Open create playlist modal
+    showFeatureNotImplementedModal();
   };
 
-  const getBestImageUrl = (images: Array<{ url: string }> | undefined): string => {
-    if (!images || images.length === 0) return '';
-    return images[0]?.url || '';
-  };
 
   return (
     <Stack direction="column" spacing="lg" className="pb-8">
@@ -217,10 +206,16 @@ export default function LibraryPage() {
 
       {/* Library Items List */}
       {loading ? (
-        <Stack direction="column" spacing="md">
-          <Typography variant="body" color="muted">
-            Loading...
-          </Typography>
+        <Stack direction="column" spacing="xs">
+          {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => (
+            <Stack key={i} direction="row" spacing="md" align="center" className="p-2">
+              <Skeleton variant="rectangular" width="48px" height="48px" />
+              <Stack direction="column" spacing="xs" className="flex-1">
+                <Skeleton variant="text" width="60%" height="16px" />
+                <Skeleton variant="text" width="40%" height="14px" />
+              </Stack>
+            </Stack>
+          ))}
         </Stack>
       ) : items.length === 0 ? (
         <Stack direction="column" spacing="md">
@@ -237,27 +232,20 @@ export default function LibraryPage() {
               spacing="md"
               align="center"
               onClick={() => handleItemClick(item)}
-              style={{
-                padding: '8px',
-                borderRadius: '4px',
-                cursor: 'pointer',
-              }}
+              className="p-2 cursor-pointer hover:bg-grey-grey1"
+              style={{ borderRadius: borderRadius.md }}
             >
               {/* Thumbnail */}
-              <Stack style={{ width: '48px', height: '48px', flexShrink: 0 }}>
+              <Stack className="w-12 h-12 flex-shrink-0">
                 {item.image ? (
-                  <Image src={item.image} alt={item.name} size="sm" />
+                  <Image src={item.image} alt={item.title} size="sm" />
                 ) : (
                   <Stack
                     direction="row"
                     align="center"
                     justify="center"
-                    style={{
-                      width: '48px',
-                      height: '48px',
-                      backgroundColor: colors.grey.grey2,
-                      borderRadius: '4px',
-                    }}
+                    className="w-12 h-12 rounded"
+                    style={{ backgroundColor: colors.grey.grey2 }}
                   >
                     {item.type === 'playlist' && (
                       <Icon icon={faHeart} size="sm" color="primary" />
@@ -267,9 +255,9 @@ export default function LibraryPage() {
               </Stack>
 
               {/* Item Details */}
-              <Stack direction="column" spacing="xs" style={{ flex: 1, minWidth: 0 }}>
+              <Stack direction="column" spacing="xs" className="flex-1 min-w-0">
                 <Typography variant="body" size="sm" weight="medium" color="primary">
-                  {item.name}
+                  {item.title}
                 </Typography>
                 <Stack direction="row" spacing="xs" align="center">
                   {item.isPinned && (
@@ -277,7 +265,7 @@ export default function LibraryPage() {
                       icon={faHeart}
                       size="sm"
                       color={colors.primary.brand}
-                      style={{ flexShrink: 0 }}
+                      className="flex-shrink-0"
                     />
                   )}
                   <Typography variant="caption" size="sm" color="muted">
@@ -295,6 +283,7 @@ export default function LibraryPage() {
           ))}
         </Stack>
       )}
+
     </Stack>
   );
 }

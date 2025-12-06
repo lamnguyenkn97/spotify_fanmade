@@ -31,7 +31,7 @@ export async function GET(request: NextRequest) {
     // duration_ms, preview_url, etc., so we can return as-is
     return NextResponse.json(recentlyPlayed.body);
   } catch (error: unknown) {
-    console.error('Error fetching recently played:', error);
+
     const errorMessage = error instanceof Error ? error.message : 'Unknown error';
     return NextResponse.json(
       { error: 'Failed to fetch recently played tracks', details: errorMessage },

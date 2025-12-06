@@ -1,40 +1,15 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Stack, Typography, Icon, Image, colors } from 'spotify-design-system';
+import { Stack, Typography, Icon, Image, colors, borderRadius } from 'spotify-design-system';
 import { faPlay } from '@fortawesome/free-solid-svg-icons';
-
-interface PlaylistItem {
-  id: string;
-  name: string;
-  images: Array<{ url: string; height: number; width: number }>;
-  tracks: {
-    total: number;
-  };
-  owner: {
-    display_name: string;
-  };
-  index?: number;
-}
-
-interface PlaylistTableProps {
-  playlists: PlaylistItem[];
-  onPlaylistClick: (playlistId: string) => void;
-}
-
-const getBestImageUrl = (images: Array<{ url: string; height: number; width: number }>) => {
-  if (!images || images.length === 0) return '';
-  return (
-    images.find((img) => img.height && img.height >= 200 && img.height <= 400)?.url ||
-    images[0]?.url ||
-    ''
-  );
-};
+import { PlaylistTableProps, SpotifyPlaylist } from '@/types';
+import { getBestImageUrl } from '@/utils/imageHelpers';
 
 export const PlaylistTable: React.FC<PlaylistTableProps> = ({ playlists, onPlaylistClick }) => {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
 
-  const tableData: PlaylistItem[] = playlists.map((playlist, idx) => ({
+  const tableData: any[] = playlists.map((playlist, idx) => ({
     ...playlist,
     index: idx + 1,
   }));
@@ -46,8 +21,8 @@ export const PlaylistTable: React.FC<PlaylistTableProps> = ({ playlists, onPlayl
         direction="row"
         spacing="lg"
         align="center"
-        className="px-2 py-2 border-b border-gray-800"
-        style={{ gridTemplateColumns: '40px 1fr 30% 150px', display: 'grid' }}
+        className="px-2 py-2 border-b border-gray-800 grid"
+        style={{ gridTemplateColumns: '40px 1fr 30% 150px' }}
       >
         <Stack direction="row" align="center">
           <Typography variant="caption" size="sm" color="muted" weight="bold">
@@ -79,8 +54,8 @@ export const PlaylistTable: React.FC<PlaylistTableProps> = ({ playlists, onPlayl
             direction="row"
             spacing="lg"
             align="center"
-            className="px-2 py-2 hover:bg-gray-800/50 rounded group cursor-pointer"
-            style={{ gridTemplateColumns: '40px 1fr 30% 150px', display: 'grid' }}
+            className="px-2 py-2 hover:bg-gray-800/50 group cursor-pointer grid"
+            style={{ gridTemplateColumns: '40px 1fr 30% 150px', borderRadius: borderRadius.md }}
             onMouseEnter={() => setHoveredIndex(item.index!)}
             onMouseLeave={() => setHoveredIndex(null)}
             onClick={() => onPlaylistClick(item.id)}

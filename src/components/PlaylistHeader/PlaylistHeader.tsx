@@ -4,26 +4,7 @@ import React from 'react';
 import { Banner, colors, Icon, Stack, Typography } from 'spotify-design-system';
 import { faBars, faPlay, faShuffle } from '@fortawesome/free-solid-svg-icons';
 import { useMusicPlayerContext } from '@/contexts/MusicPlayerContext';
-
-interface PlaylistHeaderProps {
-  playlist: {
-    name: string;
-    description?: string;
-    images: Array<{ url: string }>;
-    owner: {
-      display_name: string;
-    };
-    tracks: {
-      total: number;
-    };
-  };
-  onPlay?: () => void;
-  onShuffle?: () => void;
-  gradientColors?: {
-    color1: string;
-    color2: string;
-  };
-}
+import { PlaylistHeaderProps } from '@/types';
 
 export const PlaylistHeader: React.FC<PlaylistHeaderProps> = ({
   playlist,
@@ -49,8 +30,6 @@ export const PlaylistHeader: React.FC<PlaylistHeaderProps> = ({
       spacing="lg"
       className="w-full min-w-0"
       style={{
-        width: '100%',
-        minWidth: 0,
         background: `linear-gradient(to bottom, ${bgColor1} 0%, ${bgColor2} 50%, ${defaultDark} 100%)`,
       }}
     >
@@ -90,7 +69,6 @@ export const PlaylistHeader: React.FC<PlaylistHeaderProps> = ({
             size="lg"
             clickable
             className="hover:scale-110 hover:opacity-80 transition-all cursor-pointer"
-            style={{ cursor: 'pointer' }}
           />
         </Stack>
 

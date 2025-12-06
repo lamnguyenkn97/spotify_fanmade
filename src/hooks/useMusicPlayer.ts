@@ -146,7 +146,7 @@ export const useMusicPlayer = (): UseMusicPlayerReturn => {
       try {
         await strategy.play(track);
       } catch (error) {
-        console.error('Error playing track:', error);
+
         setIsPlaying(false);
       }
     },
@@ -220,7 +220,7 @@ export const useMusicPlayer = (): UseMusicPlayerReturn => {
     };
 
     const handleError = () => {
-      console.error('Error playing audio');
+
       setIsPlaying(false);
     };
 
@@ -239,7 +239,7 @@ export const useMusicPlayer = (): UseMusicPlayerReturn => {
     try {
       await strategy.pause();
     } catch (error) {
-      console.error('Error pausing:', error);
+
     }
   }, [strategy]);
 
@@ -247,7 +247,7 @@ export const useMusicPlayer = (): UseMusicPlayerReturn => {
     try {
       await strategy.resume();
     } catch (error) {
-      console.error('Error resuming:', error);
+
       setIsPlaying(false);
     }
   }, [strategy]);
@@ -265,7 +265,7 @@ export const useMusicPlayer = (): UseMusicPlayerReturn => {
       try {
         await strategy.seek(time);
       } catch (error) {
-        console.error('Error seeking:', error);
+
       }
     },
     [strategy]
@@ -279,7 +279,7 @@ export const useMusicPlayer = (): UseMusicPlayerReturn => {
       try {
         await strategy.setVolume(clampedVolume);
       } catch (error) {
-        console.error('Error setting volume:', error);
+
       }
     },
     [strategy]
@@ -302,7 +302,7 @@ export const useMusicPlayer = (): UseMusicPlayerReturn => {
       try {
         await strategy.nextTrack();
       } catch (error) {
-        console.error('Error going to next track:', error);
+
       }
     }
   }, [strategy, queue, playTrack, getCurrentRepeatMode, getNextIndex, setCurrentIndex, currentTrack]);
@@ -319,7 +319,7 @@ export const useMusicPlayer = (): UseMusicPlayerReturn => {
       try {
         await strategy.previousTrack();
       } catch (error) {
-        console.error('Error going to previous track:', error);
+
       }
     }
   }, [strategy, currentIndex, queue, playTrack, seek, getPreviousIndex, setCurrentIndex]);

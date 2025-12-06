@@ -1,9 +1,19 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
-import { ThemeProvider, AppHeader, Stack, Typography, Icon, Footer } from 'spotify-design-system';
+import React, { useState, useCallback, useMemo } from 'react';
+import {
+  ThemeProvider,
+  AppHeader,
+  Stack,
+  Typography,
+  Icon,
+  Footer,
+  TextLink,
+  colors,
+} from 'spotify-design-system';
 import { useRouter } from 'next/navigation';
-import { faGithub, faLinkedin } from '@fortawesome/free-brands-svg-icons';
+import type { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime';
+import { faHeart } from '@fortawesome/free-solid-svg-icons';
 import {
   UnauthenticatedSideBar,
   AuthenticatedSideBar,
@@ -15,151 +25,119 @@ import { QueueDrawerProvider, useQueueDrawer } from '@/contexts/QueueDrawerConte
 import { MusicPlayer } from '@/components/MusicPlayer';
 import { QueueDrawer } from '@/components/QueueDrawer';
 import { Modal, ModalSize } from 'spotify-design-system';
+import { FOOTER_DATA } from '@/config/footerData';
+import { SpotifyUser, LibraryItem } from '@/types';
+import {
+  useSavedTracks,
+  useMyPlaylists,
+  useMyShows,
+  useMyAlbums,
+} from '@/hooks/api';
+import { useModal } from '@/contexts';
 
 interface AppLayoutProps {
   children: React.ReactNode;
 }
 
-interface LibraryItem {
-  id: string;
-  title: string;
-  type: 'playlist' | 'artist' | 'album' | 'podcast' | 'show';
-  image?: string;
-  subtitle: string;
-  pinned?: boolean;
-  isPlaying?: boolean;
-}
-
 export const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
   const router = useRouter();
   const { user, isAuthenticated, login, logout } = useSpotify();
-  const [libraryItems, setLibraryItems] = useState<LibraryItem[]>([]);
   const [selectedFilter, setSelectedFilter] = useState<LibraryFilter>(LibraryFilter.PLAYLISTS);
-  const [showCreatePlaylistDialog, setShowCreatePlaylistDialog] = useState(false);
 
-  useEffect(() => {
-    if (isAuthenticated) {
-      fetchLibraryItems(selectedFilter);
-    }
-  }, [isAuthenticated, selectedFilter]);
+  // Fetch all library data with SWR hooks
+  const { tracks: likedTracks, total: likedTotal } = useSavedTracks(1, isAuthenticated);
+  const { playlists } = useMyPlaylists(isAuthenticated);
+  const { shows } = useMyShows(isAuthenticated);
+  const { albums } = useMyAlbums(isAuthenticated);
 
-  const fetchLibraryItems = async (filter: LibraryFilter) => {
+  // Transform data based on selected filter using useMemo for performance
+  const libraryItems = useMemo((): LibraryItem[] => {
+    if (!isAuthenticated) return [];
+
     try {
-      let data: LibraryItem[] = [];
-
-      switch (filter) {
-        case LibraryFilter.PLAYLISTS:
-          // First, add "Liked Songs" as a special playlist
-          const likedTracksRes = await fetch('/api/spotify/my-saved-tracks?limit=1');
-          if (likedTracksRes.ok) {
-            const likedTracksData = await likedTracksRes.json();
-            if (likedTracksData.total > 0) {
-              const firstTrack = likedTracksData.items?.[0]?.track;
-              data.push({
-                id: 'liked-songs',
-                title: 'Liked Songs',
-                type: 'playlist' as const,
-                image: firstTrack?.album?.images?.[0]?.url || '',
-                subtitle: `Playlist • ${likedTracksData.total} songs`,
-                pinned: true, // Always pin Liked Songs at the top
-              });
-            }
+      switch (selectedFilter) {
+        case LibraryFilter.PLAYLISTS: {
+          const items: LibraryItem[] = [];
+          
+          // Add "Liked Songs" as first item if user has liked tracks
+          if (likedTotal > 0 && likedTracks && likedTracks.length > 0) {
+            const firstTrack = likedTracks[0]?.track;
+            items.push({
+              id: 'liked-songs',
+              title: 'Liked Songs',
+              type: 'playlist' as const,
+              image: firstTrack?.album?.images?.[0]?.url || '',
+              subtitle: `Playlist • ${likedTotal} songs`,
+              pinned: true,
+            });
           }
 
-          // Then fetch regular playlists
-          const playlistsRes = await fetch('/api/spotify/my-playlists');
-          if (playlistsRes.ok) {
-            const playlistsData = await playlistsRes.json();
-            const playlists =
-              playlistsData.items?.map((playlist: any) => ({
-                id: playlist.id,
-                title: playlist.name,
-                type: 'playlist' as const,
-                image: playlist.images?.[0]?.url,
-                subtitle: `Playlist • ${playlist.owner?.display_name || 'Spotify'}${
-                  playlist.tracks?.total ? ` • ${playlist.tracks.total} songs` : ''
-                }`,
-                pinned: Math.random() > 0.7,
-              })) || [];
-            data = [...data, ...playlists];
-          }
-          break;
+          // Add regular playlists
+          const playlistItems = (playlists || []).map((playlist: any) => ({
+            id: playlist.id,
+            title: playlist.name,
+            type: 'playlist' as const,
+            image: playlist.images?.[0]?.url,
+            subtitle: `Playlist • ${playlist.owner?.display_name || 'Spotify'}${
+              playlist.tracks?.total ? ` • ${playlist.tracks.total} songs` : ''
+            }`,
+            pinned: false,
+          }));
+
+          return [...items, ...playlistItems];
+        }
 
         case LibraryFilter.PODCASTS_AND_SHOWS:
-          const showsRes = await fetch('/api/spotify/my-shows');
-          if (showsRes.ok) {
-            const showsData = await showsRes.json();
-            data =
-              showsData.items?.map((item: any) => ({
-                id: item.show?.id || item.id,
-                title: item.show?.name || item.name,
-                type: 'show' as const,
-                image: item.show?.images?.[0]?.url || item.images?.[0]?.url,
-                subtitle: `Podcast • ${item.show?.publisher || item.publisher || 'Show'}`,
-              })) || [];
-          }
-          break;
+          return (shows || []).map((item: any) => ({
+            id: item.show?.id || item.id,
+            title: item.show?.name || item.name,
+            type: 'show' as const,
+            image: item.show?.images?.[0]?.url || item.images?.[0]?.url,
+            subtitle: `Podcast • ${item.show?.publisher || item.publisher || 'Show'}`,
+          }));
 
         case LibraryFilter.ARTISTS:
-          const artistsRes = await fetch('/api/spotify/my-artists');
-          if (artistsRes.ok) {
-            const artistsData = await artistsRes.json();
-            data =
-              artistsData.items?.map((artist: any) => ({
-                id: artist.id,
-                title: artist.name,
-                type: 'artist' as const,
-                image: artist.images?.[0]?.url,
-                subtitle: 'Artist',
-              })) || [];
-          }
-          break;
+          // Note: We don't have a useMyArtists hook yet, so this will be empty
+          // TODO: Add useMyArtists hook to useSpotifyApi.ts
+          return [];
 
         case LibraryFilter.ALBUMS:
-          const albumsRes = await fetch('/api/spotify/my-albums');
-          if (albumsRes.ok) {
-            const albumsData = await albumsRes.json();
-            data =
-              albumsData.items?.map((item: any) => ({
-                id: item.album?.id || item.id,
-                title: item.album?.name || item.name,
-                type: 'album' as const,
-                image: item.album?.images?.[0]?.url || item.images?.[0]?.url,
-                subtitle: `Album • ${item.album?.artists?.map((a: any) => a.name).join(', ') || 'Unknown'}`,
-              })) || [];
-          }
-          break;
+          return (albums || []).map((item: any) => ({
+            id: item.album?.id || item.id,
+            title: item.album?.name || item.name,
+            type: 'album' as const,
+            image: item.album?.images?.[0]?.url || item.images?.[0]?.url,
+            subtitle: `Album • ${item.album?.artists?.map((a: any) => a.name).join(', ') || 'Unknown'}`,
+          }));
+
+        default:
+          return [];
       }
-
-      setLibraryItems(data);
-    } catch (error) {
-      console.error('Error fetching library items:', error);
+    } catch (err) {
+      // Silently handle any transformation errors
+      return [];
     }
-  };
+  }, [selectedFilter, isAuthenticated, likedTracks, likedTotal, playlists, shows, albums]);
 
-  const handleCreatePlaylist = () => {
+  const { showLoginModal, showFeatureNotImplementedModal } = useModal();
+
+  const handleCreatePlaylist = useCallback(() => {
     if (!isAuthenticated) {
-      setShowCreatePlaylistDialog(true);
+      showLoginModal();
     } else {
-      // TODO: Implement create playlist functionality for authenticated users
-      console.log('Create playlist functionality not yet implemented');
+      showFeatureNotImplementedModal();
     }
-  };
+  }, [isAuthenticated, showLoginModal, showFeatureNotImplementedModal]);
 
-  const handleLoginFromDialog = () => {
-    setShowCreatePlaylistDialog(false);
-    login();
-  };
-
-  const handleBrowsePodcasts = () => {
+  const handleBrowsePodcasts = useCallback(() => {
     router.push('/podcasts');
-  };
+  }, [router]);
 
-  const handleFilterClick = (filter: LibraryFilter) => {
+  const handleFilterClick = useCallback((filter: LibraryFilter) => {
     setSelectedFilter(filter);
-  };
+  }, []);
 
-  const handleLibraryItemClick = (item: LibraryItem) => {
+  const handleLibraryItemClick = useCallback((item: LibraryItem) => {
     if (item.type === 'playlist' || item.type === 'album') {
       router.push(`/playlist/${item.id}`);
     } else if (item.type === 'show' || item.type === 'podcast') {
@@ -167,7 +145,7 @@ export const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
     } else if (item.type === 'artist') {
       router.push(`/artist/${item.id}`);
     }
-  };
+  }, [router]);
 
   return (
     <ThemeProvider>
@@ -187,30 +165,6 @@ export const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
           >
             {children}
           </AppLayoutContent>
-
-          {/* Create Playlist Modal */}
-          <Modal
-            open={showCreatePlaylistDialog}
-            onClose={() => setShowCreatePlaylistDialog(false)}
-            size={ModalSize.Small}
-            title="Create a playlist"
-            description="Log in to create and share playlists."
-            actions={[
-              {
-                label: 'Not now',
-                onClick: () => setShowCreatePlaylistDialog(false),
-                variant: 'text',
-              },
-              {
-                label: 'Log in',
-                onClick: handleLoginFromDialog,
-                variant: 'primary',
-              },
-            ]}
-            showCloseButton={false}
-            closeOnBackdropClick={true}
-            closeOnEscape={true}
-          />
         </QueueDrawerProvider>
       </MusicPlayerProvider>
     </ThemeProvider>
@@ -218,9 +172,9 @@ export const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
 };
 
 // Inner component that has access to MusicPlayerContext
-const AppLayoutContent: React.FC<{
+interface AppLayoutContentProps {
   isAuthenticated: boolean;
-  user: any;
+  user: SpotifyUser | null;
   libraryItems: LibraryItem[];
   onLogin: () => void;
   onLogout: () => void;
@@ -228,9 +182,11 @@ const AppLayoutContent: React.FC<{
   onBrowsePodcasts: () => void;
   onFilterClick: (filter: LibraryFilter) => void;
   onLibraryItemClick: (item: LibraryItem) => void;
-  router: any;
+  router: AppRouterInstance;
   children: React.ReactNode;
-}> = ({
+}
+
+const AppLayoutContent: React.FC<AppLayoutContentProps> = ({
   isAuthenticated,
   user,
   libraryItems,
@@ -245,22 +201,7 @@ const AppLayoutContent: React.FC<{
 }) => {
   const { currentTrack } = useMusicPlayerContext();
   const { isQueueOpen, openQueue, closeQueue } = useQueueDrawer();
-
-  const footerData = {
-    developer: [
-      { name: 'Portfolio', url: 'https://yourportfolio.com' }, // TODO: Replace
-      { name: 'GitHub Profile', url: 'https://github.com/lamnguyenkn97' }, // TODO: Replace
-    ],
-    project: [
-      { name: 'Project Repository', url: 'https://github.com/lamnguyenkn97/spotify_fanmade' }, // TODO: Replace
-      { name: 'Design System', url: 'https://github.com/lamnguyenkn97/spotify_design_system' },
-      { name: 'Storybook', url: 'https://spotify-storybook.vercel.app' },
-    ],
-    social: [
-      { icon: faGithub, url: 'https://github.com/lamnguyenkn97', label: 'GitHub' }, // TODO: Replace
-      { icon: faLinkedin, url: 'https://linkedin.com/in/yourprofile', label: 'LinkedIn' }, // TODO: Replace
-    ],
-  };
+  const { showLoginModal, showFeatureNotImplementedModal } = useModal();
 
   return (
     <Stack direction="column" className="h-screen bg-spotify-dark text-white overflow-hidden">
@@ -275,6 +216,17 @@ const AppLayoutContent: React.FC<{
             : undefined
         }
         onSearch={(query: string) => {
+          if (!isAuthenticated) {
+            // Show login prompt for unauthenticated users only when they actually try to search
+            if (query.trim()) {
+              // Use setTimeout to avoid Enter key event propagating to modal
+              setTimeout(() => {
+                showLoginModal();
+              }, 0);
+            }
+            return;
+          }
+          // Authenticated users can search
           if (query.trim()) {
             router.push(`/search?q=${encodeURIComponent(query)}`);
           } else {
@@ -286,8 +238,24 @@ const AppLayoutContent: React.FC<{
         onHomeClick={() => router.push('/')}
         showInstallApp={false}
         showAuthButtons={true}
-        showCustomLinks={false}
-        customLinks={[]}
+        showCustomLinks={!isAuthenticated}
+        customLinks={
+          !isAuthenticated
+            ? [
+                { id: 'portfolio', label: 'Portfolio Demo', href: '#' },
+                {
+                  id: 'npm',
+                  label: 'Design System',
+                  href: 'https://www.npmjs.com/package/spotify-design-system',
+                },
+                {
+                  id: 'storybook',
+                  label: 'Documentation',
+                  href: 'https://spotify-storybook.vercel.app',
+                },
+              ]
+            : []
+        }
         customActions={
           isAuthenticated
             ? [
@@ -308,15 +276,14 @@ const AppLayoutContent: React.FC<{
           <AuthenticatedSideBar
             libraryItems={libraryItems}
             onAddClick={onCreatePlaylist}
-            onExpandClick={() => {}}
+            onExpandClick={showFeatureNotImplementedModal}
             onFilterClick={onFilterClick}
             onLibraryItemClick={onLibraryItemClick}
-            onSearch={() => {}}
+            onSearch={showFeatureNotImplementedModal}
           />
         ) : (
           <UnauthenticatedSideBar
             onCreatePlaylist={onCreatePlaylist}
-            onAddClick={onCreatePlaylist}
             onBrowsePodcasts={onBrowsePodcasts}
           />
         )}
@@ -327,12 +294,7 @@ const AppLayoutContent: React.FC<{
           {children}
 
           {/* Footer at bottom of content */}
-          <Footer
-            copyrightText="© 2024 Lam Nguyen. Not affiliated with Spotify AB. This is a portfolio project."
-            showSocialLinks={false}
-            showLinks={false}
-            showCopyright={true}
-          >
+          <Footer copyrightText="" showSocialLinks={false} showLinks={false} showCopyright={false}>
             <Stack direction="row" spacing="sm" align="start" justify="space-between">
               {/* Developer Column */}
               <Stack direction="column" spacing="md" align="start">
@@ -340,18 +302,15 @@ const AppLayoutContent: React.FC<{
                   Developer
                 </Typography>
                 <Stack direction="column" spacing="sm">
-                  {footerData.developer.map((link, index) => (
-                    <a
+                  {FOOTER_DATA.developer.map((link, index) => (
+                    <TextLink
                       key={index}
                       href={link.url}
                       target="_blank"
-                      rel="noopener noreferrer"
-                      className="no-underline hover:underline"
+                      color="muted"
                     >
-                      <Typography variant="body" size="sm" color="muted">
-                        {link.name}
-                      </Typography>
-                    </a>
+                      {link.name}
+                    </TextLink>
                   ))}
                 </Stack>
               </Stack>
@@ -362,18 +321,15 @@ const AppLayoutContent: React.FC<{
                   Project
                 </Typography>
                 <Stack direction="column" spacing="sm">
-                  {footerData.project.map((link, index) => (
-                    <a
+                  {FOOTER_DATA.project.map((link, index) => (
+                    <TextLink
                       key={index}
                       href={link.url}
                       target="_blank"
-                      rel="noopener noreferrer"
-                      className="no-underline hover:underline"
+                      color="muted"
                     >
-                      <Typography variant="body" size="sm" color="muted">
-                        {link.name}
-                      </Typography>
-                    </a>
+                      {link.name}
+                    </TextLink>
                   ))}
                 </Stack>
               </Stack>
@@ -384,20 +340,41 @@ const AppLayoutContent: React.FC<{
                   Social
                 </Typography>
                 <Stack direction="row" spacing="md">
-                  {footerData.social.map((social, index) => (
-                    <a
+                  {FOOTER_DATA.social.map((social, index) => (
+                    <TextLink
                       key={index}
                       href={social.url}
                       target="_blank"
-                      rel="noopener noreferrer"
                       aria-label={social.label}
-                      className="transition-opacity hover:opacity-70"
                     >
                       <Icon icon={social.icon} size="lg" className="text-white" />
-                    </a>
+                    </TextLink>
                   ))}
                 </Stack>
               </Stack>
+            </Stack>
+
+            {/* Legal Disclaimer */}
+            <Stack
+              direction="column"
+              spacing="sm"
+              className="mt-8 pt-8 border-t border-spotify-grey2"
+            >
+              <Typography variant="caption" color="primary" className="text-center">
+                © 2025 Lam Nguyen
+              </Typography>
+              <Stack direction="row" spacing="xs" align="center" justify="center">
+                <Typography variant="body" size="sm" color="primary">
+                  Made with
+                </Typography>
+                <Icon icon={faHeart} size="sm" color={colors.primary.brand} />
+                <Typography variant="body" size="sm" color="primary">
+                  for music lovers
+                </Typography>
+              </Stack>
+              <Typography variant="caption" color="secondary" className="text-center">
+                Not affiliated with Spotify AB.
+              </Typography>
             </Stack>
           </Footer>
         </Stack>

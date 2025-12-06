@@ -1,8 +1,5 @@
-export { CookieBanner } from './CookieBanner';
-export { SignupBanner } from './SignupBanner';
 export { UnauthenticatedSideBar } from './LibrarySideBar';
 export { ContentSections } from './ContentSections';
-export { AuthModals } from './AuthModals';
 export { UnauthenticatedHomePage } from './UnauthenticatedHomePage';
 export { AuthenticatedHomePage } from './AuthenticatedHomePage';
 export { PlaylistHeader } from './PlaylistHeader';
@@ -12,3 +9,4 @@ export { ShowTable } from './ShowTable';
 export { AppLayout } from './AppLayout';
 export { MusicPlayer } from './MusicPlayer';
 export { QueueDrawer } from './QueueDrawer';
+export { ErrorBoundary } from './ErrorBoundary';

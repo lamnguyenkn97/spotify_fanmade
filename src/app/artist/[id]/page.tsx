@@ -12,13 +12,16 @@ import {
   Pill,
   Table,
   Image,
+  Skeleton,
+  borderRadius,
 } from 'spotify-design-system';
 import { faPlay, faShuffle, faEllipsis } from '@fortawesome/free-solid-svg-icons';
 import { faClock } from '@fortawesome/free-regular-svg-icons';
 import { useRouter } from 'next/navigation';
-import { DiscographyFilterType, AlbumType } from '@/types';
+import { DiscographyFilterType, AlbumType, SpotifyArtistData, SpotifyAlbum, SpotifyTrack } from '@/types';
+import { formatDuration } from '@/utils/formatHelpers';
 
-interface ArtistData {
+interface ArtistDataExtended {
   id: string;
   name: string;
   images: Array<{ url: string }>;
@@ -59,7 +62,7 @@ interface ArtistData {
 export default function ArtistPage() {
   const params = useParams();
   const router = useRouter();
-  const [artist, setArtist] = useState<ArtistData | null>(null);
+  const [artist, setArtist] = useState<SpotifyArtistData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [isFollowing, setIsFollowing] = useState(false);
@@ -85,7 +88,7 @@ export default function ArtistPage() {
         const data = await response.json();
         setArtist(data);
       } catch (err: unknown) {
-        console.error('Error fetching artist:', err);
+
         const errorMessage = err instanceof Error ? err.message : 'Failed to load artist';
         setError(errorMessage);
       } finally {
@@ -127,38 +130,77 @@ export default function ArtistPage() {
     return count.toString();
   };
 
-  const getAlbumSubtitle = (album: ArtistData['albums'][0]): string => {
+  const getAlbumSubtitle = (album: SpotifyAlbum): string => {
     const year = album.release_date?.split('-')[0] || '';
-    const type = album.album_type.charAt(0).toUpperCase() + album.album_type.slice(1);
+    const type = album.album_type ? album.album_type.charAt(0).toUpperCase() + album.album_type.slice(1) : 'Album';
     return year ? `${year} • ${type}` : type;
   };
 
   // Filter albums based on selected filter
-  const getFilteredAlbums = (): ArtistData['albums'] => {
+  const getFilteredAlbums = (): SpotifyAlbum[] => {
     if (!artist) return [];
 
     switch (selectedFilter) {
       case DiscographyFilterType.ALBUMS:
-        return artist.albums.filter((album) => album.album_type === AlbumType.ALBUM);
+        return (artist.albums || []).filter((album) => album.album_type === AlbumType.ALBUM);
       case DiscographyFilterType.SINGLES_AND_EPS:
-        return artist.albums.filter(
+        return (artist.albums || []).filter(
           (album) => album.album_type === AlbumType.SINGLE || album.album_type === AlbumType.EP
         );
       case DiscographyFilterType.COMPILATIONS:
-        return artist.albums.filter((album) => album.album_type === AlbumType.COMPILATION);
+        return (artist.albums || []).filter((album) => album.album_type === AlbumType.COMPILATION);
       case DiscographyFilterType.POPULAR_RELEASES:
       default:
         // For popular releases, return all albums (already sorted by release date, latest first)
-        return artist.albums;
+        return artist.albums || [];
     }
   };
 
   if (loading) {
     return (
       <Stack direction="column" spacing="lg" className="p-8">
-        <Typography variant="heading" size="xl" color="inverse">
-          Loading artist...
-        </Typography>
+        {/* Artist Header Skeleton */}
+        <Stack direction="row" spacing="lg" align="end">
+          <Skeleton variant="circular" width="232px" height="232px" />
+          <Stack direction="column" spacing="md">
+            <Skeleton variant="text" width="60px" height="20px" />
+            <Skeleton variant="text" width="300px" height="60px" />
+            <Skeleton variant="text" width="200px" height="20px" />
+          </Stack>
+        </Stack>
+
+        {/* Action Buttons Skeleton */}
+        <Stack direction="row" spacing="md">
+          <Skeleton variant="rectangular" width="120px" height="48px" />
+          <Skeleton variant="rectangular" width="120px" height="48px" />
+          <Skeleton variant="rectangular" width="48px" height="48px" />
+        </Stack>
+
+        {/* Popular Tracks Skeleton */}
+        <Stack direction="column" spacing="md">
+          <Skeleton variant="text" width="20%" height="28px" />
+          {[1, 2, 3, 4, 5].map((i) => (
+            <Stack key={i} direction="row" spacing="md" align="center">
+              <Skeleton variant="text" width="30px" height="20px" />
+              <Skeleton variant="rectangular" width="40px" height="40px" />
+              <Stack direction="column" spacing="xs" className="flex-1">
+                <Skeleton variant="text" width="40%" height="16px" />
+                <Skeleton variant="text" width="30%" height="14px" />
+              </Stack>
+              <Skeleton variant="text" width="50px" height="14px" />
+            </Stack>
+          ))}
+        </Stack>
+
+        {/* Discography Skeleton */}
+        <Stack direction="column" spacing="md">
+          <Skeleton variant="text" width="25%" height="28px" />
+          <Stack direction="row" spacing="md">
+            {[1, 2, 3, 4, 5].map((i) => (
+              <Skeleton key={i} variant="rectangular" width="180px" height="180px" />
+            ))}
+          </Stack>
+        </Stack>
       </Stack>
     );
   }
@@ -176,12 +218,6 @@ export default function ArtistPage() {
     );
   }
 
-  const formatDuration = (ms: number): string => {
-    const seconds = Math.floor(ms / 1000);
-    const mins = Math.floor(seconds / 60);
-    const secs = seconds % 60;
-    return `${mins}:${secs.toString().padStart(2, '0')}`;
-  };
 
   interface TrackTableRow {
     id: string;
@@ -194,11 +230,11 @@ export default function ArtistPage() {
     duration: string;
     explicit?: boolean;
     hasVideo?: boolean;
-    track: ArtistData['topTracks'][0];
+    track: SpotifyTrack;
   }
 
   // Transform top tracks to match Table format
-  const trackTableData: TrackTableRow[] = artist.topTracks.map((track, index) => ({
+  const trackTableData: TrackTableRow[] = (artist.topTracks || []).map((track, index) => ({
     id: track.id,
     index: index,
     trackNumber: index + 1,
@@ -228,7 +264,7 @@ export default function ArtistPage() {
             type="artist"
             image={artist.avatar || artist.images?.[0]?.url || ''}
             title={artist.name}
-            description={`${formatListeners(artist.followers.total)} monthly listeners`}
+            description={`${formatListeners(artist.followers?.total || 0)} monthly listeners`}
           />
         </Stack>
 
@@ -252,11 +288,12 @@ export default function ArtistPage() {
             />
             <button
               onClick={handleFollow}
-              className={`px-6 py-2 rounded-full font-bold text-sm border-2 transition-colors ${
+              className={`px-6 py-2 font-bold text-sm border-2 transition-colors ${
                 isFollowing
                   ? 'bg-transparent border-white text-white hover:border-gray-400 hover:text-gray-400'
                   : 'bg-transparent border-gray-400 text-white hover:border-white'
               }`}
+              style={{ borderRadius: borderRadius.round }}
             >
               {isFollowing ? 'Following' : 'Follow'}
             </button>
@@ -272,7 +309,7 @@ export default function ArtistPage() {
       </Stack>
 
       {/* Popular Section */}
-      {artist.topTracks.length > 0 && (
+      {artist.topTracks && artist.topTracks.length > 0 && (
         <Stack direction="column" spacing="md">
           <Typography variant="heading" size="xl" weight="bold" color="primary">
             Popular
@@ -323,12 +360,8 @@ export default function ArtistPage() {
                               direction="row"
                               align="center"
                               justify="center"
-                              style={{
-                                width: '16px',
-                                height: '16px',
-                                backgroundColor: colors.grey.grey2,
-                                borderRadius: '2px',
-                              }}
+                              className="w-4 h-4 rounded-sm"
+                              style={{ backgroundColor: colors.grey.grey2 }}
                               title="Explicit"
                             >
                               <Typography variant="caption" size="sm" color="primary" weight="bold">
@@ -343,12 +376,8 @@ export default function ArtistPage() {
                                 direction="row"
                                 align="center"
                                 justify="center"
-                                style={{
-                                  width: '16px',
-                                  height: '16px',
-                                  backgroundColor: colors.grey.grey2,
-                                  borderRadius: '2px',
-                                }}
+                                className="w-4 h-4 rounded-sm"
+                                style={{ backgroundColor: colors.grey.grey2 }}
                                 title="Music video"
                               >
                                 <Icon icon={faPlay} size="sm" color="primary" />
@@ -401,7 +430,7 @@ export default function ArtistPage() {
       )}
 
       {/* Discography Section */}
-      {artist.albums.length > 0 && (
+      {artist.albums && artist.albums.length > 0 && (
         <Stack direction="column" spacing="md" className="px-8 pt-8 pb-8">
           <Stack direction="row" justify="space-between" align="center">
             <Typography variant="heading" size="xl" weight="bold" color="primary">
@@ -448,8 +477,7 @@ export default function ArtistPage() {
                 <Stack
                   key={album.id}
                   direction="column"
-                  className="flex-shrink-0"
-                  style={{ width: '180px' }}
+                  className="flex-shrink-0 w-[180px]"
                 >
                   <Card
                     title={album.name}

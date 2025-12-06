@@ -12,42 +12,18 @@ import { CategoryCard } from 'spotify-design-system/dist/components/molecules/Ca
 import { faChevronRight } from '@fortawesome/free-solid-svg-icons';
 import React, { useState } from 'react';
 import categoriesData from '../data/categoriesData.json';
-import { CookieBanner, SignupBanner, AuthModals } from '@/components';
 import { useSpotify } from '@/hooks/useSpotify';
-import { useCardModal } from '@/hooks/useCardModal';
+import { getBestImageUrlByWidth } from '@/utils/imageHelpers';
+import { useModal } from '@/contexts';
 
-// Helper: Extract best quality image URL from sources
-const getBestImageUrl = (sources: any[] = []) => {
-  return (
-    sources.find((source) => source.width >= 300)?.url ||
-    sources.find((source) => source.width >= 64)?.url ||
-    sources[0]?.url
-  );
-};
 
 export default function PodcastsPage() {
-  const [showCookieBanner, setShowCookieBanner] = useState(true);
-  const { isAuthenticated, login } = useSpotify();
-  const { showCardModal, selectedCard, openCardModal, closeCardModal } = useCardModal();
+  const { login } = useSpotify();
+  const { showCardModal } = useModal();
 
-  const header = categoriesData.data.browse.header;
   const sections = categoriesData.data.browse.sections.items.filter(
     (section) => section.data.title?.transformedLabel
   );
-
-  const handleCloseCookieBanner = () => {
-    setShowCookieBanner(false);
-  };
-
-  const handleSignUpFree = () => {
-    login();
-    closeCardModal();
-  };
-
-  const handleLogin = () => {
-    login();
-    closeCardModal();
-  };
 
   return (
     <>
@@ -59,7 +35,7 @@ export default function PodcastsPage() {
           )[0];
           const firstCard = firstItem?.content.data.data.cardRepresentation;
           const firstImageUrl = firstCard?.artwork?.sources
-            ? getBestImageUrl(firstCard.artwork.sources)
+            ? getBestImageUrlByWidth(firstCard.artwork.sources)
             : undefined;
 
           return (
@@ -74,7 +50,7 @@ export default function PodcastsPage() {
                   .map((item, itemIndex) => {
                     const card = item.content.data.data.cardRepresentation;
                     const imageUrl = card.artwork?.sources
-                      ? getBestImageUrl(card.artwork.sources)
+                      ? getBestImageUrlByWidth(card.artwork.sources)
                       : undefined;
 
                     return (
@@ -83,7 +59,7 @@ export default function PodcastsPage() {
                         title={card.title.transformedLabel}
                         backgroundColor={card.backgroundColor.hex}
                         overlayImageUrl={imageUrl}
-                        onClick={() => openCardModal(card.title.transformedLabel, imageUrl)}
+                        onClick={() => showCardModal(card.title.transformedLabel, imageUrl)}
                         aria-label={`Browse ${card.title.transformedLabel}`}
                       />
                     );
@@ -97,7 +73,7 @@ export default function PodcastsPage() {
                   variant={ButtonVariant.Text}
                   size={ButtonSize.Medium}
                   onClick={() =>
-                    openCardModal(firstCard.title.transformedLabel, firstImageUrl)
+                    showCardModal(firstCard.title.transformedLabel, firstImageUrl)
                   }
                   icon={<Icon icon={faChevronRight} size="sm" />}
                   style={{ fontWeight: 700 }}
@@ -108,23 +84,6 @@ export default function PodcastsPage() {
           );
         })}
       </div>
-
-      {/* Cookie Banner - shows first */}
-      {showCookieBanner && <CookieBanner onClose={handleCloseCookieBanner} />}
-
-      {/* Signup Banner - shows after cookie banner is closed */}
-      {!showCookieBanner && <SignupBanner onSignUp={() => {}} />}
-
-      {/* All Authentication Modals */}
-      <AuthModals
-        showCreatePlaylistDialog={false}
-        onCloseCreatePlaylist={() => {}}
-        onLogin={handleLogin}
-        showCardModal={showCardModal}
-        selectedCard={selectedCard}
-        onCloseCardModal={closeCardModal}
-        onSignUpFree={handleSignUpFree}
-      />
     </>
   );
 }

@@ -49,7 +49,7 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json(results);
   } catch (error: unknown) {
-    console.error('Error searching Spotify:', error);
+
     const errorMessage = error instanceof Error ? error.message : 'Failed to search';
     return NextResponse.json(
       { error: errorMessage },
@@ -57,5 +57,4 @@ export async function GET(request: NextRequest) {
     );
   }
 }
-
 

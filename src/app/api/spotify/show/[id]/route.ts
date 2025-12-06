@@ -4,10 +4,11 @@ import SpotifyWebApi from 'spotify-web-api-node';
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const cookieStore = cookies();
+    const { id } = await params;
+    const cookieStore = await cookies();
     const accessToken = cookieStore.get('spotify_access_token')?.value;
 
     if (!accessToken) {
@@ -25,12 +26,12 @@ export async function GET(
     spotifyApi.setAccessToken(accessToken);
 
     // Get show (podcast) details
-    const show = await spotifyApi.getShow(params.id, {
+    const show = await spotifyApi.getShow(id, {
       market: 'US',
     });
 
     // Get show episodes
-    const episodes = await spotifyApi.getShowEpisodes(params.id, {
+    const episodes = await spotifyApi.getShowEpisodes(id, {
       limit: 50,
       market: 'US',
     });
@@ -58,7 +59,7 @@ export async function GET(
       },
     });
   } catch (error) {
-    console.error('Error fetching show:', error);
+
     return NextResponse.json(
       { error: 'Failed to fetch show', details: error instanceof Error ? error.message : "Unknown error" },
       { status: 500 }

@@ -53,7 +53,6 @@ export const extractColorsFromImage = async (imageUrl: string): Promise<Extracte
       color2: rgbToHex(color2.r, color2.g, color2.b),
     };
   } catch (error) {
-    console.warn('Failed to extract colors, using fallback:', error);
     return FALLBACK_COLORS;
   } finally {
     // Clean up resources
