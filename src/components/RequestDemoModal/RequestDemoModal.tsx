@@ -18,11 +18,13 @@ export const RequestDemoModal: React.FC<RequestDemoModalProps> = ({ isOpen, onCl
   const [isAlreadyApproved, setIsAlreadyApproved] = useState(false);
   const emailInputRef = useRef<HTMLInputElement>(null);
   const nameInputRef = useRef<HTMLInputElement>(null);
-  const [activeField, setActiveField] = useState<'email' | 'name' | null>(null);
+  const messageInputRef = useRef<HTMLTextAreaElement>(null);
+  const [activeField, setActiveField] = useState<'email' | 'name' | 'message' | null>(null);
 
-  // Restore focus after re-render
+  // Restore focus after re-render (only for Input components, not textarea)
   useEffect(() => {
     if (!isOpen || loading || submitted || isAlreadyApproved) return;
+    if (activeField === 'message') return; // Don't interfere with textarea
     
     const timer = setTimeout(() => {
       if (activeField === 'email') {
@@ -72,13 +74,7 @@ export const RequestDemoModal: React.FC<RequestDemoModalProps> = ({ isOpen, onCl
 
       if (response.ok) {
         setSubmitted(true);
-        setTimeout(() => {
-          onClose();
-          setSubmitted(false);
-          setEmail('');
-          setName('');
-          setMessage('');
-        }, 3000);
+        // Don't auto-close - let user close manually
       } else {
         setError('Failed to submit request. Please try again.');
       }
@@ -90,13 +86,25 @@ export const RequestDemoModal: React.FC<RequestDemoModalProps> = ({ isOpen, onCl
   };
 
   const handleClose = () => {
-    if (!loading) {
+    if (!loading && !submitted) {
       onClose();
       setEmail('');
       setName('');
       setMessage('');
       setError('');
       setSubmitted(false);
+      setIsAlreadyApproved(false);
+      setActiveField(null);
+    } else if (submitted || isAlreadyApproved) {
+      // Allow closing confirmation screens
+      onClose();
+      setEmail('');
+      setName('');
+      setMessage('');
+      setError('');
+      setSubmitted(false);
+      setIsAlreadyApproved(false);
+      setActiveField(null);
     }
   };
 
@@ -131,6 +139,14 @@ export const RequestDemoModal: React.FC<RequestDemoModalProps> = ({ isOpen, onCl
             <Typography variant="caption" color="secondary" className="text-center mt-4">
               Watch the demo video in the meantime!
             </Typography>
+            <Button
+              variant={ButtonVariant.Primary}
+              size={ButtonSize.Medium}
+              onClick={handleClose}
+              className="mt-4"
+            >
+              Close
+            </Button>
           </Stack>
         ) : (
           <>
@@ -167,9 +183,12 @@ export const RequestDemoModal: React.FC<RequestDemoModalProps> = ({ isOpen, onCl
                 Message (Optional)
               </Typography>
               <textarea
+                ref={messageInputRef}
                 placeholder="E.g., 'I'm a recruiter at Company X' or 'Frontend developer interested in your work'"
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
+                onFocus={() => setActiveField('message')}
+                onBlur={() => setActiveField(null)}
                 disabled={loading}
                 rows={3}
                 className="w-full px-3 py-2 bg-grey-grey1 text-white rounded border border-grey-grey2 focus:border-spotify-green focus:outline-none resize-none"
