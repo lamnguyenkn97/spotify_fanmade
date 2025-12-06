@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Stack, Typography, Icon, Image, colors, Table, Equalizer, borderRadius } from 'spotify-design-system';
+import { Stack, Typography, Icon, Image, colors, Table, Equalizer, borderRadius, Pill } from 'spotify-design-system';
 import { faPlay, faPause, faCheckCircle, faListUl } from '@fortawesome/free-solid-svg-icons';
 import { faClock } from '@fortawesome/free-regular-svg-icons';
 import { useMusicPlayerContext } from '@/contexts/MusicPlayerContext';
@@ -160,19 +160,11 @@ export const TrackTable: React.FC<TrackTableProps> = ({ tracks, onTrackClick }) 
                       </Typography>
                       {/* Explicit indicator */}
                       {row.explicit && (
-                        <Stack
-                          direction="row"
-                          align="center"
-                          justify="center"
-                          className="w-4 h-4 rounded-sm text-[9px] font-bold"
-                          style={{ 
-                            backgroundColor: colors.grey.grey2,
-                            color: colors.primary.white,
-                          }}
+                        <Pill 
+                          label="E" 
+                          size="sm"
                           title="Explicit"
-                        >
-                          E
-                        </Stack>
+                        />
                       )}
                       {/* Music video indicator */}
                       {row.hasVideo && (
