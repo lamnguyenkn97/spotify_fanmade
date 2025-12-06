@@ -1,13 +1,14 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import { Stack, Typography, Skeleton } from 'spotify-design-system';
 import { PlaylistHeader, TrackTable } from '@/components';
 import { extractColorsFromImage, ExtractedColors } from '@/utils/colorExtractor';
 import { useMusicPlayerContext } from '@/contexts/MusicPlayerContext';
 import { convertTracksToQueue } from '@/utils/trackHelpers';
 import { useToast } from '@/contexts/ToastContext';
+import { useAuthUser } from '@/hooks/api';
 
 interface PlaylistData {
   id: string;
@@ -37,12 +38,14 @@ interface PlaylistData {
 
 export default function PlaylistPage() {
   const params = useParams();
+  const router = useRouter();
   const [playlist, setPlaylist] = useState<SpotifyPlaylist | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [gradientColors, setGradientColors] = useState<ExtractedColors | null>(null);
   const { playTrack, setQueue, toggleShuffle, isShuffled } = useMusicPlayerContext();
   const toast = useToast();
+  const { isAuthenticated } = useAuthUser();
 
   useEffect(() => {
     if (!params.id) return;
@@ -54,6 +57,16 @@ export default function PlaylistPage() {
       try {
         // Handle special "liked-songs" playlist
         if (params.id === 'liked-songs') {
+          // Check authentication before fetching liked songs
+          if (!isAuthenticated) {
+            setError('Please log in to view your liked songs');
+            setLoading(false);
+            toast.toast.warning('Please log in to view your liked songs');
+            // Redirect to home after showing message
+            setTimeout(() => router.push('/'), 2000);
+            return;
+          }
+
           const response = await fetch('/api/spotify/my-saved-tracks?limit=50');
           if (!response.ok) {
             throw new Error('Failed to fetch liked songs');
@@ -134,7 +147,7 @@ export default function PlaylistPage() {
     };
 
     fetchPlaylist();
-  }, [params.id]);
+  }, [params.id, isAuthenticated, router, toast]);
 
   const handlePlayPlaylist = async () => {
     if (!playlist || playlist.tracks.items.length === 0) return;
