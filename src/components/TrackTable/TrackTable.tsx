@@ -196,8 +196,7 @@ export const TrackTable: React.FC<TrackTableProps> = ({ tracks, onTrackClick }) 
                         variant="body"
                         size="sm"
                         weight="medium"
-                        color={isCurrentlyPlaying ? 'primary' : 'primary'}
-                        style={isCurrentlyPlaying ? { color: colors.primary.brand } : undefined}
+                        color={isCurrentlyPlaying ? 'brand' : 'primary'}
                       >
                         {row.title}
                       </Typography>
@@ -302,7 +301,7 @@ export const TrackTable: React.FC<TrackTableProps> = ({ tracks, onTrackClick }) 
               return (
                 <Stack direction="row" align="center" spacing="sm" justify="end">
                   {showCheckIcon && (
-                    <Icon icon={faCheckCircle} size="sm" color={colors.primary.brand} />
+                    <Icon icon={faCheckCircle} size="sm" color="brand" />
                   )}
                   <Typography variant="body" size="sm" color="muted">
                     {row.duration}

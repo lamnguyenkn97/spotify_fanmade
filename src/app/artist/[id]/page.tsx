@@ -280,7 +280,7 @@ export default function ArtistPage() {
               size="md"
               color={'black'}
               circular
-              backgroundColor={colors.primary.brand}
+              backgroundColor="brand"
               onClick={handlePlay}
             />
             <Icon

@@ -346,7 +346,7 @@ export default function ShowPage() {
                         )}
                         {row.isFinished && (
                           <Stack direction="row" spacing="xs" align="center">
-                            <Icon icon={faCheckCircle} size="sm" color={colors.primary.brand} />
+                            <Icon icon={faCheckCircle} size="sm" color="brand" />
                             <Typography variant="caption" size="sm" color="muted">
                               {row.status}
                             </Typography>

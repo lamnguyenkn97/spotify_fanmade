@@ -426,7 +426,7 @@ const AppLayoutContent: React.FC<AppLayoutContentProps> = ({
                 <Typography variant="body" size="sm" color="primary">
                   Made with
                 </Typography>
-                <Icon icon={faHeart} size="sm" color={colors.primary.brand} />
+                <Icon icon={faHeart} size="sm" color="brand" />
                 <Typography variant="body" size="sm" color="primary">
                   for music lovers
                 </Typography>
