@@ -127,7 +127,7 @@ export const RequestDemoModal: React.FC<RequestDemoModalProps> = ({ isOpen, onCl
                   type="email"
                   placeholder="your.email@example.com"
                   value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  onValueChange={setEmail}
                   disabled={loading}
                 />
               </Stack>
@@ -140,7 +140,7 @@ export const RequestDemoModal: React.FC<RequestDemoModalProps> = ({ isOpen, onCl
                   type="text"
                   placeholder="Your name"
                   value={name}
-                  onChange={(e) => setName(e.target.value)}
+                  onValueChange={setName}
                   disabled={loading}
                 />
               </Stack>
