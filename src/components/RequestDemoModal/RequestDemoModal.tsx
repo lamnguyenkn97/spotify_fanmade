@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Modal, Stack, Typography, Input, Button, ButtonVariant, ButtonSize } from 'spotify-design-system';
+import { Modal, Stack, Typography, Button, ButtonVariant, ButtonSize } from 'spotify-design-system';
 
 interface RequestDemoModalProps {
   isOpen: boolean;
@@ -123,12 +123,13 @@ export const RequestDemoModal: React.FC<RequestDemoModalProps> = ({ isOpen, onCl
                 <Typography variant="body" color="primary" weight="medium">
                   Spotify Email <span className="text-red-500">*</span>
                 </Typography>
-                <Input
+                <input
                   type="email"
                   placeholder="your.email@example.com"
                   value={email}
-                  onValueChange={setEmail}
+                  onChange={(e) => setEmail(e.target.value)}
                   disabled={loading}
+                  className="w-full px-3 py-2 bg-grey-grey1 text-white rounded border border-grey-grey2 focus:border-spotify-green focus:outline-none"
                 />
               </Stack>
 
@@ -136,12 +137,13 @@ export const RequestDemoModal: React.FC<RequestDemoModalProps> = ({ isOpen, onCl
                 <Typography variant="body" color="primary" weight="medium">
                   Name (Optional)
                 </Typography>
-                <Input
+                <input
                   type="text"
                   placeholder="Your name"
                   value={name}
-                  onValueChange={setName}
+                  onChange={(e) => setName(e.target.value)}
                   disabled={loading}
+                  className="w-full px-3 py-2 bg-grey-grey1 text-white rounded border border-grey-grey2 focus:border-spotify-green focus:outline-none"
                 />
               </Stack>
 
