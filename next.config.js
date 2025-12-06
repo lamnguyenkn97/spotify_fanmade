@@ -77,7 +77,7 @@ const nextConfig = {
               "font-src 'self' data:",
               "connect-src 'self' https://api.spotify.com https://accounts.spotify.com https://spclient.wg.spotify.com https://apresolve.spotify.com https://gae-spclient.spotify.com https://*.spotify.com https://vitals.vercel-insights.com",
               "media-src 'self' https: blob:",
-              "frame-src 'self' https://accounts.spotify.com",
+              "frame-src 'self' https://accounts.spotify.com https://sdk.scdn.co",
               "worker-src 'self' blob:",
             ].join('; '),
           },
