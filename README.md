@@ -15,6 +15,35 @@
 
 ---
 
+## 🎬 Demo Access
+
+### Live Demo Options
+
+**Option 1: Watch Demo Video (Recommended)**
+- 🎥 **[View Full Demo Video](#)** *(Coming soon - shows all authenticated features)*
+- No login required, see everything immediately
+
+**Option 2: Request Access for Testing**
+- 📧 Email [your-email@example.com](mailto:your-email@example.com) with your Spotify account email
+- I'll add you to the allowlist within 24 hours
+- **Slots available:** 12 remaining (13/25 used)
+
+**Option 3: Explore Unauthenticated Version**
+- 🌐 Visit [spotify-fanmade.vercel.app](https://spotify-fanmade.vercel.app)
+- See the UI, design system, and static content
+
+### Why Login is Restricted
+
+This app uses Spotify's Web API in **Development Mode** due to their [Extended Quota Mode requirements](https://developer.spotify.com/documentation/web-api/concepts/quota-modes) (250k+ MAUs, registered business entity). Development mode limits access to 25 users maximum.
+
+**This doesn't affect the technical implementation** - the code is identical to production-approved apps and demonstrates:
+- OAuth 2.0 authentication flow
+- Secure session management (HTTP-only cookies)
+- Real-time API integration
+- Professional frontend architecture
+
+---
+
 ## Legal Disclaimer
 
 This is an independent educational project for portfolio demonstration.
@@ -198,7 +227,13 @@ npm install
 - Add redirect URI: `http://127.0.0.1:3010/api/auth/callback`
 - Copy Client ID and Client Secret
 
-**3. Configure environment:**
+**3. Add yourself to User Management:**
+- In your Spotify app dashboard, go to **Settings**
+- Find **User Management** section
+- Add your Spotify account email
+- Click **Save**
+
+**4. Configure environment:**
 ```bash
 cp .env.example .env.local
 ```
@@ -212,26 +247,40 @@ NEXT_PUBLIC_APP_URL=http://127.0.0.1:3010
 SESSION_SECRET=generate_random_string
 ```
 
-**4. Run:**
+**5. Run:**
 ```bash
 npm run dev
 # Open http://127.0.0.1:3010
 ```
 
+**Note:** Your Spotify Developer App will be in Development Mode by default, which limits access to 25 users. This is sufficient for development and portfolio demonstration.
+
 ---
 
 ## Deployment (Vercel)
 
-**Environment variables:**
+**1. Set environment variables in Vercel:**
 ```env
-SPOTIFY_CLIENT_ID
-SPOTIFY_CLIENT_SECRET
+SPOTIFY_CLIENT_ID             # From Spotify Developer Dashboard
+SPOTIFY_CLIENT_SECRET         # From Spotify Developer Dashboard
 SPOTIFY_REDIRECT_URI          # https://your-app.vercel.app/api/auth/callback
 NEXT_PUBLIC_APP_URL           # https://your-app.vercel.app
-SESSION_SECRET
+SESSION_SECRET                # Generate: openssl rand -base64 32
 ```
 
-**Update Spotify redirect URIs** in Developer Dashboard, then deploy.
+**2. Update Spotify redirect URIs:**
+- Go to your app in [Spotify Developer Dashboard](https://developer.spotify.com/dashboard)
+- Settings → Redirect URIs
+- Add: `https://your-app.vercel.app/api/auth/callback`
+- Click **Save**
+
+**3. Add users to allowlist:**
+- In your Spotify app dashboard: Settings → User Management
+- Add Spotify email addresses for each user who should have access
+- Save changes
+
+**4. Deploy from GitHub:**
+- Vercel will auto-deploy when you push to main branch
 
 ---
 
