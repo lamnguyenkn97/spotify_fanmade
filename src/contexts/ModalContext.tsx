@@ -3,12 +3,13 @@
 import React, { createContext, useContext, useState, useCallback, ReactNode } from 'react';
 import { Modal, ModalSize } from 'spotify-design-system';
 import { loginWithSpotify } from '@/hooks/api';
+import { RequestDemoModal } from '@/components';
 
 // ============================================================================
 // Types
 // ============================================================================
 
-type ModalType = 'login' | 'featureNotImplemented' | 'cardInfo' | null;
+type ModalType = 'login' | 'featureNotImplemented' | 'cardInfo' | 'requestDemo' | null;
 
 interface ModalConfig {
   type: ModalType;
@@ -22,6 +23,7 @@ interface ModalContextValue {
   showLoginModal: () => void;
   showFeatureNotImplementedModal: () => void;
   showCardModal: (title: string, imageUrl?: string) => void;
+  showRequestDemoModal: () => void;
   closeModal: () => void;
 }
 
@@ -64,6 +66,12 @@ export const ModalProvider: React.FC<{ children: ReactNode }> = ({ children }) =
     });
   }, []);
 
+  const showRequestDemoModal = useCallback(() => {
+    setModalConfig({
+      type: 'requestDemo',
+    });
+  }, []);
+
   const closeModal = useCallback(() => {
     setModalConfig({ type: null });
   }, []);
@@ -84,6 +92,7 @@ export const ModalProvider: React.FC<{ children: ReactNode }> = ({ children }) =
         showLoginModal,
         showFeatureNotImplementedModal,
         showCardModal,
+        showRequestDemoModal,
         closeModal,
       }}
     >
@@ -150,6 +159,11 @@ export const ModalProvider: React.FC<{ children: ReactNode }> = ({ children }) =
           closeOnBackdropClick={true}
           closeOnEscape={true}
         />
+      )}
+
+      {/* Request Demo Modal */}
+      {modalConfig.type === 'requestDemo' && (
+        <RequestDemoModal isOpen={true} onClose={closeModal} />
       )}
     </ModalContext.Provider>
   );

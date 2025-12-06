@@ -34,7 +34,6 @@ import {
   useMyAlbums,
 } from '@/hooks/api';
 import { useModal } from '@/contexts';
-import { RequestDemoModal } from '@/components';
 
 interface AppLayoutProps {
   children: React.ReactNode;
@@ -44,7 +43,7 @@ export const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
   const router = useRouter();
   const { user, isAuthenticated, login, logout } = useSpotify();
   const [selectedFilter, setSelectedFilter] = useState<LibraryFilter>(LibraryFilter.PLAYLISTS);
-  const [showRequestDemoModal, setShowRequestDemoModal] = useState(false);
+  const { showRequestDemoModal } = useModal();
 
   // Fetch all library data with SWR hooks
   const { tracks: likedTracks, total: likedTotal } = useSavedTracks(1, isAuthenticated);
@@ -156,8 +155,8 @@ export const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
       return;
     }
     // Show Request Demo modal instead of direct OAuth
-    setShowRequestDemoModal(true);
-  }, [isAuthenticated]);
+    showRequestDemoModal();
+  }, [isAuthenticated, showRequestDemoModal]);
 
   return (
     <ThemeProvider>
@@ -177,10 +176,6 @@ export const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
           >
             {children}
           </AppLayoutContent>
-          <RequestDemoModal 
-            isOpen={showRequestDemoModal} 
-            onClose={() => setShowRequestDemoModal(false)} 
-          />
         </QueueDrawerProvider>
       </MusicPlayerProvider>
     </ThemeProvider>
