@@ -18,7 +18,7 @@ import {
 import { faPlay, faShuffle, faEllipsis } from '@fortawesome/free-solid-svg-icons';
 import { faClock } from '@fortawesome/free-regular-svg-icons';
 import { useRouter } from 'next/navigation';
-import { DiscographyFilterType, AlbumType, SpotifyArtistData } from '@/types';
+import { DiscographyFilterType, AlbumType, SpotifyArtistData, SpotifyAlbum, SpotifyTrack } from '@/types';
 import { formatDuration } from '@/utils/formatHelpers';
 
 interface ArtistDataExtended {
@@ -130,29 +130,29 @@ export default function ArtistPage() {
     return count.toString();
   };
 
-  const getAlbumSubtitle = (album: ArtistData['albums'][0]): string => {
+  const getAlbumSubtitle = (album: SpotifyAlbum): string => {
     const year = album.release_date?.split('-')[0] || '';
-    const type = album.album_type.charAt(0).toUpperCase() + album.album_type.slice(1);
+    const type = album.album_type ? album.album_type.charAt(0).toUpperCase() + album.album_type.slice(1) : 'Album';
     return year ? `${year} • ${type}` : type;
   };
 
   // Filter albums based on selected filter
-  const getFilteredAlbums = (): ArtistData['albums'] => {
+  const getFilteredAlbums = (): SpotifyAlbum[] => {
     if (!artist) return [];
 
     switch (selectedFilter) {
       case DiscographyFilterType.ALBUMS:
-        return artist.albums.filter((album) => album.album_type === AlbumType.ALBUM);
+        return (artist.albums || []).filter((album) => album.album_type === AlbumType.ALBUM);
       case DiscographyFilterType.SINGLES_AND_EPS:
-        return artist.albums.filter(
+        return (artist.albums || []).filter(
           (album) => album.album_type === AlbumType.SINGLE || album.album_type === AlbumType.EP
         );
       case DiscographyFilterType.COMPILATIONS:
-        return artist.albums.filter((album) => album.album_type === AlbumType.COMPILATION);
+        return (artist.albums || []).filter((album) => album.album_type === AlbumType.COMPILATION);
       case DiscographyFilterType.POPULAR_RELEASES:
       default:
         // For popular releases, return all albums (already sorted by release date, latest first)
-        return artist.albums;
+        return artist.albums || [];
     }
   };
 
@@ -230,11 +230,11 @@ export default function ArtistPage() {
     duration: string;
     explicit?: boolean;
     hasVideo?: boolean;
-    track: ArtistData['topTracks'][0];
+    track: SpotifyTrack;
   }
 
   // Transform top tracks to match Table format
-  const trackTableData: TrackTableRow[] = artist.topTracks.map((track, index) => ({
+  const trackTableData: TrackTableRow[] = (artist.topTracks || []).map((track, index) => ({
     id: track.id,
     index: index,
     trackNumber: index + 1,
@@ -264,7 +264,7 @@ export default function ArtistPage() {
             type="artist"
             image={artist.avatar || artist.images?.[0]?.url || ''}
             title={artist.name}
-            description={`${formatListeners(artist.followers.total)} monthly listeners`}
+            description={`${formatListeners(artist.followers?.total || 0)} monthly listeners`}
           />
         </Stack>
 
@@ -309,7 +309,7 @@ export default function ArtistPage() {
       </Stack>
 
       {/* Popular Section */}
-      {artist.topTracks.length > 0 && (
+      {artist.topTracks && artist.topTracks.length > 0 && (
         <Stack direction="column" spacing="md">
           <Typography variant="heading" size="xl" weight="bold" color="primary">
             Popular
@@ -430,7 +430,7 @@ export default function ArtistPage() {
       )}
 
       {/* Discography Section */}
-      {artist.albums.length > 0 && (
+      {artist.albums && artist.albums.length > 0 && (
         <Stack direction="column" spacing="md" className="px-8 pt-8 pb-8">
           <Stack direction="row" justify="space-between" align="center">
             <Typography variant="heading" size="xl" weight="bold" color="primary">
