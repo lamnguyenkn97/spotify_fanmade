@@ -108,7 +108,7 @@ function SearchPageContent() {
 
   const trackColumns = [
     {
-      key: 'trackNumber',
+      key: 'trackNumber' as keyof TrackTableRow,
       label: '#',
       width: '48px',
       align: 'left' as const,
@@ -119,7 +119,7 @@ function SearchPageContent() {
       ),
     },
     {
-      key: 'title',
+      key: 'title' as keyof TrackTableRow,
       label: 'Title',
       width: 'auto',
       align: 'left' as const,
@@ -158,7 +158,7 @@ function SearchPageContent() {
       ),
     },
     {
-      key: 'album',
+      key: 'album' as keyof TrackTableRow,
       label: 'Album',
       width: 'auto',
       align: 'left' as const,
@@ -169,7 +169,7 @@ function SearchPageContent() {
       ),
     },
     {
-      key: 'duration',
+      key: 'duration' as keyof TrackTableRow,
       label: '',
       width: '60px',
       align: 'right' as const,

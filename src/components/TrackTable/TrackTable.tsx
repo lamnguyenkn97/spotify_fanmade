@@ -37,7 +37,7 @@ export const TrackTable: React.FC<TrackTableProps> = ({ tracks, onTrackClick }) 
   );
 
   // Handle track click - play the track, or pause if already playing
-  const handleTrackClick = async (track: Track, trackIndex: number) => {
+  const handleTrackClick = async (track: SpotifyTrack, trackIndex: number) => {
     const trackToPlay = convertTrackToCurrentTrack(track);
 
     // If clicking the same track that's currently playing, toggle play/pause
@@ -66,7 +66,7 @@ export const TrackTable: React.FC<TrackTableProps> = ({ tracks, onTrackClick }) 
     onTrackClick?.(track);
   };
 
-  const handleAddToQueue = (e: React.MouseEvent, track: Track) => {
+  const handleAddToQueue = (e: React.MouseEvent, track: SpotifyTrack) => {
     e.stopPropagation();
     const trackToAdd = convertTrackToCurrentTrack(track);
     addToQueue(trackToAdd);

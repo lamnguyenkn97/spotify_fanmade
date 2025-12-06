@@ -3,13 +3,13 @@
 import React, { useState } from 'react';
 import { Stack, Typography, Icon, Image, colors, borderRadius } from 'spotify-design-system';
 import { faPlay } from '@fortawesome/free-solid-svg-icons';
-import { PlaylistTableProps } from '@/types';
+import { PlaylistTableProps, SpotifyPlaylist } from '@/types';
 import { getBestImageUrl } from '@/utils/imageHelpers';
 
 export const PlaylistTable: React.FC<PlaylistTableProps> = ({ playlists, onPlaylistClick }) => {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
 
-  const tableData: PlaylistItem[] = playlists.map((playlist, idx) => ({
+  const tableData: any[] = playlists.map((playlist, idx) => ({
     ...playlist,
     index: idx + 1,
   }));

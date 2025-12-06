@@ -4,10 +4,11 @@ import SpotifyWebApi from 'spotify-web-api-node';
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const cookieStore = cookies();
+    const { id } = await params;
+    const cookieStore = await cookies();
     const accessToken = cookieStore.get('spotify_access_token')?.value;
 
     if (!accessToken) {
@@ -25,7 +26,7 @@ export async function GET(
     spotifyApi.setAccessToken(accessToken);
 
     // Get album details including tracks
-    const album = await spotifyApi.getAlbum(params.id, {
+    const album = await spotifyApi.getAlbum(id, {
       market: 'US', // Required to get full track details including explicit
     });
 

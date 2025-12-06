@@ -16,7 +16,9 @@ interface PlaylistData {
   description?: string;
   images: Array<{ url: string }>;
   owner: {
+    id: string;
     display_name: string;
+    external_urls?: { spotify: string };
   };
   tracks: {
     total: number;
@@ -24,14 +26,18 @@ interface PlaylistData {
       track: {
         id: string;
         name: string;
-        artists: Array<{ name: string }>;
+        artists: Array<{ id: string; name: string }>;
         album: {
+          id?: string;
           name: string;
           images: Array<{ url: string }>;
         };
         duration_ms: number;
+        explicit?: boolean;
+        preview_url?: string | null;
       };
-      added_at: string;
+      added_at?: string;
+      played_at?: string;
     }>;
   };
 }
@@ -80,7 +86,7 @@ export default function PlaylistPage() {
               id: 'current-user',
               display_name: 'You',
               external_urls: { spotify: '' },
-            } as any, // Type assertion for liked songs special case
+            },
             tracks: {
               total: likedData.total || likedData.items?.length || 0,
               items: (likedData.items || []).map((item: any) => ({
@@ -88,7 +94,7 @@ export default function PlaylistPage() {
                 added_at: item.added_at || new Date().toISOString(),
               })),
             },
-          };
+          } as any;
           setPlaylist(likedPlaylist);
           
           // Extract colors from first track's album art
@@ -149,7 +155,7 @@ export default function PlaylistPage() {
   }, [params.id, isAuthenticated, router]);
 
   const handlePlayPlaylist = async () => {
-    if (!playlist || playlist.tracks.items.length === 0) return;
+    if (!playlist || !playlist.tracks.items || playlist.tracks.items.length === 0) return;
 
     // Convert tracks to queue format
     const trackList = playlist.tracks.items.map((item) => item.track);
@@ -169,7 +175,7 @@ export default function PlaylistPage() {
   };
 
   const handleShufflePlaylist = async () => {
-    if (!playlist || playlist.tracks.items.length === 0) return;
+    if (!playlist || !playlist.tracks.items || playlist.tracks.items.length === 0) return;
 
     // Convert tracks to queue format
     const trackList = playlist.tracks.items.map((item) => item.track);
@@ -316,7 +322,7 @@ export default function PlaylistPage() {
       />
 
       {/* Track List */}
-      <TrackTable tracks={playlist.tracks.items} onTrackClick={handleTrackClick} />
+      <TrackTable tracks={playlist.tracks.items || []} onTrackClick={handleTrackClick} />
     </Stack>
   );
 }

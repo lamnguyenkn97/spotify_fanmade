@@ -5,7 +5,7 @@ import { TimeRange } from '@/types';
 
 export async function GET(request: NextRequest) {
   try {
-    const cookieStore = cookies();
+    const cookieStore = await cookies();
     const accessToken = cookieStore.get('spotify_access_token')?.value;
 
     if (!accessToken) {

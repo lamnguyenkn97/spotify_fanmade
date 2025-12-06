@@ -9,7 +9,7 @@ import { getBestImageUrl } from '@/utils/imageHelpers';
 export const ShowTable: React.FC<ShowTableProps> = ({ shows, onShowClick }) => {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
 
-  const tableData: ShowItem[] = shows.map((show, idx) => ({
+  const tableData: any[] = shows.map((show, idx) => ({
     ...show,
     index: idx + 1,
   }));

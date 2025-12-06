@@ -109,7 +109,7 @@ export default function ShowPage() {
     return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
   };
 
-  const getEpisodeStatus = (episode: ShowData['episodes']['items'][0]): string => {
+  const getEpisodeStatus = (episode: NonNullable<SpotifyShow['episodes']>['items'][0]): string => {
     if (episode.resume_point?.fully_played) {
       return 'Finished';
     }
