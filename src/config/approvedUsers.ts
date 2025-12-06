@@ -6,8 +6,8 @@
  */
 
 export const APPROVED_USERS = [
-  // Owner (you)
-  'your-email@example.com',
+  // Owner (admin)
+  'lamnguyen.hcmut@gmail.com',
   
   // Add approved users here as you grant them access
   // 'recruiter@company.com',
@@ -27,7 +27,7 @@ export function isUserApproved(email: string | null | undefined): boolean {
  * Add your own emails here
  */
 const ADMIN_EMAILS = [
-  'your-email@example.com', // Replace with your actual email
+  'lamnguyen.hcmut@gmail.com',
 ];
 
 export function isAdmin(email: string | null | undefined): boolean {
