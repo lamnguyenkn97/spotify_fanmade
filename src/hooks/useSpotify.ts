@@ -45,7 +45,8 @@ export const useSpotify = () => {
         setUser(userData);
       }
     } catch (error) {
-
+      // Failed to check auth status, user remains unauthenticated
+      setUser(null);
     } finally {
       setLoading(false);
     }
@@ -59,7 +60,8 @@ export const useSpotify = () => {
         window.location.href = data.url;
       }
     } catch (error) {
-
+      // Failed to initiate login, silently fail
+      // User will remain on current page
     }
   };
 
@@ -69,7 +71,9 @@ export const useSpotify = () => {
       setUser(null);
       window.location.href = '/';
     } catch (error) {
-
+      // Failed to logout on server, but clear local state anyway
+      setUser(null);
+      window.location.href = '/';
     }
   };
 
@@ -80,7 +84,7 @@ export const useSpotify = () => {
       const data = await response.json();
       return data.items;
     } catch (error) {
-
+      // Failed to fetch playlists, return empty array
       return [];
     }
   };
@@ -99,7 +103,7 @@ export const useSpotify = () => {
       if (!response.ok) throw new Error('Failed to create playlist');
       return await response.json();
     } catch (error) {
-
+      // Failed to create playlist, return null
       return null;
     }
   };
@@ -110,7 +114,7 @@ export const useSpotify = () => {
       if (!response.ok) throw new Error('Failed to fetch playlist');
       return await response.json();
     } catch (error) {
-
+      // Failed to fetch playlist, return null
       return null;
     }
   };

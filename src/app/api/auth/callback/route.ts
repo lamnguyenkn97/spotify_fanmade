@@ -40,7 +40,8 @@ export async function GET(request: NextRequest) {
 
     return response;
   } catch (error) {
-
+    // Failed to exchange code for tokens or set cookies
+    // Redirect to home with error message
     return NextResponse.redirect(new URL('/?error=auth_failed', request.url));
   }
 }

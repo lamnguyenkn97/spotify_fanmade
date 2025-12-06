@@ -45,7 +45,8 @@ export const MusicPlayer: React.FC<MusicPlayerProps> = ({ className, onQueueClic
     try {
       await toggleRepeat();
     } catch (error) {
-
+      // Failed to toggle repeat, silently fail
+      // UI will reflect current state
     }
   };
 
@@ -53,7 +54,8 @@ export const MusicPlayer: React.FC<MusicPlayerProps> = ({ className, onQueueClic
     try {
       await toggleShuffle();
     } catch (error) {
-
+      // Failed to toggle shuffle, silently fail
+      // UI will reflect current state
     }
   };
 

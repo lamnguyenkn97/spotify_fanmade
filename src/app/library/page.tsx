@@ -73,7 +73,7 @@ export default function LibraryPage() {
               type: 'playlist' as const,
               image: playlist.images?.[0]?.url,
               subtitle: `Playlist • ${playlist.owner?.display_name || 'Spotify'}`,
-              isPinned: Math.random() > 0.7, // Mock pinned status
+              isPinned: false,
               trackCount: playlist.tracks?.total || 0,
             })) || [];
           }
@@ -125,7 +125,8 @@ export default function LibraryPage() {
 
       setItems(data);
     } catch (error) {
-
+      // Failed to fetch library items, keep empty state
+      setItems([]);
     } finally {
       setLoading(false);
     }

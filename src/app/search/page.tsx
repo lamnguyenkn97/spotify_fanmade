@@ -66,11 +66,11 @@ function SearchPageContent() {
         const data = await response.json();
         setResults(data);
       } else {
-
+        // API request failed, show no results
         setResults(null);
       }
     } catch (error) {
-
+      // Network error or request failed, show no results
       setResults(null);
     } finally {
       setLoading(false);
