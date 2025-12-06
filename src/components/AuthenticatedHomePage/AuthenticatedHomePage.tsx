@@ -143,24 +143,7 @@ export const AuthenticatedHomePage: React.FC<AuthenticatedHomePageProps> = ({ us
     );
   }
 
-  if (error) {
-    return (
-      <Stack direction="column" spacing="lg" className="p-6">
-        <Typography variant="heading" color="primary">
-          Oops! Something went wrong
-        </Typography>
-        <Typography variant="body" color="muted">
-          {error}
-        </Typography>
-        <Button
-          onClick={fetchPersonalizedData}
-          text="Try Again"
-          variant={ButtonVariant.Primary}
-          size={ButtonSize.Medium}
-        />
-      </Stack>
-    );
-  }
+  // No error state needed - SWR hooks handle errors gracefully
 
   return (
     <Stack direction="column" spacing="lg" className="p-6">
