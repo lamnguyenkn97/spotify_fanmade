@@ -129,19 +129,19 @@ export const UnauthenticatedHomePage: React.FC<UnauthenticatedHomePageProps> = (
     return (
       <>
         <HeroBanner />
-        <div className="px-8 py-6 space-y-8">
+        <Stack direction="column" spacing="lg" className="px-8 py-6">
           {/* Loading skeletons for content sections */}
           {[1, 2, 3, 4].map((section) => (
             <Stack key={section} direction="column" spacing="lg">
               <Skeleton variant="text" width="30%" height="32px" />
-              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+              <Stack direction="row" spacing="md" className="flex-wrap">
                 {[1, 2, 3, 4, 5].map((card) => (
-                  <Skeleton key={card} variant="rectangular" width="100%" height="200px" />
+                  <Skeleton key={card} variant="rectangular" width="180px" height="200px" />
                 ))}
-              </div>
+              </Stack>
             </Stack>
           ))}
-        </div>
+        </Stack>
       </>
     );
   }
@@ -150,7 +150,7 @@ export const UnauthenticatedHomePage: React.FC<UnauthenticatedHomePageProps> = (
     <>
       <HeroBanner onLogin={onLogin} />
       
-      <div className="px-8 py-6 space-y-8">
+      <Stack direction="column" spacing="lg" className="px-8 py-6">
         {/* Render Sections */}
         {sections.length > 0 ? (
           sections.map((section: any, sectionIndex: number) => {
@@ -162,7 +162,7 @@ export const UnauthenticatedHomePage: React.FC<UnauthenticatedHomePageProps> = (
                 <Typography variant="heading" size="xl" weight="bold" color="primary">
                   {sectionTitle}
                 </Typography>
-                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+                <Stack direction="row" spacing="md" className="flex-wrap">
                   {items.slice(0, 10).map((item: any, itemIndex: number) => {
                     const cardProps = getCardProps(item);
                     if (!cardProps) return null;
@@ -178,7 +178,7 @@ export const UnauthenticatedHomePage: React.FC<UnauthenticatedHomePageProps> = (
                       />
                     );
                   })}
-                </div>
+                </Stack>
             </Stack>
           );
         })
@@ -189,7 +189,7 @@ export const UnauthenticatedHomePage: React.FC<UnauthenticatedHomePageProps> = (
           </Typography>
         </Stack>
       )}
-      </div>
+      </Stack>
     </>
   );
 };

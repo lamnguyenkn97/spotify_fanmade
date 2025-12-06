@@ -1,7 +1,7 @@
 'use client';
 
 import React, { createContext, useContext, useState, useCallback } from 'react';
-import { Toast, ToastType } from 'spotify-design-system';
+import { Toast, ToastType, Stack } from 'spotify-design-system';
 
 type ToastTypeValue = 'success' | 'error' | 'warning' | 'info';
 
@@ -47,15 +47,14 @@ export const ToastProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     <ToastContext.Provider value={{ showToast, success, error, warning, info }}>
       {children}
       {/* Toast Container */}
-      <div
+      <Stack
+        direction="column"
+        spacing="sm"
         style={{
           position: 'fixed',
           bottom: '20px',
           right: '20px',
           zIndex: 9999,
-          display: 'flex',
-          flexDirection: 'column',
-          gap: '12px',
         }}
       >
         {toasts.map((toast) => (
@@ -67,7 +66,7 @@ export const ToastProvider: React.FC<{ children: React.ReactNode }> = ({ childre
             duration={4000}
           />
         ))}
-      </div>
+      </Stack>
     </ToastContext.Provider>
   );
 };
