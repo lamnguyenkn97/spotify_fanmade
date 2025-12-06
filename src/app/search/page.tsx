@@ -8,9 +8,7 @@ import {
   Card,
   Table,
   colors,
-  Button,
-  ButtonVariant,
-  ButtonSize,
+  Skeleton,
 } from 'spotify-design-system';
 
 interface SearchResults {
@@ -532,19 +530,34 @@ export default function SearchPage() {
   return (
     <Suspense
       fallback={
-        <Stack
-          direction="column"
-          align="center"
-          justify="center"
-          className="h-screen w-full bg-spotify-dark"
-        >
-          <Button
-            text="Loading"
-            variant={ButtonVariant.Primary}
-            size={ButtonSize.Large}
-            loading={true}
-            disabled={true}
-          />
+        <Stack direction="column" spacing="lg" className="p-8">
+          {/* Search placeholder */}
+          <Skeleton variant="text" width="100%" height="48px" />
+          
+          {/* Songs section skeleton */}
+          <Stack direction="column" spacing="md">
+            <Skeleton variant="text" width="20%" height="32px" />
+            {[1, 2, 3, 4, 5].map((i) => (
+              <Stack key={i} direction="row" spacing="md" align="center">
+                <Skeleton variant="rectangular" width="40px" height="40px" />
+                <Stack direction="column" spacing="xs" style={{ flex: 1 }}>
+                  <Skeleton variant="text" width="40%" height="16px" />
+                  <Skeleton variant="text" width="30%" height="14px" />
+                </Stack>
+                <Skeleton variant="text" width="10%" height="14px" />
+              </Stack>
+            ))}
+          </Stack>
+
+          {/* Artists section skeleton */}
+          <Stack direction="column" spacing="md">
+            <Skeleton variant="text" width="15%" height="32px" />
+            <Stack direction="row" spacing="md">
+              {[1, 2, 3, 4, 5].map((i) => (
+                <Skeleton key={i} variant="circular" width="180px" height="180px" />
+              ))}
+            </Stack>
+          </Stack>
         </Stack>
       }
     >

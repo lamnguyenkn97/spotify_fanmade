@@ -13,6 +13,7 @@ import {
   colors,
   Modal,
   ModalSize,
+  Skeleton,
 } from 'spotify-design-system';
 import { faPlus, faSearch, faExpand, faBars, faHeart, faVolumeHigh } from '@fortawesome/free-solid-svg-icons';
 import { useRouter } from 'next/navigation';
@@ -221,14 +222,16 @@ export default function LibraryPage() {
 
       {/* Library Items List */}
       {loading ? (
-        <Stack direction="column" align="center" justify="center" className="py-12">
-          <Button
-            text="Loading"
-            variant={ButtonVariant.Primary}
-            size={ButtonSize.Large}
-            loading={true}
-            disabled={true}
-          />
+        <Stack direction="column" spacing="xs">
+          {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => (
+            <Stack key={i} direction="row" spacing="md" align="center" style={{ padding: '8px' }}>
+              <Skeleton variant="rectangular" width="48px" height="48px" />
+              <Stack direction="column" spacing="xs" style={{ flex: 1 }}>
+                <Skeleton variant="text" width="60%" height="16px" />
+                <Skeleton variant="text" width="40%" height="14px" />
+              </Stack>
+            </Stack>
+          ))}
         </Stack>
       ) : items.length === 0 ? (
         <Stack direction="column" spacing="md">

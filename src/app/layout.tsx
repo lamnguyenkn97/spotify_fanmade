@@ -5,6 +5,7 @@ import React from 'react';
 import StyledComponentsRegistry from '@/lib/registry';
 import '@/lib/fontawesome';
 import { AppLayout, ErrorBoundary } from '@/components';
+import { ToastProvider } from '@/contexts/ToastContext';
 
 export const metadata: Metadata = {
   title: 'Spotify Fanmade',
@@ -29,9 +30,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       </head>
       <body>
         <StyledComponentsRegistry>
-          <ErrorBoundary>
-            <AppLayout>{children}</AppLayout>
-          </ErrorBoundary>
+          <ToastProvider>
+            <ErrorBoundary>
+              <AppLayout>{children}</AppLayout>
+            </ErrorBoundary>
+          </ToastProvider>
         </StyledComponentsRegistry>
       </body>
     </html>

@@ -1,6 +1,6 @@
 'use client';
 import React, { useState, useEffect } from 'react';
-import { Card, Stack, Typography, Button, ButtonVariant, ButtonSize } from 'spotify-design-system';
+import { Card, Stack, Typography, Button, ButtonVariant, ButtonSize, Skeleton } from 'spotify-design-system';
 import homepageData from '@/app/data/homepageData.json';
 
 interface UnauthenticatedHomePageProps {
@@ -129,15 +129,19 @@ export const UnauthenticatedHomePage: React.FC<UnauthenticatedHomePageProps> = (
     return (
       <>
         <HeroBanner />
-        <Stack direction="column" align="center" justify="center" className="px-8 py-12">
-          <Button
-            text="Loading"
-            variant={ButtonVariant.Primary}
-            size={ButtonSize.Large}
-            loading={true}
-            disabled={true}
-          />
-        </Stack>
+        <div className="px-8 py-6 space-y-8">
+          {/* Loading skeletons for content sections */}
+          {[1, 2, 3, 4].map((section) => (
+            <Stack key={section} direction="column" spacing="lg">
+              <Skeleton variant="text" width="30%" height="32px" />
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+                {[1, 2, 3, 4, 5].map((card) => (
+                  <Skeleton key={card} variant="rectangular" width="100%" height="200px" />
+                ))}
+              </div>
+            </Stack>
+          ))}
+        </div>
       </>
     );
   }
