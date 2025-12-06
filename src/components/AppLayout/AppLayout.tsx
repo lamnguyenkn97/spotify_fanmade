@@ -8,6 +8,7 @@ import {
   Typography,
   Icon,
   Footer,
+  TextLink,
   colors,
 } from 'spotify-design-system';
 import { useRouter } from 'next/navigation';
@@ -318,17 +319,14 @@ const AppLayoutContent: React.FC<AppLayoutContentProps> = ({
                 </Typography>
                 <Stack direction="column" spacing="sm">
                   {FOOTER_DATA.developer.map((link, index) => (
-                    <a
+                    <TextLink
                       key={index}
                       href={link.url}
                       target="_blank"
-                      rel="noopener noreferrer"
-                      className="no-underline hover:underline"
+                      color="muted"
                     >
-                      <Typography variant="body" size="sm" color="muted">
-                        {link.name}
-                      </Typography>
-                    </a>
+                      {link.name}
+                    </TextLink>
                   ))}
                 </Stack>
               </Stack>
@@ -340,17 +338,14 @@ const AppLayoutContent: React.FC<AppLayoutContentProps> = ({
                 </Typography>
                 <Stack direction="column" spacing="sm">
                   {FOOTER_DATA.project.map((link, index) => (
-                    <a
+                    <TextLink
                       key={index}
                       href={link.url}
                       target="_blank"
-                      rel="noopener noreferrer"
-                      className="no-underline hover:underline"
+                      color="muted"
                     >
-                      <Typography variant="body" size="sm" color="muted">
-                        {link.name}
-                      </Typography>
-                    </a>
+                      {link.name}
+                    </TextLink>
                   ))}
                 </Stack>
               </Stack>
@@ -362,16 +357,14 @@ const AppLayoutContent: React.FC<AppLayoutContentProps> = ({
                 </Typography>
                 <Stack direction="row" spacing="md">
                   {FOOTER_DATA.social.map((social, index) => (
-                    <a
+                    <TextLink
                       key={index}
                       href={social.url}
                       target="_blank"
-                      rel="noopener noreferrer"
                       aria-label={social.label}
-                      className="transition-opacity hover:opacity-70"
                     >
                       <Icon icon={social.icon} size="lg" className="text-white" />
-                    </a>
+                    </TextLink>
                   ))}
                 </Stack>
               </Stack>
