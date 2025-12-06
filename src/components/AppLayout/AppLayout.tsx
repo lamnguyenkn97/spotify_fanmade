@@ -26,7 +26,12 @@ import { QueueDrawer } from '@/components/QueueDrawer';
 import { Modal, ModalSize } from 'spotify-design-system';
 import { FOOTER_DATA } from '@/config/footerData';
 import { SpotifyUser, LibraryItem } from '@/types';
-import { apiClient } from '@/lib/api-client';
+import {
+  useSavedTracks,
+  useMyPlaylists,
+  useMyShows,
+  useMyAlbums,
+} from '@/hooks/api';
 
 interface AppLayoutProps {
   children: React.ReactNode;
@@ -35,96 +40,79 @@ interface AppLayoutProps {
 export const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
   const router = useRouter();
   const { user, isAuthenticated, login, logout } = useSpotify();
-  const [libraryItems, setLibraryItems] = useState<LibraryItem[]>([]);
   const [selectedFilter, setSelectedFilter] = useState<LibraryFilter>(LibraryFilter.PLAYLISTS);
   const [showLoginPrompt, setShowLoginPrompt] = useState(false);
   const [showFeatureNotImplemented, setShowFeatureNotImplemented] = useState(false);
 
-  useEffect(() => {
-    if (isAuthenticated) {
-      fetchLibraryItems(selectedFilter);
-    }
-  }, [isAuthenticated, selectedFilter]);
+  // Fetch all library data with SWR hooks
+  const { tracks: likedTracks, total: likedTotal } = useSavedTracks(1, isAuthenticated);
+  const { playlists } = useMyPlaylists(isAuthenticated);
+  const { shows } = useMyShows(isAuthenticated);
+  const { albums } = useMyAlbums(isAuthenticated);
 
-  const fetchLibraryItems = async (filter: LibraryFilter) => {
-    try {
-      let data: LibraryItem[] = [];
+  // Transform data based on selected filter using useMemo for performance
+  const libraryItems = useMemo((): LibraryItem[] => {
+    if (!isAuthenticated) return [];
 
-      switch (filter) {
-        case LibraryFilter.PLAYLISTS:
-          // First, add "Liked Songs" as a special playlist
-          const likedTracksRes = await apiClient.get<{ items: any[]; total: number }>('/api/spotify/my-saved-tracks?limit=1');
-          if (likedTracksRes && likedTracksRes.total > 0) {
-            const firstTrack = likedTracksRes.items?.[0]?.track;
-            data.push({
-              id: 'liked-songs',
-              title: 'Liked Songs',
-              type: 'playlist' as const,
-              image: firstTrack?.album?.images?.[0]?.url || '',
-              subtitle: `Playlist • ${likedTracksRes.total} songs`,
-              pinned: true, // Always pin Liked Songs at the top
-            });
-          }
+    switch (selectedFilter) {
+      case LibraryFilter.PLAYLISTS: {
+        const items: LibraryItem[] = [];
+        
+        // Add "Liked Songs" as first item if user has liked tracks
+        if (likedTotal > 0 && likedTracks.length > 0) {
+          const firstTrack = likedTracks[0]?.track;
+          items.push({
+            id: 'liked-songs',
+            title: 'Liked Songs',
+            type: 'playlist' as const,
+            image: firstTrack?.album?.images?.[0]?.url || '',
+            subtitle: `Playlist • ${likedTotal} songs`,
+            pinned: true,
+          });
+        }
 
-          // Then fetch regular playlists
-          const playlistsData = await apiClient.get<{ items: any[] }>('/api/spotify/my-playlists');
-          const playlists =
-            playlistsData.items?.map((playlist: any) => ({
-              id: playlist.id,
-              title: playlist.name,
-              type: 'playlist' as const,
-              image: playlist.images?.[0]?.url,
-              subtitle: `Playlist • ${playlist.owner?.display_name || 'Spotify'}${
-                playlist.tracks?.total ? ` • ${playlist.tracks.total} songs` : ''
-              }`,
-              pinned: false,
-            })) || [];
-          data = [...data, ...playlists];
-          break;
+        // Add regular playlists
+        const playlistItems = playlists.map((playlist: any) => ({
+          id: playlist.id,
+          title: playlist.name,
+          type: 'playlist' as const,
+          image: playlist.images?.[0]?.url,
+          subtitle: `Playlist • ${playlist.owner?.display_name || 'Spotify'}${
+            playlist.tracks?.total ? ` • ${playlist.tracks.total} songs` : ''
+          }`,
+          pinned: false,
+        }));
 
-        case LibraryFilter.PODCASTS_AND_SHOWS:
-          const showsData = await apiClient.get<{ items: any[] }>('/api/spotify/my-shows');
-          data =
-            showsData.items?.map((item: any) => ({
-              id: item.show?.id || item.id,
-              title: item.show?.name || item.name,
-              type: 'show' as const,
-              image: item.show?.images?.[0]?.url || item.images?.[0]?.url,
-              subtitle: `Podcast • ${item.show?.publisher || item.publisher || 'Show'}`,
-            })) || [];
-          break;
-
-        case LibraryFilter.ARTISTS:
-          const artistsData = await apiClient.get<{ items: any[] }>('/api/spotify/my-artists');
-          data =
-            artistsData.items?.map((artist: any) => ({
-              id: artist.id,
-              title: artist.name,
-              type: 'artist' as const,
-              image: artist.images?.[0]?.url,
-              subtitle: 'Artist',
-            })) || [];
-          break;
-
-        case LibraryFilter.ALBUMS:
-          const albumsData = await apiClient.get<{ items: any[] }>('/api/spotify/my-albums');
-          data =
-            albumsData.items?.map((item: any) => ({
-              id: item.album?.id || item.id,
-              title: item.album?.name || item.name,
-              type: 'album' as const,
-              image: item.album?.images?.[0]?.url || item.images?.[0]?.url,
-              subtitle: `Album • ${item.album?.artists?.map((a: any) => a.name).join(', ') || 'Unknown'}`,
-            })) || [];
-          break;
+        return [...items, ...playlistItems];
       }
 
-      setLibraryItems(data);
-    } catch (error) {
-      // Silently fail - user will see empty library
-      setLibraryItems([]);
+      case LibraryFilter.PODCASTS_AND_SHOWS:
+        return shows.map((item: any) => ({
+          id: item.show?.id || item.id,
+          title: item.show?.name || item.name,
+          type: 'show' as const,
+          image: item.show?.images?.[0]?.url || item.images?.[0]?.url,
+          subtitle: `Podcast • ${item.show?.publisher || item.publisher || 'Show'}`,
+        }));
+
+      case LibraryFilter.ARTISTS:
+        // Note: We don't have a useMyArtists hook yet, so this will be empty
+        // TODO: Add useMyArtists hook to useSpotifyApi.ts
+        return [];
+
+      case LibraryFilter.ALBUMS:
+        return albums.map((item: any) => ({
+          id: item.album?.id || item.id,
+          title: item.album?.name || item.name,
+          type: 'album' as const,
+          image: item.album?.images?.[0]?.url || item.images?.[0]?.url,
+          subtitle: `Album • ${item.album?.artists?.map((a: any) => a.name).join(', ') || 'Unknown'}`,
+        }));
+
+      default:
+        return [];
     }
-  };
+  }, [selectedFilter, isAuthenticated, likedTracks, likedTotal, playlists, shows, albums]);
 
   const handleCreatePlaylist = useCallback(() => {
     if (!isAuthenticated) {
