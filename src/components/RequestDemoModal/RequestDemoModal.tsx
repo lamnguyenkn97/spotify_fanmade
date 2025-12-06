@@ -1,7 +1,7 @@
 'use client';
 
-import React, { useState, useRef, useEffect } from 'react';
-import { Modal, Stack, Typography, Button, ButtonVariant, ButtonSize } from 'spotify-design-system';
+import React, { useState } from 'react';
+import { Modal, Stack, Typography, Input, Button, ButtonVariant, ButtonSize } from 'spotify-design-system';
 
 interface RequestDemoModalProps {
   isOpen: boolean;
@@ -16,16 +16,8 @@ export const RequestDemoModal: React.FC<RequestDemoModalProps> = ({ isOpen, onCl
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState('');
   const [isAlreadyApproved, setIsAlreadyApproved] = useState(false);
-  const emailInputRef = useRef<HTMLInputElement>(null);
 
-  // Auto-focus email input when modal opens
-  useEffect(() => {
-    if (isOpen && !submitted && !isAlreadyApproved) {
-      setTimeout(() => {
-        emailInputRef.current?.focus();
-      }, 100);
-    }
-  }, [isOpen, submitted, isAlreadyApproved]);
+  console.log('RequestDemoModal render:', { isOpen, email, name, loading, submitted });
 
   const handleSubmit = async () => {
     if (!email || !email.includes('@')) {
@@ -126,65 +118,55 @@ export const RequestDemoModal: React.FC<RequestDemoModalProps> = ({ isOpen, onCl
           </Stack>
         ) : (
           <>
-            <Stack direction="column" spacing="sm">
-              <Typography variant="body" color="secondary">
-                Enter your Spotify account email to request access to the full authenticated experience.
+            <Typography variant="body" color="secondary">
+              Enter your Spotify account email to request access to the full authenticated experience. I'll add you to the allowlist and send you a confirmation within 24 hours.
+            </Typography>
+
+            <Input
+              label="Spotify Email"
+              type="email"
+              placeholder="your.email@example.com"
+              value={email}
+              onValueChange={(val) => {
+                console.log('Email onValueChange:', val);
+                setEmail(val);
+              }}
+              disabled={loading}
+              fullWidth
+            />
+
+            <Input
+              label="Name (Optional)"
+              type="text"
+              placeholder="Your name"
+              value={name}
+              onValueChange={(val) => {
+                console.log('Name onValueChange:', val);
+                setName(val);
+              }}
+              disabled={loading}
+              fullWidth
+            />
+
+            <Stack direction="column" spacing="xs">
+              <Typography variant="body" color="primary" weight="medium">
+                Message (Optional)
               </Typography>
-              <Typography variant="caption" color="secondary" className="opacity-70">
-                I'll add you to the allowlist and send you a confirmation within 24 hours.
-              </Typography>
+              <textarea
+                placeholder="E.g., 'I'm a recruiter at Company X' or 'Frontend developer interested in your work'"
+                value={message}
+                onChange={(e) => setMessage(e.target.value)}
+                disabled={loading}
+                rows={3}
+                className="w-full px-3 py-2 bg-grey-grey1 text-white rounded border border-grey-grey2 focus:border-spotify-green focus:outline-none resize-none"
+              />
             </Stack>
 
-            <Stack direction="column" spacing="md">
-              <Stack direction="column" spacing="xs">
-                <Typography variant="body" color="primary" weight="medium">
-                  Spotify Email <span className="text-red-500">*</span>
-                </Typography>
-                <input
-                  ref={emailInputRef}
-                  type="email"
-                  placeholder="your.email@example.com"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  disabled={loading}
-                  className="w-full px-3 py-2 bg-grey-grey1 text-white rounded border border-grey-grey2 focus:border-spotify-green focus:outline-none"
-                />
-              </Stack>
-
-              <Stack direction="column" spacing="xs">
-                <Typography variant="body" color="primary" weight="medium">
-                  Name (Optional)
-                </Typography>
-                <input
-                  type="text"
-                  placeholder="Your name"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  disabled={loading}
-                  className="w-full px-3 py-2 bg-grey-grey1 text-white rounded border border-grey-grey2 focus:border-spotify-green focus:outline-none"
-                />
-              </Stack>
-
-              <Stack direction="column" spacing="xs">
-                <Typography variant="body" color="primary" weight="medium">
-                  Message (Optional)
-                </Typography>
-                <textarea
-                  placeholder="E.g., 'I'm a recruiter at Company X' or 'Frontend developer interested in your work'"
-                  value={message}
-                  onChange={(e) => setMessage(e.target.value)}
-                  disabled={loading}
-                  rows={3}
-                  className="w-full px-3 py-2 bg-grey-grey1 text-white rounded border border-grey-grey2 focus:border-spotify-green focus:outline-none resize-none"
-                />
-              </Stack>
-
-              {error && (
-                <Typography variant="caption" color="primary" className="text-red-500">
-                  {error}
-                </Typography>
-              )}
-            </Stack>
+            {error && (
+              <Typography variant="caption" color="primary" className="text-red-500">
+                {error}
+              </Typography>
+            )}
 
             <Stack direction="row" spacing="sm" justify="end">
               <Button
