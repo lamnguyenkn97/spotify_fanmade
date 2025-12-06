@@ -12,6 +12,7 @@ import {
   Pill,
   Table,
   Image,
+  Skeleton,
 } from 'spotify-design-system';
 import { faPlay, faShuffle, faEllipsis } from '@fortawesome/free-solid-svg-icons';
 import { faClock } from '@fortawesome/free-regular-svg-icons';
@@ -156,9 +157,48 @@ export default function ArtistPage() {
   if (loading) {
     return (
       <Stack direction="column" spacing="lg" className="p-8">
-        <Typography variant="heading" size="xl" color="inverse">
-          Loading artist...
-        </Typography>
+        {/* Artist Header Skeleton */}
+        <Stack direction="row" spacing="lg" align="end">
+          <Skeleton variant="circular" width="232px" height="232px" />
+          <Stack direction="column" spacing="md">
+            <Skeleton variant="text" width="60px" height="20px" />
+            <Skeleton variant="text" width="300px" height="60px" />
+            <Skeleton variant="text" width="200px" height="20px" />
+          </Stack>
+        </Stack>
+
+        {/* Action Buttons Skeleton */}
+        <Stack direction="row" spacing="md">
+          <Skeleton variant="rectangular" width="120px" height="48px" />
+          <Skeleton variant="rectangular" width="120px" height="48px" />
+          <Skeleton variant="rectangular" width="48px" height="48px" />
+        </Stack>
+
+        {/* Popular Tracks Skeleton */}
+        <Stack direction="column" spacing="md">
+          <Skeleton variant="text" width="20%" height="28px" />
+          {[1, 2, 3, 4, 5].map((i) => (
+            <Stack key={i} direction="row" spacing="md" align="center">
+              <Skeleton variant="text" width="30px" height="20px" />
+              <Skeleton variant="rectangular" width="40px" height="40px" />
+              <Stack direction="column" spacing="xs" style={{ flex: 1 }}>
+                <Skeleton variant="text" width="40%" height="16px" />
+                <Skeleton variant="text" width="30%" height="14px" />
+              </Stack>
+              <Skeleton variant="text" width="50px" height="14px" />
+            </Stack>
+          ))}
+        </Stack>
+
+        {/* Discography Skeleton */}
+        <Stack direction="column" spacing="md">
+          <Skeleton variant="text" width="25%" height="28px" />
+          <Stack direction="row" spacing="md">
+            {[1, 2, 3, 4, 5].map((i) => (
+              <Skeleton key={i} variant="rectangular" width="180px" height="180px" />
+            ))}
+          </Stack>
+        </Stack>
       </Stack>
     );
   }

@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { Button, ButtonSize, ButtonVariant, Card, Stack, Typography, HorizontalTileCard } from 'spotify-design-system';
+import { Button, ButtonSize, ButtonVariant, Card, Stack, Typography, HorizontalTileCard, Skeleton } from 'spotify-design-system';
 import { useRouter } from 'next/navigation';
 import { TimeRange, NUMBER_OF_DISPLAYED_ITEMS } from '@/types';
 import { useMusicPlayerContext } from '@/contexts/MusicPlayerContext';
@@ -203,10 +203,44 @@ export const AuthenticatedHomePage: React.FC<AuthenticatedHomePageProps> = ({ us
   if (loading) {
     return (
       <Stack direction="column" spacing="lg" className="p-6">
-        <Typography variant="heading" color="primary">
-          Loading your music...
-        </Typography>
-        {/* TODO: Add skeleton loaders */}
+        {/* Greeting Skeleton */}
+        <Skeleton variant="text" width="40%" height="36px" />
+
+        {/* Made for you - Liked Songs Skeleton */}
+        <Stack direction="column" spacing="md">
+          <Skeleton variant="text" width="20%" height="28px" />
+          <Skeleton variant="rectangular" width="400px" height="80px" />
+        </Stack>
+
+        {/* Your Playlists Skeleton */}
+        <Stack direction="column" spacing="md">
+          <Skeleton variant="text" width="20%" height="28px" />
+          <Stack direction="row" spacing="md">
+            {[1, 2, 3].map((i) => (
+              <Skeleton key={i} variant="rectangular" width="400px" height="80px" />
+            ))}
+          </Stack>
+        </Stack>
+
+        {/* Recently Played Skeleton */}
+        <Stack direction="column" spacing="md">
+          <Skeleton variant="text" width="25%" height="28px" />
+          <Stack direction="row" spacing="md">
+            {[1, 2, 3, 4, 5].map((i) => (
+              <Skeleton key={i} variant="rectangular" width="180px" height="180px" />
+            ))}
+          </Stack>
+        </Stack>
+
+        {/* Top Artists Skeleton */}
+        <Stack direction="column" spacing="md">
+          <Skeleton variant="text" width="35%" height="28px" />
+          <Stack direction="row" spacing="md">
+            {[1, 2, 3, 4, 5].map((i) => (
+              <Skeleton key={i} variant="circular" width="180px" height="180px" />
+            ))}
+          </Stack>
+        </Stack>
       </Stack>
     );
   }

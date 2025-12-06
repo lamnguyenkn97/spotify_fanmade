@@ -14,6 +14,7 @@ import {
   ButtonVariant,
   ButtonSize,
   Table,
+  Skeleton,
 } from 'spotify-design-system';
 import { faPlay, faEllipsis, faCheckCircle } from '@fortawesome/free-solid-svg-icons';
 import { faClock } from '@fortawesome/free-regular-svg-icons';
@@ -165,10 +166,40 @@ export default function ShowPage() {
 
   if (loading) {
     return (
-      <Stack direction="column" spacing="lg">
-        <Typography variant="heading" size="xl" color="inverse">
-          Loading show...
-        </Typography>
+      <Stack direction="column" spacing="lg" className="p-8">
+        {/* Show Header Skeleton */}
+        <Stack direction="row" spacing="lg" align="end">
+          <Skeleton variant="rectangular" width="232px" height="232px" />
+          <Stack direction="column" spacing="md">
+            <Skeleton variant="text" width="80px" height="20px" />
+            <Skeleton variant="text" width="350px" height="60px" />
+            <Skeleton variant="text" width="200px" height="20px" />
+          </Stack>
+        </Stack>
+
+        {/* Action Buttons Skeleton */}
+        <Stack direction="row" spacing="md" align="center">
+          <Skeleton variant="rectangular" width="120px" height="48px" />
+          <Skeleton variant="rectangular" width="48px" height="48px" />
+        </Stack>
+
+        {/* Episodes List Skeleton */}
+        <Stack direction="column" spacing="md">
+          <Skeleton variant="text" width="20%" height="28px" />
+          {[1, 2, 3, 4, 5, 6].map((i) => (
+            <Stack key={i} direction="row" spacing="md" align="center">
+              <Skeleton variant="rectangular" width="120px" height="120px" />
+              <Stack direction="column" spacing="xs" style={{ flex: 1 }}>
+                <Skeleton variant="text" width="60%" height="20px" />
+                <Skeleton variant="text" width="90%" height="16px" />
+                <Stack direction="row" spacing="xs" align="center">
+                  <Skeleton variant="text" width="80px" height="14px" />
+                  <Skeleton variant="text" width="80px" height="14px" />
+                </Stack>
+              </Stack>
+            </Stack>
+          ))}
+        </Stack>
       </Stack>
     );
   }

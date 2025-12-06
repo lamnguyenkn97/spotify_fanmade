@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
-import { Stack, Typography } from 'spotify-design-system';
+import { Stack, Typography, Skeleton } from 'spotify-design-system';
 import { PlaylistHeader, TrackTable } from '@/components';
 import { extractColorsFromImage, ExtractedColors } from '@/utils/colorExtractor';
 import { useMusicPlayerContext } from '@/contexts/MusicPlayerContext';
@@ -192,10 +192,57 @@ export default function PlaylistPage() {
 
   if (loading) {
     return (
-      <Stack direction="column" spacing="lg" className="p-8">
-        <Typography variant="heading" size="xl" color="inverse">
-          Loading playlist...
-        </Typography>
+      <Stack direction="column" spacing="lg">
+        {/* Playlist Header Skeleton with Gradient Background */}
+        <Stack
+          direction="row"
+          spacing="lg"
+          align="end"
+          className="p-8"
+          style={{
+            background: 'linear-gradient(180deg, rgba(83, 83, 83, 1) 0%, rgba(18, 18, 18, 1) 100%)',
+            minHeight: '340px',
+          }}
+        >
+          <Skeleton variant="rectangular" width="232px" height="232px" />
+          <Stack direction="column" spacing="md" justify="end">
+            <Skeleton variant="text" width="80px" height="16px" />
+            <Skeleton variant="text" width="400px" height="80px" />
+            <Skeleton variant="text" width="300px" height="16px" />
+          </Stack>
+        </Stack>
+
+        {/* Action Buttons Skeleton */}
+        <Stack direction="row" spacing="md" align="center" className="px-8">
+          <Skeleton variant="circular" width="56px" height="56px" />
+          <Skeleton variant="circular" width="32px" height="32px" />
+          <Skeleton variant="circular" width="32px" height="32px" />
+          <Skeleton variant="circular" width="32px" height="32px" />
+        </Stack>
+
+        {/* Track List Skeleton */}
+        <Stack direction="column" spacing="xs" className="px-8 pb-8">
+          {/* Table Header */}
+          <Stack direction="row" spacing="md" className="px-4 py-2">
+            <Skeleton variant="text" width="30px" height="16px" />
+            <Skeleton variant="text" width="150px" height="16px" />
+            <Skeleton variant="text" width="150px" height="16px" />
+            <Skeleton variant="text" width="100px" height="16px" />
+          </Stack>
+          {/* Track Rows */}
+          {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => (
+            <Stack key={i} direction="row" spacing="md" align="center" className="px-4 py-2">
+              <Skeleton variant="text" width="30px" height="20px" />
+              <Skeleton variant="rectangular" width="40px" height="40px" />
+              <Stack direction="column" spacing="xs" style={{ flex: 1 }}>
+                <Skeleton variant="text" width="40%" height="16px" />
+                <Skeleton variant="text" width="30%" height="14px" />
+              </Stack>
+              <Skeleton variant="text" width="150px" height="14px" />
+              <Skeleton variant="text" width="50px" height="14px" />
+            </Stack>
+          ))}
+        </Stack>
       </Stack>
     );
   }
