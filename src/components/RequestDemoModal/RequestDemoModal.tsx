@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Modal, Stack, Typography, Button, ButtonVariant, ButtonSize } from 'spotify-design-system';
 
 interface RequestDemoModalProps {
@@ -16,6 +16,16 @@ export const RequestDemoModal: React.FC<RequestDemoModalProps> = ({ isOpen, onCl
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState('');
   const [isAlreadyApproved, setIsAlreadyApproved] = useState(false);
+  const emailInputRef = useRef<HTMLInputElement>(null);
+
+  // Auto-focus email input when modal opens
+  useEffect(() => {
+    if (isOpen && !submitted && !isAlreadyApproved) {
+      setTimeout(() => {
+        emailInputRef.current?.focus();
+      }, 100);
+    }
+  }, [isOpen, submitted, isAlreadyApproved]);
 
   const handleSubmit = async () => {
     if (!email || !email.includes('@')) {
@@ -83,7 +93,14 @@ export const RequestDemoModal: React.FC<RequestDemoModalProps> = ({ isOpen, onCl
   };
 
   return (
-    <Modal open={isOpen} onClose={handleClose} title={isAlreadyApproved ? 'Already Approved!' : submitted ? 'Request Submitted!' : 'Request Demo Access'}>
+    <Modal 
+      open={isOpen} 
+      onClose={handleClose} 
+      title={isAlreadyApproved ? 'Already Approved!' : submitted ? 'Request Submitted!' : 'Request Demo Access'}
+      showCloseButton={true}
+      closeOnBackdropClick={false}
+      closeOnEscape={true}
+    >
       <Stack direction="column" spacing="lg" className="p-6">
         {isAlreadyApproved ? (
           <Stack direction="column" spacing="md" align="center" className="py-8">
@@ -124,6 +141,7 @@ export const RequestDemoModal: React.FC<RequestDemoModalProps> = ({ isOpen, onCl
                   Spotify Email <span className="text-red-500">*</span>
                 </Typography>
                 <input
+                  ref={emailInputRef}
                   type="email"
                   placeholder="your.email@example.com"
                   value={email}
