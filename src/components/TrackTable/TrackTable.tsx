@@ -153,7 +153,8 @@ export const TrackTable: React.FC<TrackTableProps> = ({ tracks, onTrackClick }) 
                         variant="body"
                         size="sm"
                         weight="medium"
-                        color={isCurrentlyPlaying ? 'brand' : 'primary'}
+                        color="primary"
+                        style={isCurrentlyPlaying ? { color: colors.primary.brand } : undefined}
                       >
                         {row.title}
                       </Typography>
