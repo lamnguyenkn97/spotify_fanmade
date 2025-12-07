@@ -24,15 +24,15 @@ export async function POST(request: NextRequest) {
             <p><strong>Message:</strong> ${message || 'No message'}</p>
             <p><strong>Time:</strong> ${new Date().toLocaleString()}</p>
             <hr />
-            <h3>Manual Steps Required:</h3>
+            <h3>Grant Access Steps:</h3>
             <ol>
               <li><strong>Spotify Dashboard:</strong> <a href="https://developer.spotify.com/dashboard">developer.spotify.com/dashboard</a> → Settings → User Management → Add "${email}"</li>
-              <li><strong>Code:</strong> Add to <code>src/config/approvedUsers.ts</code></li>
-              <li><strong>Deploy:</strong> <code>git add . && git commit -m "add ${email}" && git push</code></li>
-              <li><strong>Notify:</strong> Reply to ${email} that access is granted</li>
+              <li><strong>Vercel Environment Variables:</strong> <a href="https://vercel.com/dashboard">vercel.com/dashboard</a> → Your Project → Settings → Environment Variables → Edit <code>APPROVED_USERS</code> → Add "${email}" (comma-separated)</li>
+              <li><strong>Redeploy:</strong> Vercel will auto-redeploy, or click "Redeploy" in Deployments tab</li>
+              <li><strong>Notify User:</strong> Email ${email} that access is granted</li>
             </ol>
             <hr />
-            <p><small><em>Note: Spotify does not provide an API to automate User Management, so step 1 must be done manually.</em></small></p>
+            <p><strong>Current APPROVED_USERS:</strong> <code>${process.env.APPROVED_USERS || '(none)'}</code></p>
           `,
         });
       } catch (emailError) {

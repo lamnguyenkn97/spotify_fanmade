@@ -257,6 +257,7 @@ SPOTIFY_CLIENT_SECRET=your_client_secret
 SPOTIFY_REDIRECT_URI=http://127.0.0.1:3010/api/auth/callback
 NEXT_PUBLIC_APP_URL=http://127.0.0.1:3010
 SESSION_SECRET=generate_random_string
+APPROVED_USERS="your.email@example.com"
 ```
 
 **5. Run:**
@@ -279,6 +280,9 @@ SPOTIFY_CLIENT_SECRET         # From Spotify Developer Dashboard
 SPOTIFY_REDIRECT_URI          # https://your-app.vercel.app/api/auth/callback
 NEXT_PUBLIC_APP_URL           # https://your-app.vercel.app
 SESSION_SECRET                # Generate: openssl rand -base64 32
+
+# Approved Users (comma-separated)
+APPROVED_USERS                # "user1@example.com,user2@example.com"
 
 # Optional - Demo Request Emails
 RESEND_API_KEY                # From resend.com (enables email notifications)
@@ -307,15 +311,13 @@ RESEND_API_KEY                # From resend.com (free tier: 3k emails/month)
 - Required for OAuth access
 
 **Method 2: Auto-approved Users (Bypass Request Modal)**
-- Edit `src/config/approvedUsers.ts`
-- Add emails to `APPROVED_USERS` array
+- Add to environment variable (no code changes needed!)
 - These users skip the "Request Demo" modal and go straight to OAuth login
-```typescript
-export const APPROVED_USERS = [
-  'admin@example.com',
-  'user@example.com',
-];
+```env
+APPROVED_USERS="admin@example.com,user@example.com,recruiter@company.com"
 ```
+- In Vercel: Settings → Environment Variables → Edit `APPROVED_USERS`
+- Locally: Add to `.env.local`
 
 **5. Deploy from GitHub:**
 - Vercel auto-deploys on push to main branch

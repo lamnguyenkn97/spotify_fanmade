@@ -1,18 +1,15 @@
 /**
- * Approved users allowlist
+ * Approved users allowlist - managed via environment variable
  * 
- * When you add a user to Spotify Developer Dashboard,
- * also add their email here so they can log in via OAuth
+ * Set APPROVED_USERS in your environment (Vercel, .env.local):
+ * APPROVED_USERS="user1@example.com,user2@example.com,admin@example.com"
+ * 
+ * This allows adding users without code changes - just update env var and redeploy
  */
 
-export const APPROVED_USERS = [
-  // Owner (admin)
-  'lamnguyen.hcmut@gmail.com',
-  
-  // Add approved users here as you grant them access
-  // 'recruiter@company.com',
-  // 'friend@example.com',
-];
+export const APPROVED_USERS = process.env.APPROVED_USERS 
+  ? process.env.APPROVED_USERS.split(',').map(email => email.trim().toLowerCase())
+  : [];
 
 /**
  * Check if a user email is approved for OAuth login
@@ -24,11 +21,12 @@ export function isUserApproved(email: string | null | undefined): boolean {
 
 /**
  * For admin/owner - always allow OAuth login
- * Add your own emails here
+ * Set ADMIN_EMAILS in your environment:
+ * ADMIN_EMAILS="admin1@example.com,admin2@example.com"
  */
-const ADMIN_EMAILS = [
-  'lamnguyen.hcmut@gmail.com',
-];
+const ADMIN_EMAILS = process.env.ADMIN_EMAILS
+  ? process.env.ADMIN_EMAILS.split(',').map(email => email.trim().toLowerCase())
+  : ['lamnguyen.hcmut@gmail.com']; // Fallback to owner email
 
 export function isAdmin(email: string | null | undefined): boolean {
   if (!email) return false;
