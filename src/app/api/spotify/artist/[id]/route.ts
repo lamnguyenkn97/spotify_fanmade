@@ -37,8 +37,8 @@ export async function GET(
     const limit = 50; // Max per request
     let hasMore = true;
 
-    // Fetch up to 200 albums (4 requests)
-    while (hasMore && offset < 200) {
+    // Fetch up to 500 albums (10 requests max) to show complete discography
+    while (hasMore && offset < 500) {
       const albums = await spotifyApi.getArtistAlbums(id, {
         limit,
         offset,
@@ -88,6 +88,8 @@ export async function GET(
         external_urls: track.external_urls,
         preview_url: track.preview_url,
         popularity: track.popularity,
+        uri: track.uri, // Required for playback!
+        track_number: track.track_number,
       })),
       albums: sortedAlbums.map((album: any) => ({
         id: album.id,
@@ -96,6 +98,8 @@ export async function GET(
         release_date: album.release_date,
         album_type: album.album_type,
         total_tracks: album.total_tracks,
+        uri: album.uri,
+        artists: album.artists,
       })),
     });
   } catch (error) {

@@ -38,10 +38,11 @@ interface ArtistDataExtended {
   topTracks: Array<{
     id: string;
     name: string;
-    artists: Array<{ name: string }>;
+    artists: Array<{ name: string; id: string }>;
     album: {
       name: string;
       images: Array<{ url: string }>;
+      id?: string;
     };
     duration_ms: number;
     explicit?: boolean;
@@ -50,6 +51,8 @@ interface ArtistDataExtended {
     };
     preview_url?: string | null;
     popularity: number;
+    uri?: string;
+    track_number?: number;
   }>;
   albums: Array<{
     id: string;
@@ -58,6 +61,8 @@ interface ArtistDataExtended {
     release_date: string;
     album_type: string;
     total_tracks: number;
+    uri?: string;
+    artists?: Array<{ name: string; id: string }>;
   }>;
 }
 
