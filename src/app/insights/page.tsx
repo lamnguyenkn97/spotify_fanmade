@@ -403,6 +403,9 @@ export default function InsightsPage() {
                   {track.popularity !== undefined && (
                     <Stack direction="row" spacing="xs" align="center" className="flex-shrink-0">
                       <Typography variant="body" size="sm" color="secondary">
+                        Popularity:
+                      </Typography>
+                      <Typography variant="body" size="sm" weight="bold" color="primary">
                         {track.popularity}
                       </Typography>
                     </Stack>
