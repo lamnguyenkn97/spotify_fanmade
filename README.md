@@ -77,30 +77,43 @@ This is an independent educational project for portfolio demonstration.
 
 ## Features
 
-### Playback
+### 🎵 Playback
 - Spotify Web Playback SDK integration with automatic fallback to preview URLs
 - Full player controls: play/pause, skip, seek, volume, shuffle, repeat
 - Queue management with drag-and-drop reordering
 - Real-time position tracking
 
-### Library & Content
+### 📊 Listening Insights (NEW)
+- **Personal Analytics Dashboard** with interactive data visualizations
+- **Time Range Selection**: Last Month, 6 Months, All Time
+- **Top Artists**: Champion highlight + horizontal bar chart by followers
+- **Genre Distribution**: Interactive donut chart + colorful progress breakdown
+- **Audio Features**: Radar chart showing music taste profile (Energy, Danceability, Valence, etc.)
+- **Track Popularity**: Bar chart visualizing Spotify popularity scores
+- **Smart Stats Cards**: Top Tracks, Artists, Genres count, Estimated listening time
+- Built with **Chart.js** (Donut, Radar, Bar charts)
+- Featured with **NEW badge** in header navigation for discoverability
+
+### 📚 Library & Content
 - User library: saved tracks, playlists, albums, artists, podcasts
 - Recently played history and top artists
 - Multi-entity search (tracks, artists, albums, playlists, podcasts)
 - Filter system for library items
 
-### Access Control
+### 🔐 Access Control
 - Automated demo request system with email notifications
 - Approved users bypass request modal for seamless OAuth login
 - Configurable user allowlist for development mode compliance
 
-### UI/UX
+### 🎨 UI/UX
 - Dynamic gradient backgrounds extracted from album artwork
 - Skeleton loading screens
 - Toast notifications
 - Error boundaries
 - Responsive design
 - Dark theme
+- Custom circular icon badges with unique colors
+- Smooth animations and transitions
 
 ---
 
@@ -362,6 +375,10 @@ APPROVED_USERS="admin@example.com,user@example.com,recruiter@company.com"
 - `spotify-design-system` (custom)
 - `spotify-web-api-node`
 - `swr`
+
+**Data Visualization:**
+- `chart.js` (charts and graphs)
+- `react-chartjs-2` (React wrapper)
 
 **Utilities:**
 - `fast-average-color` (color extraction)

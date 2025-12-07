@@ -1,12 +1,11 @@
 'use client';
 
 import React, { useState, useMemo } from 'react';
-import { Stack, Typography, Card, Button, ButtonVariant, ButtonSize, Skeleton } from 'spotify-design-system';
+import { Stack, Typography, Button, ButtonVariant, ButtonSize, Skeleton } from 'spotify-design-system';
 import { Doughnut, Radar, Bar } from 'react-chartjs-2';
-import { useTopArtists, useTopTracks, useRecentlyPlayed } from '@/hooks/api/useSpotifyApi';
+import { useTopArtists, useTopTracks } from '@/hooks/api/useSpotifyApi';
 import { TimeRange } from '@/types';
-import { InsightCard, GenreChart, TrackTable } from '@/components';
-import { getBestImageUrlByWidth } from '@/utils/imageHelpers';
+import { InsightCard, GenreChart, TopArtistChart } from '@/components';
 import { useSpotify } from '@/hooks/useSpotify';
 import { useRouter } from 'next/navigation';
 import { faMusic, faUserFriends, faCompactDisc, faClock } from '@fortawesome/free-solid-svg-icons';
@@ -32,7 +31,6 @@ export default function InsightsPage() {
     { time_range: selectedTimeRange, limit: 20 },
     isAuthenticated
   );
-  const { tracks: recentTracks, isLoading: recentLoading } = useRecentlyPlayed(20, isAuthenticated);
 
   // Calculate genre data from artists
   const genreData = useMemo(() => {
@@ -139,80 +137,63 @@ export default function InsightsPage() {
       </Stack>
 
       {/* Stats Cards */}
-      <Stack direction="row" spacing="md" className="flex-wrap">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {isLoading ? (
           <>
-            <Skeleton variant="rectangular" width="200px" height="120px" className="rounded-lg" />
-            <Skeleton variant="rectangular" width="200px" height="120px" className="rounded-lg" />
-            <Skeleton variant="rectangular" width="200px" height="120px" className="rounded-lg" />
-            <Skeleton variant="rectangular" width="200px" height="120px" className="rounded-lg" />
+            <Skeleton variant="rectangular" width="100%" height="140px" className="rounded-lg" />
+            <Skeleton variant="rectangular" width="100%" height="140px" className="rounded-lg" />
+            <Skeleton variant="rectangular" width="100%" height="140px" className="rounded-lg" />
+            <Skeleton variant="rectangular" width="100%" height="140px" className="rounded-lg" />
           </>
         ) : (
           <>
-            <InsightCard icon={faMusic} value={tracks.length} label="Top Tracks" />
-            <InsightCard icon={faUserFriends} value={artists.length} label="Top Artists" />
-            <InsightCard icon={faCompactDisc} value={genreData.length} label="Genres" />
+            <InsightCard 
+              icon={faMusic} 
+              value={tracks.length} 
+              label="Top Tracks" 
+              color="#FF6B9D"
+            />
+            <InsightCard 
+              icon={faUserFriends} 
+              value={artists.length} 
+              label="Top Artists" 
+              color="#4ECDC4"
+            />
+            <InsightCard 
+              icon={faCompactDisc} 
+              value={genreData.length} 
+              label="Genres" 
+              color="#95E1D3"
+            />
             <InsightCard 
               icon={faClock} 
               value={`${estimatedHours}h`} 
               label="Estimated Listening" 
               description="Approximate"
+              color="#FFA07A"
             />
           </>
         )}
-      </Stack>
+      </div>
 
       {/* Top Artists Section */}
       <Stack direction="column" spacing="lg">
-        <Typography variant="heading" size="lg" weight="bold" color="primary">
-          Top Artists
-        </Typography>
+        <Stack direction="column" spacing="xs">
+          <Typography variant="heading" size="lg" weight="bold" color="primary">
+            Your Top Artists
+          </Typography>
+          <Typography variant="body" color="secondary">
+            Artists you've listened to the most this period
+          </Typography>
+        </Stack>
         
         {isLoading ? (
-          <Stack direction="row" spacing="md" className="flex-wrap">
-            {[...Array(10)].map((_, i) => (
-              <Skeleton key={i} variant="rectangular" width="180px" height="220px" className="rounded-lg" />
-            ))}
-          </Stack>
+          <Skeleton variant="rectangular" width="100%" height="400px" className="rounded-lg" />
         ) : artists.length > 0 ? (
-          <Stack direction="row" spacing="md" className="flex-wrap">
-            {artists.map((artist, index) => (
-              <Card
-                key={artist.id}
-                title={artist.name}
-                subtitle={`#${index + 1} • ${artist.genres?.[0] || 'Artist'}`}
-                imageUrl={getBestImageUrlByWidth(artist.images)}
-                variant="artist"
-                onClick={() => router.push(`/artist/${artist.id}`)}
-              />
-            ))}
-          </Stack>
+          <TopArtistChart artists={artists} maxArtists={5} />
         ) : (
           <Typography variant="body" color="secondary">
             No artist data available for this time range
-          </Typography>
-        )}
-      </Stack>
-
-      {/* Top Tracks Section */}
-      <Stack direction="column" spacing="lg">
-        <Typography variant="heading" size="lg" weight="bold" color="primary">
-          Top Tracks
-        </Typography>
-        
-        {isLoading ? (
-          <Stack direction="column" spacing="sm">
-            {[...Array(5)].map((_, i) => (
-              <Skeleton key={i} variant="rectangular" width="100%" height="60px" className="rounded-lg" />
-            ))}
-          </Stack>
-        ) : tracks.length > 0 ? (
-          <TrackTable 
-            tracks={tracks.map(track => ({ track, added_at: new Date().toISOString() }))} 
-          />
-        ) : (
-          <Typography variant="body" color="secondary">
-            No track data available for this time range
           </Typography>
         )}
       </Stack>
@@ -228,10 +209,10 @@ export default function InsightsPage() {
             <Skeleton variant="rectangular" width="100%" height="300px" className="rounded-lg" />
           ) : (
             <Stack direction="row" spacing="lg" className="flex-wrap items-start">
-              <Stack className="w-80 h-80 p-4 bg-surface-elevated rounded-lg">
+              <Stack className="w-80 h-80 p-4 bg-surface-elevated rounded-lg flex-shrink-0">
                 <Doughnut data={genreChartData} options={getDonutChartOptions()} />
               </Stack>
-              <Stack direction="column" spacing="sm" className="flex-1 min-w-[300px]">
+              <Stack direction="column" spacing="sm" className="flex-1 min-w-[400px]">
                 <Typography variant="body" color="secondary" className="mb-2">
                   Progress Breakdown
                 </Typography>
@@ -286,28 +267,6 @@ export default function InsightsPage() {
         </Stack>
       )}
 
-      {/* Recently Played Section */}
-      <Stack direction="column" spacing="lg">
-        <Typography variant="heading" size="lg" weight="bold" color="primary">
-          Recently Played
-        </Typography>
-        
-        {recentLoading ? (
-          <Stack direction="column" spacing="sm">
-            {[...Array(5)].map((_, i) => (
-              <Skeleton key={i} variant="rectangular" width="100%" height="60px" className="rounded-lg" />
-            ))}
-          </Stack>
-        ) : recentTracks.length > 0 ? (
-          <TrackTable 
-            tracks={recentTracks} 
-          />
-        ) : (
-          <Typography variant="body" color="secondary">
-            No recently played tracks available
-          </Typography>
-        )}
-      </Stack>
     </Stack>
   );
 }

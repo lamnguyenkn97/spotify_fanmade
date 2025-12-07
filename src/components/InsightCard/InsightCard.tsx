@@ -9,6 +9,7 @@ interface InsightCardProps {
   value: string | number;
   label: string;
   description?: string;
+  color?: string;
 }
 
 export const InsightCard: React.FC<InsightCardProps> = ({
@@ -16,18 +17,26 @@ export const InsightCard: React.FC<InsightCardProps> = ({
   value,
   label,
   description,
+  color = '#1DB954', // Default Spotify green
 }) => {
   return (
     <Stack
       direction="column"
       spacing="md"
-      className="bg-surface-elevated rounded-lg p-6 hover:bg-surface-elevated-hover transition-colors"
+      className="bg-surface-elevated rounded-lg p-6 hover:bg-surface-elevated-hover transition-all hover:scale-105 cursor-pointer shadow-lg"
     >
       <Stack direction="row" spacing="md" align="center">
-        <Stack className="bg-spotify-green/10 rounded-full p-3" align="center" justify="center">
-          <Icon icon={icon} size="md" className="text-spotify-green" />
-        </Stack>
-        <Stack direction="column" spacing="xs">
+        <span 
+          className="rounded-full shadow-lg flex items-center justify-center flex-shrink-0"
+          style={{ 
+            backgroundColor: color,
+            width: '72px',
+            height: '72px'
+          }}
+        >
+          <Icon icon={icon} size="lg" color="#000000" />
+        </span>
+        <Stack direction="column" spacing="xs" className="flex-1">
           <Typography variant="heading" size="2xl" weight="bold" color="primary">
             {value}
           </Typography>

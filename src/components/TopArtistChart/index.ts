@@ -1,0 +1,2 @@
+export { TopArtistChart } from './TopArtistChart';
+
