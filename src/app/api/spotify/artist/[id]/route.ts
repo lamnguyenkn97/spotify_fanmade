@@ -31,14 +31,29 @@ export async function GET(
     // Get artist's top tracks
     const topTracks = await spotifyApi.getArtistTopTracks(id, 'US');
 
-    // Get artist's albums (latest to oldest)
-    const albums = await spotifyApi.getArtistAlbums(id, {
-      limit: 50,
-      include_groups: 'album,single,compilation',
-    } as any); // Type issue with spotify-web-api-node library
+    // Get artist's albums (fetch all by making multiple requests if needed)
+    let allAlbums: any[] = [];
+    let offset = 0;
+    const limit = 50; // Max per request
+    let hasMore = true;
+
+    // Fetch up to 200 albums (4 requests)
+    while (hasMore && offset < 200) {
+      const albums = await spotifyApi.getArtistAlbums(id, {
+        limit,
+        offset,
+        include_groups: 'album,single,compilation',
+      } as any); // Type issue with spotify-web-api-node library
+
+      const items = (albums as any).body.items;
+      allAlbums = allAlbums.concat(items);
+      
+      hasMore = items.length === limit;
+      offset += limit;
+    }
 
     // Sort albums by release date (latest to oldest)
-    const sortedAlbums = (albums as any).body.items.sort((a: any, b: any) => {
+    const sortedAlbums = allAlbums.sort((a: any, b: any) => {
       const dateA = new Date(a.release_date || 0).getTime();
       const dateB = new Date(b.release_date || 0).getTime();
       return dateB - dateA; // Descending order (latest first)

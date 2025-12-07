@@ -20,6 +20,8 @@ import { faClock } from '@fortawesome/free-regular-svg-icons';
 import { useRouter } from 'next/navigation';
 import { DiscographyFilterType, AlbumType, SpotifyArtistData, SpotifyAlbum, SpotifyTrack } from '@/types';
 import { formatDuration } from '@/utils/formatHelpers';
+import { useMusicPlayerContext } from '@/contexts/MusicPlayerContext';
+import { convertTracksToQueue } from '@/utils/trackHelpers';
 
 interface ArtistDataExtended {
   id: string;
@@ -65,11 +67,11 @@ export default function ArtistPage() {
   const [artist, setArtist] = useState<SpotifyArtistData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [isFollowing, setIsFollowing] = useState(false);
   const [selectedFilter, setSelectedFilter] = useState<DiscographyFilterType>(
     DiscographyFilterType.POPULAR_RELEASES
   );
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
+  const { playTrack, setQueue } = useMusicPlayerContext();
 
   useEffect(() => {
     if (!params.id) return;
@@ -99,21 +101,44 @@ export default function ArtistPage() {
     fetchArtist();
   }, [params.id]);
 
-  const handlePlay = () => {
-    // TODO: Connect to music player when built
+  const handlePlay = async () => {
+    if (!artist?.topTracks || artist.topTracks.length === 0) return;
+    
+    try {
+      // Play first track and set queue to all top tracks
+      const queue = convertTracksToQueue(artist.topTracks as any);
+      setQueue(queue);
+      await playTrack(artist.topTracks[0] as any);
+    } catch (error) {
+      console.error('Failed to play artist tracks:', error);
+    }
   };
 
-  const handleShuffle = () => {
-    // TODO: Connect to music player when built
+  const handleShuffle = async () => {
+    if (!artist?.topTracks || artist.topTracks.length === 0) return;
+    
+    try {
+      // Shuffle the tracks
+      const shuffled = [...artist.topTracks].sort(() => Math.random() - 0.5);
+      const queue = convertTracksToQueue(shuffled as any);
+      setQueue(queue);
+      await playTrack(shuffled[0] as any);
+    } catch (error) {
+      console.error('Failed to shuffle artist tracks:', error);
+    }
   };
 
-  const handleFollow = () => {
-    setIsFollowing(!isFollowing);
-    // TODO: Implement follow/unfollow functionality
-  };
-
-  const handleTrackClick = (track: any) => {
-    // TODO: Connect to music player when built
+  const handleTrackClick = async (track: any) => {
+    if (!artist?.topTracks) return;
+    
+    try {
+      // Set queue to all top tracks and play the clicked track
+      const queue = convertTracksToQueue(artist.topTracks as any);
+      setQueue(queue);
+      await playTrack(track);
+    } catch (error) {
+      console.error('Failed to play track:', error);
+    }
   };
 
   const handleAlbumClick = (albumId: string) => {
@@ -286,17 +311,6 @@ export default function ArtistPage() {
               color={'white'}
               size="lg"
             />
-            <button
-              onClick={handleFollow}
-              className={`px-6 py-2 font-bold text-sm border-2 transition-colors ${
-                isFollowing
-                  ? 'bg-transparent border-white text-white hover:border-gray-400 hover:text-gray-400'
-                  : 'bg-transparent border-gray-400 text-white hover:border-white'
-              }`}
-              style={{ borderRadius: borderRadius.round }}
-            >
-              {isFollowing ? 'Following' : 'Follow'}
-            </button>
             <Icon
               icon={faEllipsis}
               onClick={() => {}}
