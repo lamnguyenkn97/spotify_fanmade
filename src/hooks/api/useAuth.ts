@@ -7,14 +7,6 @@ import { apiClient, swrFetcher } from '@/lib/api-client';
 import { SpotifyUser } from '@/types';
 
 // ============================================================================
-// Types
-// ============================================================================
-
-interface LoginResponse {
-  url: string;
-}
-
-// ============================================================================
 // Auth Hooks
 // ============================================================================
 
@@ -49,17 +41,11 @@ export function useAuthUser() {
 
 /**
  * Login - initiates OAuth flow
+ * Note: /api/auth/login now redirects directly to Spotify, no JSON response
  */
 export async function loginWithSpotify(): Promise<void> {
-  try {
-    const data = await apiClient.get<LoginResponse>('/api/auth/login');
-    if (data.url) {
-      window.location.href = data.url;
-    }
-  } catch (error) {
-    // Failed to initiate login, silently fail
-    // User will remain on current page
-  }
+  // Directly navigate to the login endpoint which will redirect to Spotify
+  window.location.href = '/api/auth/login';
 }
 
 /**
