@@ -1,0 +1,84 @@
+'use client';
+
+import React from 'react';
+import { Stack, Typography, Skeleton } from 'spotify-design-system';
+
+interface DemoVideoProps {
+  videoUrl?: string;
+}
+
+export const DemoVideo: React.FC<DemoVideoProps> = ({ videoUrl }) => {
+  // TODO: Replace with your actual video URL after filming
+  // Examples:
+  // - YouTube: "https://www.youtube.com/embed/YOUR_VIDEO_ID"
+  // - Loom: "https://www.loom.com/embed/YOUR_VIDEO_ID"
+  const DEMO_VIDEO_URL = videoUrl || process.env.NEXT_PUBLIC_DEMO_VIDEO_URL || '';
+
+  if (!DEMO_VIDEO_URL) {
+    return (
+      <div className="w-full px-8 py-12 bg-grey-grey1/50">
+        <Stack direction="column" spacing="lg" align="center" className="max-w-5xl mx-auto">
+          <Stack direction="column" spacing="sm" align="center">
+            <Typography variant="heading" weight="bold" color="primary" className="text-3xl">
+              See It In Action
+            </Typography>
+            <Typography variant="body" color="secondary" className="text-center">
+              Watch a quick demo of all features in action
+            </Typography>
+          </Stack>
+
+          {/* Video Placeholder */}
+          <div className="w-full aspect-video bg-grey-grey2 rounded-lg flex items-center justify-center">
+            <Stack direction="column" spacing="md" align="center">
+              <Typography variant="body" color="secondary" className="text-xl">
+                📹 Demo video coming soon
+              </Typography>
+              <Typography variant="caption" color="secondary" className="opacity-70">
+                Recording in progress...
+              </Typography>
+            </Stack>
+          </div>
+        </Stack>
+      </div>
+    );
+  }
+
+  return (
+    <div className="w-full px-8 py-12 bg-grey-grey1/50">
+      <Stack direction="column" spacing="lg" align="center" className="max-w-5xl mx-auto">
+        <Stack direction="column" spacing="sm" align="center">
+          <Typography variant="heading" weight="bold" color="primary" className="text-3xl">
+            See It In Action
+          </Typography>
+          <Typography variant="body" color="secondary" className="text-center">
+            1-minute walkthrough of key features and technical implementation
+          </Typography>
+        </Stack>
+
+        {/* Video Embed */}
+        <div className="w-full aspect-video bg-grey-grey2 rounded-lg overflow-hidden shadow-xl">
+          <iframe
+            src={DEMO_VIDEO_URL}
+            title="Spotify Demo Video"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowFullScreen
+            className="w-full h-full"
+          />
+        </div>
+
+        {/* Tech Stack Tags */}
+        <Stack direction="row" spacing="sm" className="flex-wrap justify-center">
+          {['Next.js 15', 'React 18', 'TypeScript', 'NPM Published', 'Spotify API'].map((tech) => (
+            <span
+              key={tech}
+              className="px-3 py-1 bg-grey-grey2 text-white text-sm rounded-full"
+            >
+              {tech}
+            </span>
+          ))}
+        </Stack>
+      </Stack>
+    </div>
+  );
+};
+

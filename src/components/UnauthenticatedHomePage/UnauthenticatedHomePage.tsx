@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { Card, Stack, Typography, Button, ButtonVariant, ButtonSize, Skeleton } from 'spotify-design-system';
 import homepageData from '@/app/data/homepageData.json';
 import { getBestImageUrlByWidth } from '@/utils/imageHelpers';
-import { RequestDemoModal } from '@/components';
+import { RequestDemoModal, DemoVideo } from '@/components';
 
 interface UnauthenticatedHomePageProps {
   onCardClick: (card: any) => void;
@@ -114,6 +114,10 @@ export const UnauthenticatedHomePage: React.FC<UnauthenticatedHomePageProps> = (
       <>
         <HeroBanner onRequestDemo={() => setShowRequestModal(true)} />
         <RequestDemoModal isOpen={showRequestModal} onClose={() => setShowRequestModal(false)} />
+        
+        {/* Demo Video Section */}
+        <DemoVideo />
+        
         <Stack direction="column" spacing="lg" className="px-8 py-6">
           {/* Loading skeletons for content sections */}
           {[1, 2, 3, 4].map((section) => (
@@ -135,6 +139,9 @@ export const UnauthenticatedHomePage: React.FC<UnauthenticatedHomePageProps> = (
     <>
       <HeroBanner onRequestDemo={() => setShowRequestModal(true)} />
       <RequestDemoModal isOpen={showRequestModal} onClose={() => setShowRequestModal(false)} />
+      
+      {/* Demo Video Section */}
+      <DemoVideo />
       
       <Stack direction="column" spacing="lg" className="px-8 py-6">
         {/* Render Sections */}
