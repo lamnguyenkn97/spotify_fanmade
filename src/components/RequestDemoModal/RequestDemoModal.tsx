@@ -20,6 +20,44 @@ export const RequestDemoModal: React.FC<RequestDemoModalProps> = ({ isOpen, onCl
   const nameInputRef = useRef<HTMLInputElement>(null);
   const [activeField, setActiveField] = useState<'email' | 'name' | 'message' | null>(null);
 
+  // Load saved email and auto-check approval when modal opens
+  useEffect(() => {
+    if (!isOpen) return;
+
+    const savedEmail = localStorage.getItem('spotify_demo_email');
+    if (savedEmail) {
+      setEmail(savedEmail);
+      // Auto-check if they're approved now
+      checkApproval(savedEmail);
+    }
+  }, [isOpen]);
+
+  // Check if email is approved
+  const checkApproval = async (emailToCheck: string) => {
+    if (!emailToCheck || !emailToCheck.includes('@')) return;
+
+    try {
+      const checkResponse = await fetch('/api/check-approval', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: emailToCheck }),
+      });
+
+      const { approved } = await checkResponse.json();
+
+      if (approved) {
+        // User is approved! Auto-redirect to OAuth
+        setIsAlreadyApproved(true);
+        setTimeout(() => {
+          window.location.href = '/api/auth/login';
+        }, 2000);
+      }
+    } catch (err) {
+      // Silently fail - user can still manually enter email
+      console.error('Auto-check approval failed:', err);
+    }
+  };
+
   // Restore focus after re-render (only for Input components, not textarea)
   useEffect(() => {
     if (!isOpen || loading || submitted || isAlreadyApproved) return;
@@ -46,6 +84,9 @@ export const RequestDemoModal: React.FC<RequestDemoModalProps> = ({ isOpen, onCl
     setError('');
 
     try {
+      // Save email to localStorage for future visits
+      localStorage.setItem('spotify_demo_email', email);
+
       // First, check if user is already approved
       const checkResponse = await fetch('/api/check-approval', {
         method: 'POST',
