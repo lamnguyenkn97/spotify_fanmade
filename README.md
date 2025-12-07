@@ -84,45 +84,24 @@ This is an independent educational project for portfolio demonstration.
 - Real-time position tracking
 
 ### 📊 Listening Insights (NEW)
-- **Personal Analytics Dashboard** with interactive data visualizations and time-range filtering
-- **Time Range Selection**: Last Month, 6 Months, All Time with real-time data updates
-- **Interactive Stat Cards**: Click to smoothly scroll to detailed sections
-  - Top Tracks count with clickable list
-  - Top Artists count with listening time analysis
-  - Genres count with distribution charts
-  - Estimated Listening Time with time-range multipliers
-- **Champion Artist Section**: Spotlight on your most played artist
-  - Artist avatar with trophy badge
-  - Estimated listening time (hours/minutes)
-  - Top genres and follower count
-- **Top Artists Chart**: Horizontal bar chart showing listening time per artist
-  - Uses actual track durations from Spotify API
-  - Weighted play estimation based on track rankings
-  - Color-coded bars for top 5-10 artists
-- **Your Top Tracks List**: Interactive list of top 20-50 tracks
-  - Click any track to view detailed information in modal
-  - Album artwork, track name, artists, popularity score
-  - Hover effects with Spotify green highlight
-- **Track Detail Modal**: Comprehensive track information
-  - Album artwork, track metadata, release year
-  - Popularity score, duration, track number
-  - Content rating (explicit/clean)
-  - "Open in Spotify" link using TextLink component
-- **Genre Distribution**: Visual breakdown of music taste
-  - Interactive donut chart with top 8 genres
-  - Progress bars with circular music icons
-  - Genre names, counts, and percentages
-  - Unique colors for each genre
-- **Audio Features Radar Chart**: Music taste profile (mock data for demo)
-  - Energy, Danceability, Valence, Acousticness, Speechiness, Instrumentalness
-- **Track Popularity Chart**: Bar chart of Spotify popularity scores (0-100)
-- **Accurate Listening Time Calculations**:
-  - Uses real track durations from Spotify API
-  - Weighted by track ranking (top tracks = more plays)
-  - Time range multipliers (1x, 6x, 24x for different periods)
-- Built with **Chart.js** (Donut, Radar, Bar charts)
-- **NEW badge** with pulse animation in header for discoverability
-- All components use Design System (Stack, Typography, Image, Icon, Modal)
+Personal analytics dashboard with interactive data visualizations and time-range filtering (Last Month, 6 Months, All Time).
+
+**Key Features:**
+- **Interactive Stat Cards**: Click to navigate to Top Tracks, Artists, Genres, or Estimated Listening Time sections
+- **Champion Artist**: Spotlight with trophy badge, avatar, listening time, and follower stats
+- **Top Artists Chart**: Horizontal bar chart with estimated listening time per artist (uses actual track durations from Spotify API)
+- **Top Tracks List**: Clickable list showing album art, track info, and popularity scores. Click any track to view detailed modal
+- **Track Detail Modal**: Comprehensive track information with album artwork, metadata, popularity, duration, and "Open in Spotify" link
+- **Genre Distribution**: Interactive donut chart + progress bars with circular icons showing genre breakdown
+- **Audio Features**: Radar chart displaying music taste profile (Energy, Danceability, Valence, etc.)
+- **Track Popularity**: Bar chart of Spotify popularity scores (0-100)
+
+**Technical Highlights:**
+- Accurate listening time calculations using real track durations and weighted play estimation
+- Time range multipliers (1x, 6x, 24x) for different periods
+- Built with Chart.js (Donut, Radar, Bar charts)
+- 100% Design System compliance
+- NEW badge with pulse animation in header
 
 ### 📚 Library & Content
 - User library: saved tracks, playlists, albums, artists, podcasts
