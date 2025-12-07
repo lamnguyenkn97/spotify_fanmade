@@ -13,7 +13,22 @@ interface TrackDetailModalProps {
 }
 
 export const TrackDetailModal: React.FC<TrackDetailModalProps> = ({ isOpen, onClose, track }) => {
-  if (!track) return null;
+  if (!track) {
+    return (
+      <Modal
+        open={false}
+        onClose={onClose}
+        size={ModalSize.Medium}
+        showCloseButton={true}
+        closeOnBackdropClick={true}
+        closeOnEscape={true}
+      >
+        <Stack direction="column" spacing="lg" className="p-6">
+          <Typography variant="body" color="secondary">No track selected</Typography>
+        </Stack>
+      </Modal>
+    );
+  }
 
   const albumImage = getBestImageUrl(track.album?.images);
   const duration = track.duration_ms ? Math.floor(track.duration_ms / 1000) : 0;
