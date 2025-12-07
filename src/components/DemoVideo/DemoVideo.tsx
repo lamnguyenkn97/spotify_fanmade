@@ -16,24 +16,24 @@ export const DemoVideo: React.FC<DemoVideoProps> = ({ videoUrl }) => {
 
   if (!DEMO_VIDEO_URL) {
     return (
-      <div className="w-full px-8 py-12 bg-grey-grey1/50">
-        <Stack direction="column" spacing="lg" align="center" className="max-w-5xl mx-auto">
-          <Stack direction="column" spacing="sm" align="center">
-            <Typography variant="heading" weight="bold" color="primary" className="text-3xl">
+      <div className="w-full px-8 py-8 bg-grey-grey1/50">
+        <Stack direction="column" spacing="md" align="center" className="max-w-3xl mx-auto">
+          <Stack direction="column" spacing="xs" align="center">
+            <Typography variant="heading" weight="bold" color="primary" className="text-2xl">
               See It In Action
             </Typography>
-            <Typography variant="body" color="secondary" className="text-center">
-              Watch a quick demo of all features in action
+            <Typography variant="body" color="secondary" className="text-center text-sm">
+              1-minute walkthrough of key features
             </Typography>
           </Stack>
 
           {/* Video Placeholder */}
           <div className="w-full aspect-video bg-grey-grey2 rounded-lg flex items-center justify-center">
-            <Stack direction="column" spacing="md" align="center">
-              <Typography variant="body" color="secondary" className="text-xl">
+            <Stack direction="column" spacing="sm" align="center">
+              <Typography variant="body" color="secondary" className="text-lg">
                 📹 Demo video coming soon
               </Typography>
-              <Typography variant="caption" color="secondary" className="opacity-70">
+              <Typography variant="caption" color="secondary" className="opacity-70 text-xs">
                 Recording in progress...
               </Typography>
             </Stack>
@@ -44,14 +44,14 @@ export const DemoVideo: React.FC<DemoVideoProps> = ({ videoUrl }) => {
   }
 
   return (
-    <div className="w-full px-8 py-12 bg-grey-grey1/50">
-      <Stack direction="column" spacing="lg" align="center" className="max-w-5xl mx-auto">
-        <Stack direction="column" spacing="sm" align="center">
-          <Typography variant="heading" weight="bold" color="primary" className="text-3xl">
+    <div className="w-full px-8 py-8 bg-grey-grey1/50">
+      <Stack direction="column" spacing="md" align="center" className="max-w-3xl mx-auto">
+        <Stack direction="column" spacing="xs" align="center">
+          <Typography variant="heading" weight="bold" color="primary" className="text-2xl">
             See It In Action
           </Typography>
-          <Typography variant="body" color="secondary" className="text-center">
-            1-minute walkthrough of key features and technical implementation
+          <Typography variant="body" color="secondary" className="text-center text-sm">
+            1-minute walkthrough of key features
           </Typography>
         </Stack>
 
@@ -68,10 +68,10 @@ export const DemoVideo: React.FC<DemoVideoProps> = ({ videoUrl }) => {
 
         {/* Tech Stack Tags */}
         <Stack direction="row" spacing="sm" className="flex-wrap justify-center">
-          {['Next.js 15', 'React 18', 'TypeScript', 'NPM Published', 'Spotify API'].map((tech) => (
+          {['Next.js 15', 'React 18', 'TypeScript', 'NPM Published'].map((tech) => (
             <span
               key={tech}
-              className="px-3 py-1 bg-grey-grey2 text-white text-sm rounded-full"
+              className="px-2 py-1 bg-grey-grey2 text-white text-xs rounded-full"
             >
               {tech}
             </span>
