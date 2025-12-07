@@ -154,7 +154,7 @@ export const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
       // User is already logged in, do nothing
       return;
     }
-    // Show Request Demo modal instead of direct OAuth
+    // Show Request Demo modal (modal itself handles admin auto-redirect)
     showRequestDemoModal();
   }, [isAuthenticated, showRequestDemoModal]);
 

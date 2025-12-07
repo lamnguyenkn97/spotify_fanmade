@@ -91,19 +91,27 @@ export const UnauthenticatedHomePage: React.FC<UnauthenticatedHomePageProps> = (
 
   useEffect(() => {
     const fetchHomepageData = async () => {
-      // For unauthenticated users, load static data immediately
-      // No API call needed - this is a portfolio demo showcase
-      const filteredSections = homepageData.data.home.sectionContainer.sections.items.filter(
-        (section: any) => {
-          const items = section.sectionItems?.items || [];
-          const firstItem = items.find((item: any) => item.content?.data);
-          return firstItem !== undefined && items.length > 0;
-        }
-      );
-      
-      setSections(filteredSections);
-      setUsingFallback(false);
-      setLoading(false);
+      try {
+        // For unauthenticated users, load static data immediately
+        // No API call needed - this is a portfolio demo showcase
+        const filteredSections = homepageData.data.home.sectionContainer.sections.items.filter(
+          (section: any) => {
+            const items = section.sectionItems?.items || [];
+            const firstItem = items.find((item: any) => item.content?.data);
+            return firstItem !== undefined && items.length > 0;
+          }
+        );
+        
+        setSections(filteredSections);
+        setUsingFallback(false);
+      } catch (error) {
+        console.error('Failed to load homepage data:', error);
+        setSections([]);
+        setUsingFallback(true);
+      } finally {
+        // Always set loading to false, even if there's an error
+        setLoading(false);
+      }
     };
 
     fetchHomepageData();

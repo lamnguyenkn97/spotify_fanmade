@@ -1,7 +1,7 @@
 'use client';
 
-import React, { useState, useRef, useEffect } from 'react';
-import { Modal, Stack, Typography, Input, Button, ButtonVariant, ButtonSize } from 'spotify-design-system';
+import React, { useState, useEffect } from 'react';
+import { Modal, Stack, Typography, Input, TextArea, Button, ButtonVariant, ButtonSize } from 'spotify-design-system';
 
 interface RequestDemoModalProps {
   isOpen: boolean;
@@ -16,25 +16,45 @@ export const RequestDemoModal: React.FC<RequestDemoModalProps> = ({ isOpen, onCl
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState('');
   const [isAlreadyApproved, setIsAlreadyApproved] = useState(false);
-  const emailInputRef = useRef<HTMLInputElement>(null);
-  const nameInputRef = useRef<HTMLInputElement>(null);
-  const [activeField, setActiveField] = useState<'email' | 'name' | 'message' | null>(null);
 
-  // Restore focus after re-render (only for Input components, not textarea)
+  // Load saved email and auto-check approval when modal opens
   useEffect(() => {
-    if (!isOpen || loading || submitted || isAlreadyApproved) return;
-    if (activeField === 'message') return; // Don't interfere with textarea
-    
-    const timer = setTimeout(() => {
-      if (activeField === 'email') {
-        emailInputRef.current?.focus();
-      } else if (activeField === 'name') {
-        nameInputRef.current?.focus();
-      }
-    }, 0);
+    if (!isOpen) return;
 
-    return () => clearTimeout(timer);
-  }, [email, name, isOpen, loading, submitted, isAlreadyApproved, activeField]);
+    const savedEmail = localStorage.getItem('spotify_demo_email');
+    if (savedEmail) {
+      setEmail(savedEmail);
+      // Auto-check if they're approved now
+      checkApproval(savedEmail);
+    }
+  }, [isOpen]);
+
+  // Check if email is approved
+  const checkApproval = async (emailToCheck: string) => {
+    if (!emailToCheck || !emailToCheck.includes('@')) return;
+
+    try {
+      const checkResponse = await fetch('/api/check-approval', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: emailToCheck }),
+      });
+
+      const { approved } = await checkResponse.json();
+
+      if (approved) {
+        // User is approved! Auto-redirect to OAuth
+        setIsAlreadyApproved(true);
+        setTimeout(() => {
+          window.location.href = '/api/auth/login';
+        }, 2000);
+      }
+    } catch (err) {
+      // Silently fail - user can still manually enter email
+      console.error('Auto-check approval failed:', err);
+    }
+  };
+
 
   const handleSubmit = async () => {
     if (!email || !email.includes('@')) {
@@ -46,6 +66,9 @@ export const RequestDemoModal: React.FC<RequestDemoModalProps> = ({ isOpen, onCl
     setError('');
 
     try {
+      // Save email to localStorage for future visits
+      localStorage.setItem('spotify_demo_email', email);
+
       // First, check if user is already approved
       const checkResponse = await fetch('/api/check-approval', {
         method: 'POST',
@@ -93,7 +116,6 @@ export const RequestDemoModal: React.FC<RequestDemoModalProps> = ({ isOpen, onCl
       setError('');
       setSubmitted(false);
       setIsAlreadyApproved(false);
-      setActiveField(null);
     } else if (submitted || isAlreadyApproved) {
       // Allow closing confirmation screens
       onClose();
@@ -103,7 +125,6 @@ export const RequestDemoModal: React.FC<RequestDemoModalProps> = ({ isOpen, onCl
       setError('');
       setSubmitted(false);
       setIsAlreadyApproved(false);
-      setActiveField(null);
     }
   };
 
@@ -151,45 +172,34 @@ export const RequestDemoModal: React.FC<RequestDemoModalProps> = ({ isOpen, onCl
             </Typography>
 
             <Input
-              ref={emailInputRef}
               label="Spotify Email"
               type="email"
               placeholder="your.email@example.com"
               value={email}
               onValueChange={setEmail}
-              onFocus={() => setActiveField('email')}
               disabled={loading}
               fullWidth
             />
 
             <Input
-              ref={nameInputRef}
               label="Name (Optional)"
               type="text"
               placeholder="Your name"
               value={name}
               onValueChange={setName}
-              onFocus={() => setActiveField('name')}
               disabled={loading}
               fullWidth
             />
 
-            <Stack direction="column" spacing="xs">
-              <Typography variant="body" color="primary" weight="medium">
-                Message (Optional)
-              </Typography>
-              <Input
-                type="text"
-                placeholder="E.g., 'I'm a recruiter at Company X' or 'Frontend developer interested in your work'"
-                value={message}
-                onValueChange={setMessage}
-                onFocus={() => setActiveField('message')}
-                onBlur={() => setActiveField(null)}
-                disabled={loading}
-                fullWidth
-                className="h-20"
-              />
-            </Stack>
+            <TextArea
+              label="Message (Optional)"
+              placeholder="E.g., 'I'm a recruiter at Company X' or 'Frontend developer interested in your work'"
+              value={message}
+              onValueChange={setMessage}
+              disabled={loading}
+              rows={3}
+              fullWidth
+            />
 
             {error && (
               <Typography variant="caption" color="primary" className="text-red-500">
