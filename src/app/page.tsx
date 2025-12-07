@@ -21,6 +21,9 @@ function HomeContent() {
     if (error === 'access_denied') {
       toast.warning('You need to authorize the app to use Spotify features');
       window.history.replaceState({}, '', '/');
+    } else if (error === 'not_on_allowlist') {
+      toast.error('Access Restricted: Your Spotify account needs to be added to the allowlist. See README for access request details.');
+      window.history.replaceState({}, '', '/');
     } else if (error === 'auth_failed' || errorDescription) {
       toast.error('Authentication failed. Please try again.');
       window.history.replaceState({}, '', '/');

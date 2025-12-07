@@ -15,6 +15,42 @@
 
 ---
 
+## 🎬 Demo Access
+
+### Automated Request System
+
+**How to Get Access:**
+
+1. 🌐 Visit [spotify-fanmade.vercel.app](https://spotify-fanmade.vercel.app)
+2. Click **"Request Demo"** button
+3. Enter your Spotify account email + optional message
+4. System automatically emails me your request via Resend
+5. I add you to both:
+   - Spotify Developer Dashboard (User Management)
+   - App's approved users list (`src/config/approvedUsers.ts`)
+6. You receive confirmation within 24 hours
+7. Login with Spotify OAuth - auto-approved users bypass the request modal
+
+**Watch Demo Instead:**
+- 🎥 **[View Full Demo Video](#)** *(Coming soon)*
+- See all authenticated features without login
+
+**Direct Email (Backup):**
+- 📧 [lamnguyen.hcmut@gmail.com](mailto:lamnguyen.hcmut@gmail.com)
+- Include your Spotify account email
+
+### Why Login is Restricted
+
+This app uses Spotify's Web API in **Development Mode** due to their [Extended Quota Mode requirements](https://developer.spotify.com/documentation/web-api/concepts/quota-modes) (250k+ MAUs, registered business entity). Development mode limits access to 25 users maximum.
+
+**This doesn't affect the technical implementation** - the code is identical to production-approved apps and demonstrates:
+- OAuth 2.0 authentication flow
+- Secure session management (HTTP-only cookies)
+- Real-time API integration
+- Professional frontend architecture
+
+---
+
 ## Legal Disclaimer
 
 This is an independent educational project for portfolio demonstration.
@@ -52,6 +88,11 @@ This is an independent educational project for portfolio demonstration.
 - Recently played history and top artists
 - Multi-entity search (tracks, artists, albums, playlists, podcasts)
 - Filter system for library items
+
+### Access Control
+- Automated demo request system with email notifications
+- Approved users bypass request modal for seamless OAuth login
+- Configurable user allowlist for development mode compliance
 
 ### UI/UX
 - Dynamic gradient backgrounds extracted from album artwork
@@ -198,7 +239,13 @@ npm install
 - Add redirect URI: `http://127.0.0.1:3010/api/auth/callback`
 - Copy Client ID and Client Secret
 
-**3. Configure environment:**
+**3. Add yourself to User Management:**
+- In your Spotify app dashboard, go to **Settings**
+- Find **User Management** section
+- Add your Spotify account email
+- Click **Save**
+
+**4. Configure environment:**
 ```bash
 cp .env.example .env.local
 ```
@@ -210,28 +257,70 @@ SPOTIFY_CLIENT_SECRET=your_client_secret
 SPOTIFY_REDIRECT_URI=http://127.0.0.1:3010/api/auth/callback
 NEXT_PUBLIC_APP_URL=http://127.0.0.1:3010
 SESSION_SECRET=generate_random_string
+APPROVED_USERS="your.email@example.com"
 ```
 
-**4. Run:**
+**5. Run:**
 ```bash
 npm run dev
 # Open http://127.0.0.1:3010
 ```
 
+**Note:** Your Spotify Developer App will be in Development Mode by default, which limits access to 25 users. This is sufficient for development and portfolio demonstration.
+
 ---
 
 ## Deployment (Vercel)
 
-**Environment variables:**
+**1. Set environment variables in Vercel:**
 ```env
-SPOTIFY_CLIENT_ID
-SPOTIFY_CLIENT_SECRET
+# Required
+SPOTIFY_CLIENT_ID             # From Spotify Developer Dashboard
+SPOTIFY_CLIENT_SECRET         # From Spotify Developer Dashboard
 SPOTIFY_REDIRECT_URI          # https://your-app.vercel.app/api/auth/callback
 NEXT_PUBLIC_APP_URL           # https://your-app.vercel.app
-SESSION_SECRET
+SESSION_SECRET                # Generate: openssl rand -base64 32
+
+# Approved Users (comma-separated)
+APPROVED_USERS                # "user1@example.com,user2@example.com"
+
+# Optional - Demo Request Emails
+RESEND_API_KEY                # From resend.com (enables email notifications)
 ```
 
-**Update Spotify redirect URIs** in Developer Dashboard, then deploy.
+**2. Update Spotify redirect URIs:**
+- Go to your app in [Spotify Developer Dashboard](https://developer.spotify.com/dashboard)
+- Settings → Redirect URIs
+- Add: `https://your-app.vercel.app/api/auth/callback`
+- Click **Save**
+
+**3. Configure demo request email (Optional):**
+```env
+RESEND_API_KEY                # From resend.com (free tier: 3k emails/month)
+```
+- Sign up at [resend.com](https://resend.com)
+- Get API key from dashboard
+- Enables automated email notifications for demo requests
+- Without this, requests are logged to console only
+
+**4. Add users to allowlist:**
+
+**Method 1: Spotify Developer Dashboard**
+- Settings → User Management
+- Add Spotify email addresses
+- Required for OAuth access
+
+**Method 2: Auto-approved Users (Bypass Request Modal)**
+- Add to environment variable (no code changes needed!)
+- These users skip the "Request Demo" modal and go straight to OAuth login
+```env
+APPROVED_USERS="admin@example.com,user@example.com,recruiter@company.com"
+```
+- In Vercel: Settings → Environment Variables → Edit `APPROVED_USERS`
+- Locally: Add to `.env.local`
+
+**5. Deploy from GitHub:**
+- Vercel auto-deploys on push to main branch
 
 ---
 

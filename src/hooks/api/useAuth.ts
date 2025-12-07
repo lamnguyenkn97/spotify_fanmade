@@ -28,8 +28,13 @@ export function useAuthUser() {
     {
       revalidateOnFocus: false,
       shouldRetryOnError: false,
-      onError: (err) => {
-        // Silently handle auth errors - user is just not authenticated
+      onError: (err: any) => {
+        // Check if user is not on allowlist (403 error)
+        if (err?.code === 'NOT_ON_ALLOWLIST' || err?.error === 'User not authorized') {
+          // Redirect to home with error message
+          window.location.href = '/?error=not_on_allowlist';
+        }
+        // Otherwise silently handle - user is just not authenticated
       },
     }
   );

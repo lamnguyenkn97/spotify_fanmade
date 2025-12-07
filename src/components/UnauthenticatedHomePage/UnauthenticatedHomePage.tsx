@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { Card, Stack, Typography, Button, ButtonVariant, ButtonSize, Skeleton } from 'spotify-design-system';
 import homepageData from '@/app/data/homepageData.json';
 import { getBestImageUrlByWidth } from '@/utils/imageHelpers';
+import { RequestDemoModal, DemoVideo } from '@/components';
 
 interface UnauthenticatedHomePageProps {
   onCardClick: (card: any) => void;
@@ -52,10 +53,10 @@ const getCardProps = (item: any) => {
 };
 
 interface HeroBannerProps {
-  onLogin?: () => void;
+  onRequestDemo: () => void;
 }
 
-const HeroBanner: React.FC<HeroBannerProps> = ({ onLogin }) => (
+const HeroBanner: React.FC<HeroBannerProps> = ({ onRequestDemo }) => (
   <div className="relative w-full bg-gradient-to-b from-spotify-green/20 to-transparent px-8 py-12 mb-8">
     <Stack direction="column" spacing="lg" align="center" className="max-w-4xl mx-auto text-center">
       <Stack direction="column" spacing="md">
@@ -63,23 +64,18 @@ const HeroBanner: React.FC<HeroBannerProps> = ({ onLogin }) => (
           Spotify Fan-Made Experience
         </Typography>
         <Typography variant="body" color="secondary" className="text-xl">
-          A full-stack portfolio project showcasing modern web development with React, Next.js, and
-          a custom design system.
+          Frontend portfolio project with custom design system
         </Typography>
       </Stack>
+      
       <Button
         variant={ButtonVariant.Primary}
         size={ButtonSize.Large}
-        onClick={onLogin || (() => window.open('https://open.spotify.com', '_blank'))}
+        onClick={onRequestDemo}
         className="px-12 py-4 text-lg font-bold"
       >
-        Connect with Spotify
+        Request Demo Access
       </Button>
-      <Typography variant="caption" color="secondary" className="mt-2">
-        {onLogin 
-          ? 'Log in with your Spotify account to unlock all features'
-          : 'Visit Spotify to experience the full music streaming service'}
-      </Typography>
     </Stack>
   </div>
 );
@@ -91,6 +87,7 @@ export const UnauthenticatedHomePage: React.FC<UnauthenticatedHomePageProps> = (
   const [sections, setSections] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [usingFallback, setUsingFallback] = useState(false);
+  const [showRequestModal, setShowRequestModal] = useState(false);
 
   useEffect(() => {
     const fetchHomepageData = async () => {
@@ -115,7 +112,12 @@ export const UnauthenticatedHomePage: React.FC<UnauthenticatedHomePageProps> = (
   if (loading) {
     return (
       <>
-        <HeroBanner />
+        <HeroBanner onRequestDemo={() => setShowRequestModal(true)} />
+        <RequestDemoModal isOpen={showRequestModal} onClose={() => setShowRequestModal(false)} />
+        
+        {/* Demo Video Section */}
+        <DemoVideo />
+        
         <Stack direction="column" spacing="lg" className="px-8 py-6">
           {/* Loading skeletons for content sections */}
           {[1, 2, 3, 4].map((section) => (
@@ -135,7 +137,11 @@ export const UnauthenticatedHomePage: React.FC<UnauthenticatedHomePageProps> = (
 
   return (
     <>
-      <HeroBanner onLogin={onLogin} />
+      <HeroBanner onRequestDemo={() => setShowRequestModal(true)} />
+      <RequestDemoModal isOpen={showRequestModal} onClose={() => setShowRequestModal(false)} />
+      
+      {/* Demo Video Section */}
+      <DemoVideo />
       
       <Stack direction="column" spacing="lg" className="px-8 py-6">
         {/* Render Sections */}
