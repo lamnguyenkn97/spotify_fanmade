@@ -10,6 +10,7 @@ interface InsightCardProps {
   label: string;
   description?: string;
   color?: string;
+  onClick?: () => void;
 }
 
 export const InsightCard: React.FC<InsightCardProps> = ({
@@ -18,12 +19,14 @@ export const InsightCard: React.FC<InsightCardProps> = ({
   label,
   description,
   color = '#1DB954', // Default Spotify green
+  onClick,
 }) => {
   return (
     <Stack
       direction="column"
       spacing="md"
       className="bg-surface-elevated rounded-lg p-6 hover:bg-surface-elevated-hover transition-all hover:scale-105 cursor-pointer shadow-lg"
+      onClick={onClick}
     >
       <Stack direction="row" spacing="md" align="center">
         <span 

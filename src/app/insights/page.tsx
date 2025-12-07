@@ -25,6 +25,14 @@ export default function InsightsPage() {
   const { showTrackDetailModal } = useModal();
   const [selectedTimeRange, setSelectedTimeRange] = useState<TimeRange>(TimeRange.SHORT_TERM);
 
+  // Scroll to section handlers
+  const scrollToSection = (sectionId: string) => {
+    const element = document.getElementById(sectionId);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  };
+
   // Fetch data based on selected time range
   const { artists, isLoading: artistsLoading } = useTopArtists(
     { time_range: selectedTimeRange, limit: 10 },
@@ -187,6 +195,7 @@ export default function InsightsPage() {
                 value={tracks.length} 
                 label="Top Tracks" 
                 color="#FF6B9D"
+                onClick={() => scrollToSection('top-tracks-section')}
               />
             </Stack>
             <Stack className="flex-1 min-w-[250px]">
@@ -195,6 +204,7 @@ export default function InsightsPage() {
                 value={artists.length} 
                 label="Top Artists" 
                 color="#4ECDC4"
+                onClick={() => scrollToSection('top-artists-section')}
               />
             </Stack>
             <Stack className="flex-1 min-w-[250px]">
@@ -203,6 +213,7 @@ export default function InsightsPage() {
                 value={genreData.length} 
                 label="Genres" 
                 color="#95E1D3"
+                onClick={() => scrollToSection('genre-distribution-section')}
               />
             </Stack>
             <Stack className="flex-1 min-w-[250px]">
@@ -212,6 +223,7 @@ export default function InsightsPage() {
                 label="Estimated Listening" 
                 description="Approximate"
                 color="#FFA07A"
+                onClick={() => scrollToSection('top-artists-section')}
               />
             </Stack>
           </>
@@ -219,7 +231,7 @@ export default function InsightsPage() {
       </Stack>
 
       {/* Top Artists Section */}
-      <Stack direction="column" spacing="lg">
+      <Stack id="top-artists-section" direction="column" spacing="lg">
         <Stack direction="column" spacing="xs">
           <Typography variant="heading" size="lg" weight="bold" color="primary">
             Your Top Artists
@@ -242,7 +254,7 @@ export default function InsightsPage() {
 
       {/* Genre Distribution Chart */}
       {genreData.length > 0 && (
-        <Stack direction="column" spacing="lg">
+        <Stack id="genre-distribution-section" direction="column" spacing="lg">
           <Typography variant="heading" size="lg" weight="bold" color="primary">
             Genre Distribution
           </Typography>
@@ -311,7 +323,7 @@ export default function InsightsPage() {
 
       {/* Top Tracks List */}
       {tracks.length > 0 && (
-        <Stack direction="column" spacing="lg">
+        <Stack id="top-tracks-section" direction="column" spacing="lg">
           <Stack direction="column" spacing="sm">
             <Typography variant="heading" size="lg" weight="bold" color="primary">
               Your Top Tracks
