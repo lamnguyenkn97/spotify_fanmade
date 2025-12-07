@@ -5,8 +5,8 @@ import { SpotifyTrack } from '@/types';
  * Convert a Spotify track object to CurrentTrack format for the music player
  */
 export const convertTrackToCurrentTrack = (track: SpotifyTrack): CurrentTrack => {
-  // Generate Spotify URI from track ID (format: spotify:track:TRACK_ID)
-  const spotifyUri = track.id ? `spotify:track:${track.id}` : track.external_urls?.spotify || undefined;
+  // Use track.uri if available, otherwise generate from track ID
+  const spotifyUri = track.uri || (track.id ? `spotify:track:${track.id}` : undefined);
 
   return {
     id: track.id,

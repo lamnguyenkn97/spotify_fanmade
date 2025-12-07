@@ -186,10 +186,42 @@ function SearchPageContent() {
       >
 
       {loading && (
-        <Stack direction="column" spacing="md" align="center">
-          <Typography variant="body" color="muted">
-            Searching...
-          </Typography>
+        <Stack direction="column" spacing="lg">
+          {/* Songs section skeleton */}
+          <Stack direction="column" spacing="md">
+            <Skeleton variant="text" width="20%" height="32px" />
+            {[1, 2, 3, 4, 5].map((i) => (
+              <Stack key={i} direction="row" spacing="md" align="center">
+                <Skeleton variant="text" width="40px" height="20px" />
+                <Skeleton variant="rectangular" width="40px" height="40px" />
+                <Stack direction="column" spacing="xs" className="flex-1">
+                  <Skeleton variant="text" width="40%" height="16px" />
+                  <Skeleton variant="text" width="30%" height="14px" />
+                </Stack>
+                <Skeleton variant="text" width="10%" height="14px" />
+              </Stack>
+            ))}
+          </Stack>
+
+          {/* Artists section skeleton */}
+          <Stack direction="column" spacing="md">
+            <Skeleton variant="text" width="15%" height="32px" />
+            <Stack direction="row" spacing="md">
+              {[1, 2, 3, 4, 5].map((i) => (
+                <Skeleton key={i} variant="circular" width="180px" height="180px" />
+              ))}
+            </Stack>
+          </Stack>
+
+          {/* Albums section skeleton */}
+          <Stack direction="column" spacing="md">
+            <Skeleton variant="text" width="15%" height="32px" />
+            <Stack direction="row" spacing="md">
+              {[1, 2, 3, 4, 5].map((i) => (
+                <Skeleton key={i} variant="rectangular" width="180px" height="180px" className="rounded-lg" />
+              ))}
+            </Stack>
+          </Stack>
         </Stack>
       )}
 

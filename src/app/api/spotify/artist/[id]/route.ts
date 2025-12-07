@@ -31,14 +31,29 @@ export async function GET(
     // Get artist's top tracks
     const topTracks = await spotifyApi.getArtistTopTracks(id, 'US');
 
-    // Get artist's albums (latest to oldest)
-    const albums = await spotifyApi.getArtistAlbums(id, {
-      limit: 50,
-      include_groups: 'album,single,compilation',
-    } as any); // Type issue with spotify-web-api-node library
+    // Get artist's albums (fetch all by making multiple requests if needed)
+    let allAlbums: any[] = [];
+    let offset = 0;
+    const limit = 50; // Max per request
+    let hasMore = true;
+
+    // Fetch up to 500 albums (10 requests max) to show complete discography
+    while (hasMore && offset < 500) {
+      const albums = await spotifyApi.getArtistAlbums(id, {
+        limit,
+        offset,
+        include_groups: 'album,single,compilation',
+      } as any); // Type issue with spotify-web-api-node library
+
+      const items = (albums as any).body.items;
+      allAlbums = allAlbums.concat(items);
+      
+      hasMore = items.length === limit;
+      offset += limit;
+    }
 
     // Sort albums by release date (latest to oldest)
-    const sortedAlbums = (albums as any).body.items.sort((a: any, b: any) => {
+    const sortedAlbums = allAlbums.sort((a: any, b: any) => {
       const dateA = new Date(a.release_date || 0).getTime();
       const dateB = new Date(b.release_date || 0).getTime();
       return dateB - dateA; // Descending order (latest first)
@@ -73,6 +88,8 @@ export async function GET(
         external_urls: track.external_urls,
         preview_url: track.preview_url,
         popularity: track.popularity,
+        uri: track.uri, // Required for playback!
+        track_number: track.track_number,
       })),
       albums: sortedAlbums.map((album: any) => ({
         id: album.id,
@@ -81,6 +98,8 @@ export async function GET(
         release_date: album.release_date,
         album_type: album.album_type,
         total_tracks: album.total_tracks,
+        uri: album.uri,
+        artists: album.artists,
       })),
     });
   } catch (error) {

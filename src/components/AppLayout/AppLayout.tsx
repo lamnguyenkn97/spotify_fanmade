@@ -13,7 +13,7 @@ import {
 } from 'spotify-design-system';
 import { useRouter } from 'next/navigation';
 import type { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime';
-import { faHeart } from '@fortawesome/free-solid-svg-icons';
+import { faHeart, faChartLine } from '@fortawesome/free-solid-svg-icons';
 import {
   UnauthenticatedSideBar,
   AuthenticatedSideBar,
@@ -272,7 +272,8 @@ const AppLayoutContent: React.FC<AppLayoutContentProps> = ({
             ? [
                 {
                   id: 'insights',
-                  label: 'Insights ✨',
+                  label: 'Insights',
+                  icon: <Icon icon={faChartLine} size="sm" />,
                   onClick: () => router.push('/insights'),
                   variant: 'primary' as const,
                   type: 'button' as const,
