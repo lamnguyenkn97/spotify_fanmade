@@ -87,8 +87,30 @@ export default function InsightsPage() {
       .sort((a, b) => b.count - a.count);
   }, [artists]);
 
-  // Calculate estimated listening time (rough estimate: avg 3.5 min per track)
-  const estimatedMinutes = tracks.length * 3.5;
+  // Calculate estimated listening time based on track rankings and time range
+  const estimatedMinutes = useMemo(() => {
+    // Calculate total minutes from all tracks with weighted plays
+    let totalMinutes = 0;
+    tracks.forEach((track, index) => {
+      // Estimate plays based on rank (top tracks played more)
+      const estimatedPlays = Math.max(5, 50 - (index * 2));
+      const trackMinutes = estimatedPlays * 3.5; // avg 3.5 min per track
+      totalMinutes += trackMinutes;
+    });
+    
+    // Apply time range multiplier
+    // short_term (4 weeks) = base
+    // medium_term (6 months) = ~6x
+    // long_term (several years, ~2 years) = ~24x
+    const timeRangeMultiplier = {
+      [TimeRange.SHORT_TERM]: 1,      // 4 weeks
+      [TimeRange.MEDIUM_TERM]: 6,     // 6 months = ~24 weeks = 6x
+      [TimeRange.LONG_TERM]: 24,      // 2 years = ~96 weeks = 24x
+    };
+    
+    return totalMinutes * (timeRangeMultiplier[selectedTimeRange] || 1);
+  }, [tracks, selectedTimeRange]);
+  
   const estimatedHours = Math.round(estimatedMinutes / 60);
 
   // Prepare Donut chart data for genres
