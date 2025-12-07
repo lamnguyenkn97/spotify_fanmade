@@ -43,11 +43,10 @@ export default function InsightsPage() {
     isAuthenticated
   );
 
-  // Calculate estimated listening time per artist
+  // Calculate estimated listening time per artist using ACTUAL track durations
   const artistListeningTime = useMemo(() => {
     const artistTime: Record<string, { minutes: number; trackCount: number }> = {};
     
-    // Average track duration is ~3.5 minutes, but we can be more precise
     // Top tracks are listened to more frequently, so we estimate based on their rank
     tracks.forEach((track, index) => {
       track.artists.forEach((artist) => {
@@ -57,7 +56,9 @@ export default function InsightsPage() {
         // Estimate: Higher ranked tracks = more plays
         // Top track might be played 50+ times, decreasing logarithmically
         const estimatedPlays = Math.max(5, 50 - (index * 2));
-        const estimatedMinutes = estimatedPlays * 3.5; // avg 3.5 min per track
+        // Use ACTUAL track duration from Spotify API
+        const trackMinutes = (track.duration_ms / 1000 / 60); // convert ms to minutes
+        const estimatedMinutes = estimatedPlays * trackMinutes;
         artistTime[artist.id].minutes += estimatedMinutes;
         artistTime[artist.id].trackCount += 1;
       });
@@ -87,15 +88,16 @@ export default function InsightsPage() {
       .sort((a, b) => b.count - a.count);
   }, [artists]);
 
-  // Calculate estimated listening time based on track rankings and time range
+  // Calculate estimated listening time using ACTUAL track durations and time range
   const estimatedMinutes = useMemo(() => {
-    // Calculate total minutes from all tracks with weighted plays
+    // Calculate total minutes from all tracks with weighted plays using REAL durations
     let totalMinutes = 0;
     tracks.forEach((track, index) => {
       // Estimate plays based on rank (top tracks played more)
       const estimatedPlays = Math.max(5, 50 - (index * 2));
-      const trackMinutes = estimatedPlays * 3.5; // avg 3.5 min per track
-      totalMinutes += trackMinutes;
+      // Use ACTUAL track duration from Spotify API (convert ms to minutes)
+      const trackMinutes = (track.duration_ms / 1000 / 60);
+      totalMinutes += estimatedPlays * trackMinutes;
     });
     
     // Apply time range multiplier
