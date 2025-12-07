@@ -22,8 +22,16 @@ const TIME_RANGES = [
 export default function InsightsPage() {
   const router = useRouter();
   const { isAuthenticated, loading: authLoading } = useSpotify();
-  const { showTrackDetailModal, showTopTracksModal, showTopArtistsModal, showGenresModal } = useModal();
+  const { showTrackDetailModal } = useModal();
   const [selectedTimeRange, setSelectedTimeRange] = useState<TimeRange>(TimeRange.SHORT_TERM);
+
+  // Scroll to section handlers
+  const scrollToSection = (sectionId: string) => {
+    const element = document.getElementById(sectionId);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  };
 
   // Fetch data based on selected time range
   const { artists, isLoading: artistsLoading } = useTopArtists(
@@ -187,7 +195,7 @@ export default function InsightsPage() {
                 value={tracks.length} 
                 label="Top Tracks" 
                 color="#FF6B9D"
-                onClick={() => showTopTracksModal(tracks, showTrackDetailModal)}
+                onClick={() => scrollToSection('top-tracks-section')}
               />
             </Stack>
             <Stack className="flex-1 min-w-[250px]">
@@ -196,7 +204,7 @@ export default function InsightsPage() {
                 value={artists.length} 
                 label="Top Artists" 
                 color="#4ECDC4"
-                onClick={() => showTopArtistsModal(artists, artistListeningTime)}
+                onClick={() => scrollToSection('top-artists-section')}
               />
             </Stack>
             <Stack className="flex-1 min-w-[250px]">
@@ -205,7 +213,7 @@ export default function InsightsPage() {
                 value={genreData.length} 
                 label="Genres" 
                 color="#95E1D3"
-                onClick={() => showGenresModal(genreData)}
+                onClick={() => scrollToSection('genre-distribution-section')}
               />
             </Stack>
             <Stack className="flex-1 min-w-[250px]">
@@ -215,7 +223,7 @@ export default function InsightsPage() {
                 label="Estimated Listening" 
                 description="Approximate"
                 color="#FFA07A"
-                onClick={() => showTopArtistsModal(artists, artistListeningTime)}
+                onClick={() => scrollToSection('top-artists-section')}
               />
             </Stack>
           </>
