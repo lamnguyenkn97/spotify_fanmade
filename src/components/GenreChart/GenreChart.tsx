@@ -35,12 +35,14 @@ export const GenreChart: React.FC<GenreChartProps> = ({ genres, maxItems = 10 })
               {genre.percentage}%
             </Typography>
           </Stack>
-          <div className="w-full bg-surface-base rounded-full h-2 overflow-hidden">
-            <div
+          <Stack className="w-full bg-surface-base rounded-full h-2 overflow-hidden">
+            <Stack
               className="bg-spotify-green h-full rounded-full transition-all duration-500"
               style={{ width: `${(genre.count / maxCount) * 100}%` }}
-            />
-          </div>
+            >
+              <span className="sr-only">{genre.percentage}%</span>
+            </Stack>
+          </Stack>
         </Stack>
       ))}
     </Stack>

@@ -24,9 +24,9 @@ export const InsightCard: React.FC<InsightCardProps> = ({
       className="bg-surface-elevated rounded-lg p-6 hover:bg-surface-elevated-hover transition-colors"
     >
       <Stack direction="row" spacing="md" align="center">
-        <div className="bg-spotify-green/10 rounded-full p-3">
+        <Stack className="bg-spotify-green/10 rounded-full p-3" align="center" justify="center">
           <Icon icon={icon} size="md" className="text-spotify-green" />
-        </div>
+        </Stack>
         <Stack direction="column" spacing="xs">
           <Typography variant="heading" size="2xl" weight="bold" color="primary">
             {value}
