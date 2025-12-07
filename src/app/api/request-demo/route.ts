@@ -24,13 +24,15 @@ export async function POST(request: NextRequest) {
             <p><strong>Message:</strong> ${message || 'No message'}</p>
             <p><strong>Time:</strong> ${new Date().toLocaleString()}</p>
             <hr />
-            <h3>Next Steps:</h3>
+            <h3>Manual Steps Required:</h3>
             <ol>
-              <li>Add to Spotify Developer Dashboard → User Management</li>
-              <li>Add "${email}" to src/config/approvedUsers.ts</li>
-              <li>Deploy changes</li>
-              <li>Reply to user</li>
+              <li><strong>Spotify Dashboard:</strong> <a href="https://developer.spotify.com/dashboard">developer.spotify.com/dashboard</a> → Settings → User Management → Add "${email}"</li>
+              <li><strong>Code:</strong> Add to <code>src/config/approvedUsers.ts</code></li>
+              <li><strong>Deploy:</strong> <code>git add . && git commit -m "add ${email}" && git push</code></li>
+              <li><strong>Notify:</strong> Reply to ${email} that access is granted</li>
             </ol>
+            <hr />
+            <p><small><em>Note: Spotify does not provide an API to automate User Management, so step 1 must be done manually.</em></small></p>
           `,
         });
       } catch (emailError) {
