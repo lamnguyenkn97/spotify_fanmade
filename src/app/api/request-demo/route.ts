@@ -17,11 +17,16 @@ export async function POST(request: NextRequest) {
       timestamp: new Date().toISOString(),
     });
 
+    // Debug: Check if API key exists
+    console.log('RESEND_API_KEY exists:', !!process.env.RESEND_API_KEY);
+
     // Send email notification via Resend
     if (process.env.RESEND_API_KEY) {
       try {
         const resend = new Resend(process.env.RESEND_API_KEY);
-        await resend.emails.send({
+        console.log('Attempting to send email to lamnguyen.hcmut@gmail.com...');
+        
+        const result = await resend.emails.send({
           from: 'Spotify Demo <onboarding@resend.dev>',
           to: 'lamnguyen.hcmut@gmail.com',
           subject: '🎵 New Spotify Demo Access Request',
@@ -41,6 +46,8 @@ export async function POST(request: NextRequest) {
             </ol>
           `,
         });
+        
+        console.log('Email sent successfully!', result);
       } catch (emailError) {
         console.error('Failed to send email:', emailError);
         // Don't fail the request if email fails
