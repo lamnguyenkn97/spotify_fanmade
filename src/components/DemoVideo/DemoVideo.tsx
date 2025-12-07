@@ -16,8 +16,8 @@ export const DemoVideo: React.FC<DemoVideoProps> = ({ videoUrl }) => {
 
   if (!DEMO_VIDEO_URL) {
     return (
-      <div className="w-full px-8 py-8 bg-grey-grey1/50">
-        <Stack direction="column" spacing="md" align="center" className="max-w-3xl mx-auto">
+      <Stack direction="column" spacing="md" align="center" className="w-full px-8 py-8 bg-grey-grey1/50">
+        <Stack direction="column" spacing="md" align="center" className="max-w-3xl mx-auto w-full">
           <Stack direction="column" spacing="xs" align="center">
             <Typography variant="heading" weight="bold" color="primary" className="text-2xl">
               See It In Action
@@ -28,7 +28,7 @@ export const DemoVideo: React.FC<DemoVideoProps> = ({ videoUrl }) => {
           </Stack>
 
           {/* Video Placeholder */}
-          <div className="w-full aspect-video bg-grey-grey2 rounded-lg flex items-center justify-center">
+          <Stack direction="column" align="center" justify="center" className="w-full aspect-video bg-grey-grey2 rounded-lg">
             <Stack direction="column" spacing="sm" align="center">
               <Typography variant="body" color="secondary" className="text-lg">
                 📹 Demo video coming soon
@@ -37,15 +37,15 @@ export const DemoVideo: React.FC<DemoVideoProps> = ({ videoUrl }) => {
                 Recording in progress...
               </Typography>
             </Stack>
-          </div>
+          </Stack>
         </Stack>
-      </div>
+      </Stack>
     );
   }
 
   return (
-    <div className="w-full px-8 py-8 bg-grey-grey1/50">
-      <Stack direction="column" spacing="md" align="center" className="max-w-3xl mx-auto">
+    <Stack direction="column" spacing="md" align="center" className="w-full px-8 py-8 bg-grey-grey1/50">
+      <Stack direction="column" spacing="md" align="center" className="max-w-3xl mx-auto w-full">
         <Stack direction="column" spacing="xs" align="center">
           <Typography variant="heading" weight="bold" color="primary" className="text-2xl">
             See It In Action
@@ -56,7 +56,7 @@ export const DemoVideo: React.FC<DemoVideoProps> = ({ videoUrl }) => {
         </Stack>
 
         {/* Video Embed */}
-        <div className="w-full aspect-video bg-grey-grey2 rounded-lg overflow-hidden shadow-xl">
+        <Stack direction="column" className="w-full aspect-video bg-grey-grey2 rounded-lg overflow-hidden shadow-xl">
           <iframe
             src={DEMO_VIDEO_URL}
             title="Spotify Demo Video"
@@ -64,21 +64,23 @@ export const DemoVideo: React.FC<DemoVideoProps> = ({ videoUrl }) => {
             allowFullScreen
             className="w-full h-full"
           />
-        </div>
+        </Stack>
 
         {/* Tech Stack Tags */}
         <Stack direction="row" spacing="sm" className="flex-wrap justify-center">
           {['Next.js 15', 'React 18', 'TypeScript', 'NPM Published'].map((tech) => (
-            <span
+            <Typography
               key={tech}
+              variant="caption"
+              color="secondary"
               className="px-2 py-1 bg-grey-grey2 text-white text-xs rounded-full"
             >
               {tech}
-            </span>
+            </Typography>
           ))}
         </Stack>
       </Stack>
-    </div>
+    </Stack>
   );
 };
 
