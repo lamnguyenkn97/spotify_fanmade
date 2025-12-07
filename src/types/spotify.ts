@@ -60,6 +60,7 @@ export interface SpotifyTrack {
     spotify?: string;
   };
   uri?: string;
+  popularity?: number; // 0-100 popularity score from Spotify
 }
 
 export interface SpotifyTrackWithContext {

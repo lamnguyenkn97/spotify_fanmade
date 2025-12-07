@@ -1,0 +1,49 @@
+import { NextRequest, NextResponse } from 'next/server';
+import { cookies } from 'next/headers';
+import SpotifyWebApi from 'spotify-web-api-node';
+import { TimeRange } from '@/types';
+
+export async function GET(request: NextRequest) {
+  try {
+    const cookieStore = await cookies();
+    const accessToken = cookieStore.get('spotify_access_token')?.value;
+
+    if (!accessToken) {
+      return NextResponse.json(
+        { error: 'Not authenticated' },
+        { status: 401 }
+      );
+    }
+
+    const { searchParams } = new URL(request.url);
+    const timeRange = (searchParams.get('time_range') || TimeRange.SHORT_TERM) as
+      | TimeRange.SHORT_TERM
+      | TimeRange.MEDIUM_TERM
+      | TimeRange.LONG_TERM;
+    const limit = parseInt(searchParams.get('limit') || '20', 10);
+
+    const spotifyApi = new SpotifyWebApi({
+      clientId: process.env.SPOTIFY_CLIENT_ID,
+      clientSecret: process.env.SPOTIFY_CLIENT_SECRET,
+    });
+
+    spotifyApi.setAccessToken(accessToken);
+
+    // Get user's top tracks
+    // short_term = last 4 weeks
+    // medium_term = last 6 months
+    // long_term = several years
+    const topTracks = await spotifyApi.getMyTopTracks({
+      limit,
+      time_range: timeRange,
+    });
+
+    return NextResponse.json(topTracks.body);
+  } catch (error) {
+    return NextResponse.json(
+      { error: 'Failed to fetch top tracks', details: error instanceof Error ? error.message : "Unknown error" },
+      { status: 500 }
+    );
+  }
+}
+

@@ -1,0 +1,2 @@
+export { GenreChart } from './GenreChart';
+

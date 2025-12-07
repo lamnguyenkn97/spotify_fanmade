@@ -217,6 +217,30 @@ export function useTopArtists(params: TopItemsParams = {}, enabled: boolean = tr
 }
 
 /**
+ * Get user's top tracks
+ */
+export function useTopTracks(params: TopItemsParams = {}, enabled: boolean = true) {
+  const queryParams = new URLSearchParams({
+    time_range: params.time_range || 'short_term',
+    limit: String(params.limit || 20),
+    offset: String(params.offset || 0),
+  }).toString();
+
+  const { data, error, isLoading } = useSWR<PaginatedResponse<SpotifyTrack>>(
+    enabled ? `/api/spotify/top-tracks?${queryParams}` : null,
+    swrFetcher,
+    defaultConfig
+  );
+
+  return {
+    tracks: data?.items || [],
+    total: data?.total || 0,
+    isLoading,
+    error,
+  };
+}
+
+/**
  * Get user's top albums
  */
 export function useTopAlbums(params: TopItemsParams = {}, enabled: boolean = true) {

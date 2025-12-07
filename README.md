@@ -77,30 +77,55 @@ This is an independent educational project for portfolio demonstration.
 
 ## Features
 
-### Playback
-- Spotify Web Playback SDK integration with automatic fallback to preview URLs
-- Full player controls: play/pause, skip, seek, volume, shuffle, repeat
-- Queue management with drag-and-drop reordering
-- Real-time position tracking
+### 🎵 Playback & Queue
+- **Spotify Web Playback SDK** integration with automatic fallback to 30s preview URLs for free users
+- **Full Player Controls**: play/pause, skip, seek, volume, shuffle, repeat modes
+- **Advanced Queue Management**: 
+  - Drag-and-drop reordering with smooth animations
+  - Add tracks from anywhere in the app
+  - Visual queue drawer with album artwork
+  - Real-time queue state management
+- **Real-time Position Tracking** with progress bar
 
-### Library & Content
+### 📊 Listening Insights (NEW)
+Personal analytics dashboard with interactive data visualizations and time-range filtering (Last Month, 6 Months, All Time).
+
+**Key Features:**
+- **Interactive Stat Cards**: Click to navigate to Top Tracks, Artists, Genres, or Estimated Listening Time sections
+- **Champion Artist**: Spotlight with trophy badge, avatar, listening time, and follower stats
+- **Top Artists Chart**: Horizontal bar chart with estimated listening time per artist (uses actual track durations from Spotify API)
+- **Top Tracks List**: Clickable list showing album art, track info, and popularity scores. Click any track to view detailed modal
+- **Track Detail Modal**: Comprehensive track information with album artwork, metadata, popularity, duration, and "Open in Spotify" link
+- **Genre Distribution**: Interactive donut chart + progress bars with circular icons showing genre breakdown
+- **Audio Features**: Radar chart displaying music taste profile (Energy, Danceability, Valence, etc.)
+- **Track Popularity**: Bar chart of Spotify popularity scores (0-100)
+
+**Technical Highlights:**
+- Accurate listening time calculations using real track durations and weighted play estimation
+- Time range multipliers (1x, 6x, 24x) for different periods
+- Built with Chart.js (Donut, Radar, Bar charts)
+- 100% Design System compliance
+- NEW badge with pulse animation in header
+
+### 📚 Library & Content
 - User library: saved tracks, playlists, albums, artists, podcasts
 - Recently played history and top artists
 - Multi-entity search (tracks, artists, albums, playlists, podcasts)
 - Filter system for library items
 
-### Access Control
+### 🔐 Access Control
 - Automated demo request system with email notifications
 - Approved users bypass request modal for seamless OAuth login
 - Configurable user allowlist for development mode compliance
 
-### UI/UX
-- Dynamic gradient backgrounds extracted from album artwork
-- Skeleton loading screens
-- Toast notifications
-- Error boundaries
-- Responsive design
-- Dark theme
+### 🎨 UI/UX
+- **Dynamic Backgrounds**: Extracted from album artwork with gradient overlays
+- **Responsive Design**: Fully responsive across mobile, tablet, and desktop with dark Spotify theme
+- **Loading States**: Skeleton screens, toast notifications, and graceful error handling
+- **Smooth Interactions**: Hover effects, scale transforms, smooth scroll navigation, and pulsing animations
+- **Modal System**: Nested modals for focused viewing (Track List → Track Detail)
+- **Design System**: 100% compliance with custom Design System components (no raw HTML)
+- **Accessibility**: Proper ARIA labels, keyboard navigation, and semantic HTML
 
 ---
 
@@ -362,6 +387,10 @@ APPROVED_USERS="admin@example.com,user@example.com,recruiter@company.com"
 - `spotify-design-system` (custom)
 - `spotify-web-api-node`
 - `swr`
+
+**Data Visualization:**
+- `chart.js` (charts and graphs)
+- `react-chartjs-2` (React wrapper)
 
 **Utilities:**
 - `fast-average-color` (color extraction)
