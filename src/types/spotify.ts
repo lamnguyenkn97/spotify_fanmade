@@ -52,6 +52,8 @@ export interface SpotifyTrack {
     name: string;
     images: SpotifyImage[];
     id?: string;
+    release_date?: string;
+    total_tracks?: number;
   };
   duration_ms: number;
   preview_url?: string | null;
@@ -61,6 +63,7 @@ export interface SpotifyTrack {
   };
   uri?: string;
   popularity?: number; // 0-100 popularity score from Spotify
+  track_number?: number;
 }
 
 export interface SpotifyTrackWithContext {
