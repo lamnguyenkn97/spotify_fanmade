@@ -104,7 +104,7 @@ export const TrackDetailModal: React.FC<TrackDetailModalProps> = ({ isOpen, onCl
             {track.album && (
               <Stack direction="row" spacing="sm" align="center">
                 <Icon icon={faCompactDisc} size="sm" color="#95E1D3" />
-                <Stack direction="column" spacing="none" className="flex-1">
+                <Stack direction="column" spacing="xs" className="flex-1">
                   <Typography variant="body" size="sm" color="secondary">
                     Album
                   </Typography>
@@ -119,7 +119,7 @@ export const TrackDetailModal: React.FC<TrackDetailModalProps> = ({ isOpen, onCl
             {releaseYear && (
               <Stack direction="row" spacing="sm" align="center">
                 <Icon icon={faCalendar} size="sm" color="#FFA07A" />
-                <Stack direction="column" spacing="none" className="flex-1">
+                <Stack direction="column" spacing="xs" className="flex-1">
                   <Typography variant="body" size="sm" color="secondary">
                     Release Year
                   </Typography>
@@ -134,7 +134,7 @@ export const TrackDetailModal: React.FC<TrackDetailModalProps> = ({ isOpen, onCl
             {track.track_number && (
               <Stack direction="row" spacing="sm" align="center">
                 <Icon icon={faMusic} size="sm" color="#C77DFF" />
-                <Stack direction="column" spacing="none" className="flex-1">
+                <Stack direction="column" spacing="xs" className="flex-1">
                   <Typography variant="body" size="sm" color="secondary">
                     Track Number
                   </Typography>
@@ -148,7 +148,7 @@ export const TrackDetailModal: React.FC<TrackDetailModalProps> = ({ isOpen, onCl
             {/* Explicit */}
             {track.explicit !== undefined && (
               <Stack direction="row" spacing="sm" align="center">
-                <Stack direction="column" spacing="none" className="flex-1">
+                <Stack direction="column" spacing="xs" className="flex-1">
                   <Typography variant="body" size="sm" color="secondary">
                     Content Rating
                   </Typography>

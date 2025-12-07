@@ -272,26 +272,10 @@ const AppLayoutContent: React.FC<AppLayoutContentProps> = ({
             ? [
                 {
                   id: 'insights',
-                  label: (
-                    <Stack direction="row" spacing="xs" align="center">
-                      <Typography variant="body" size="md" weight="medium">
-                        Insights
-                      </Typography>
-                      <Stack 
-                        className="px-2 py-0.5 bg-spotify-green rounded-full animate-pulse"
-                        align="center"
-                        justify="center"
-                      >
-                        <Typography variant="caption" size="xs" weight="bold" className="text-black leading-none">
-                          NEW
-                        </Typography>
-                      </Stack>
-                    </Stack>
-                  ),
+                  label: 'Insights ✨',
                   onClick: () => router.push('/insights'),
-                  variant: 'text' as const,
+                  variant: 'primary' as const,
                   type: 'button' as const,
-                  className: 'hover:text-spotify-green transition-colors',
                 },
                 {
                   id: 'logout',
