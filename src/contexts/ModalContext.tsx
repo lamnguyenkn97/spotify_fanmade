@@ -258,7 +258,7 @@ export const ModalProvider: React.FC<{ children: ReactNode }> = ({ children }) =
                 
                 {/* Track Info */}
                 <Stack direction="column" spacing="xs" className="flex-1 min-w-0">
-                  <Typography variant="body" size="md" weight="medium" color="primary" className="truncate group-hover:text-spotify-green transition-colors">
+                  <Typography variant="body" size="lg" weight="bold" color="primary" className="group-hover:text-spotify-green transition-colors">
                     {track.name}
                   </Typography>
                   <Typography variant="body" size="sm" color="secondary" className="truncate">
