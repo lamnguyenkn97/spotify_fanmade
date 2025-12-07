@@ -14,7 +14,11 @@ interface TopArtistChartProps {
   artistListeningTime?: Record<string, { minutes: number; trackCount: number }>;
 }
 
-export const TopArtistChart: React.FC<TopArtistChartProps> = ({ artists, maxArtists = 5, artistListeningTime = {} }) => {
+export const TopArtistChart: React.FC<TopArtistChartProps> = ({
+  artists,
+  maxArtists = 5,
+  artistListeningTime = {},
+}) => {
   if (!artists || artists.length === 0) {
     return (
       <Typography variant="body" color="secondary">
@@ -34,16 +38,20 @@ export const TopArtistChart: React.FC<TopArtistChartProps> = ({ artists, maxArti
   // Prepare chart data - showing estimated listening time
   const chartData = {
     labels: topArtists.map((artist, index) => `${index + 1}. ${artist.name}`),
-    datasets: [{
-      label: 'Listening Time (hours)',
-      data: topArtists.map(artist => {
-        const time = artistListeningTime[artist.id];
-        return time ? Math.round(time.minutes / 60 * 10) / 10 : 0; // Round to 1 decimal
-      }),
-      backgroundColor: topArtists.map((_, index) => chartColors.palette[index % chartColors.palette.length]),
-      borderRadius: 8,
-      barThickness: 40,
-    }]
+    datasets: [
+      {
+        label: 'Listening Time (hours)',
+        data: topArtists.map((artist) => {
+          const time = artistListeningTime[artist.id];
+          return time ? Math.round((time.minutes / 60) * 10) / 10 : 0; // Round to 1 decimal
+        }),
+        backgroundColor: topArtists.map(
+          (_, index) => chartColors.palette[index % chartColors.palette.length]
+        ),
+        borderRadius: 8,
+        barThickness: 40,
+      },
+    ],
   };
 
   const options = {
@@ -53,18 +61,18 @@ export const TopArtistChart: React.FC<TopArtistChartProps> = ({ artists, maxArti
       x: {
         beginAtZero: true,
         ticks: {
-          callback: function(value: number | string) {
+          callback: function (value: number | string) {
             const numValue = typeof value === 'string' ? parseFloat(value) : value;
             return numValue + 'h';
           },
           color: '#b3b3b3',
           font: {
             size: 12,
-          }
+          },
         },
         grid: {
           color: 'rgba(255, 255, 255, 0.1)',
-        }
+        },
       },
       y: {
         ticks: {
@@ -72,12 +80,12 @@ export const TopArtistChart: React.FC<TopArtistChartProps> = ({ artists, maxArti
           font: {
             size: 12,
             weight: 'bold' as const,
-          }
+          },
         },
         grid: {
           display: false,
-        }
-      }
+        },
+      },
     },
     plugins: {
       legend: {
@@ -85,7 +93,7 @@ export const TopArtistChart: React.FC<TopArtistChartProps> = ({ artists, maxArti
       },
       tooltip: {
         callbacks: {
-          label: function(context: any) {
+          label: function (context: any) {
             const hours = context.parsed.x;
             const minutes = Math.round((hours % 1) * 60);
             if (hours >= 1) {
@@ -93,33 +101,35 @@ export const TopArtistChart: React.FC<TopArtistChartProps> = ({ artists, maxArti
             } else {
               return `~${Math.round(hours * 60)}m listening time`;
             }
-          }
-        }
-      }
-    }
+          },
+        },
+      },
+    },
   };
 
   return (
     <Stack direction="column" spacing="md" className="max-w-3xl">
       {/* Champion Section */}
-      <Stack direction="column" spacing="md" className="p-6 bg-gradient-to-r from-yellow-900/30 to-yellow-800/20 border-2 border-yellow-600/50 rounded-lg">
+      <Stack
+        direction="column"
+        spacing="md"
+        className="p-6 bg-gradient-to-r from-yellow-900/30 to-yellow-800/20 border-2 border-yellow-600/50 rounded-lg"
+      >
         {/* Header with Trophy */}
         <Stack direction="row" spacing="sm" align="center">
-          <span 
-            className="w-10 h-10 rounded-full bg-yellow-500 shadow-lg flex items-center justify-center flex-shrink-0"
-          >
+          <span className="w-10 h-10 rounded-full bg-yellow-500 shadow-lg flex items-center justify-center flex-shrink-0">
             <Icon icon={faTrophy} size="md" color="#000000" />
           </span>
           <Typography variant="heading" size="lg" weight="bold" color="primary">
             Your Most Played Artist
           </Typography>
         </Stack>
-        
+
         {/* Artist Info with Avatar */}
         <Stack direction="row" spacing="md" align="center">
           {/* Artist Avatar */}
           {champion.images && champion.images.length > 0 && (
-            <Image 
+            <Image
               src={getBestImageUrlByWidth(champion.images) || champion.images[0].url}
               alt={champion.name}
               variant="avatar"
@@ -128,7 +138,7 @@ export const TopArtistChart: React.FC<TopArtistChartProps> = ({ artists, maxArti
               className="flex-shrink-0 shadow-xl border-2 border-yellow-500/50"
             />
           )}
-          
+
           {/* Artist Details */}
           <Stack direction="column" spacing="xs" className="flex-1 min-w-0">
             <Typography variant="heading" size="xl" weight="bold" color="primary">
@@ -149,7 +159,7 @@ export const TopArtistChart: React.FC<TopArtistChartProps> = ({ artists, maxArti
                 estimated listening time
               </Typography>
             </Stack>
-            <Typography variant="body" size="xs" color="secondary">
+            <Typography variant="body" size="sm" color="secondary">
               {(champion.followers?.total || 0).toLocaleString()} followers on Spotify
             </Typography>
           </Stack>
@@ -173,4 +183,3 @@ export const TopArtistChart: React.FC<TopArtistChartProps> = ({ artists, maxArti
     </Stack>
   );
 };
-
