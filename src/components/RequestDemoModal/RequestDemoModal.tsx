@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Modal, Stack, Typography, Input, TextArea, Button, ButtonVariant, ButtonSize } from 'spotify-design-system';
 
 interface RequestDemoModalProps {
@@ -16,9 +16,6 @@ export const RequestDemoModal: React.FC<RequestDemoModalProps> = ({ isOpen, onCl
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState('');
   const [isAlreadyApproved, setIsAlreadyApproved] = useState(false);
-  const emailInputRef = useRef<HTMLInputElement>(null);
-  const nameInputRef = useRef<HTMLInputElement>(null);
-  const [activeField, setActiveField] = useState<'email' | 'name' | 'message' | null>(null);
 
   // Load saved email and auto-check approval when modal opens
   useEffect(() => {
@@ -58,21 +55,6 @@ export const RequestDemoModal: React.FC<RequestDemoModalProps> = ({ isOpen, onCl
     }
   };
 
-  // Restore focus after re-render (only for Input components)
-  useEffect(() => {
-    if (!isOpen || loading || submitted || isAlreadyApproved) return;
-    
-    const timer = setTimeout(() => {
-      if (activeField === 'email') {
-        emailInputRef.current?.focus();
-      } else if (activeField === 'name') {
-        nameInputRef.current?.focus();
-      }
-      // Don't restore focus for TextArea - it handles focus correctly
-    }, 0);
-
-    return () => clearTimeout(timer);
-  }, [email, name, isOpen, loading, submitted, isAlreadyApproved, activeField]);
 
   const handleSubmit = async () => {
     if (!email || !email.includes('@')) {
@@ -134,7 +116,6 @@ export const RequestDemoModal: React.FC<RequestDemoModalProps> = ({ isOpen, onCl
       setError('');
       setSubmitted(false);
       setIsAlreadyApproved(false);
-      setActiveField(null);
     } else if (submitted || isAlreadyApproved) {
       // Allow closing confirmation screens
       onClose();
@@ -144,7 +125,6 @@ export const RequestDemoModal: React.FC<RequestDemoModalProps> = ({ isOpen, onCl
       setError('');
       setSubmitted(false);
       setIsAlreadyApproved(false);
-      setActiveField(null);
     }
   };
 
@@ -192,25 +172,21 @@ export const RequestDemoModal: React.FC<RequestDemoModalProps> = ({ isOpen, onCl
             </Typography>
 
             <Input
-              ref={emailInputRef}
               label="Spotify Email"
               type="email"
               placeholder="your.email@example.com"
               value={email}
               onValueChange={setEmail}
-              onFocus={() => setActiveField('email')}
               disabled={loading}
               fullWidth
             />
 
             <Input
-              ref={nameInputRef}
               label="Name (Optional)"
               type="text"
               placeholder="Your name"
               value={name}
               onValueChange={setName}
-              onFocus={() => setActiveField('name')}
               disabled={loading}
               fullWidth
             />
