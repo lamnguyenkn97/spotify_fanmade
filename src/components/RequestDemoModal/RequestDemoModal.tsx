@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useRef, useEffect } from 'react';
-import { Modal, Stack, Typography, Input, Button, ButtonVariant, ButtonSize } from 'spotify-design-system';
+import { Modal, Stack, Typography, Input, TextArea, Button, ButtonVariant, ButtonSize } from 'spotify-design-system';
 
 interface RequestDemoModalProps {
   isOpen: boolean;
@@ -58,10 +58,9 @@ export const RequestDemoModal: React.FC<RequestDemoModalProps> = ({ isOpen, onCl
     }
   };
 
-  // Restore focus after re-render (only for Input components, not textarea)
+  // Restore focus after re-render (only for Input components)
   useEffect(() => {
     if (!isOpen || loading || submitted || isAlreadyApproved) return;
-    if (activeField === 'message') return; // Don't interfere with textarea
     
     const timer = setTimeout(() => {
       if (activeField === 'email') {
@@ -69,6 +68,7 @@ export const RequestDemoModal: React.FC<RequestDemoModalProps> = ({ isOpen, onCl
       } else if (activeField === 'name') {
         nameInputRef.current?.focus();
       }
+      // Don't restore focus for TextArea - it handles focus correctly
     }, 0);
 
     return () => clearTimeout(timer);
@@ -215,21 +215,15 @@ export const RequestDemoModal: React.FC<RequestDemoModalProps> = ({ isOpen, onCl
               fullWidth
             />
 
-            <Stack direction="column" spacing="xs">
-              <Typography variant="body" color="primary" weight="medium">
-                Message (Optional)
-              </Typography>
-              <textarea
-                placeholder="E.g., 'I'm a recruiter at Company X' or 'Frontend developer interested in your work'"
-                value={message}
-                onChange={(e) => setMessage(e.target.value)}
-                onFocus={() => setActiveField('message')}
-                onBlur={() => setActiveField(null)}
-                disabled={loading}
-                rows={3}
-                className="w-full px-3 py-2 bg-grey-grey1 text-white rounded border border-grey-grey2 focus:border-spotify-green focus:outline-none resize-none"
-              />
-            </Stack>
+            <TextArea
+              label="Message (Optional)"
+              placeholder="E.g., 'I'm a recruiter at Company X' or 'Frontend developer interested in your work'"
+              value={message}
+              onValueChange={setMessage}
+              disabled={loading}
+              rows={3}
+              fullWidth
+            />
 
             {error && (
               <Typography variant="caption" color="primary" className="text-red-500">
