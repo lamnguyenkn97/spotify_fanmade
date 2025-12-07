@@ -1,12 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { Resend } from 'resend';
+import { ERROR_CODES, createErrorResponse } from '@/constants';
 
 export async function POST(request: NextRequest) {
   try {
     const { email, name, message } = await request.json();
 
     if (!email || !email.includes('@')) {
-      return NextResponse.json({ error: 'Invalid email' }, { status: 400 });
+      const errorResponse = createErrorResponse(ERROR_CODES.VALIDATION.INVALID_EMAIL);
+      return NextResponse.json(errorResponse.error, { status: errorResponse.status });
     }
 
     // Send email notification via Resend
@@ -47,7 +49,11 @@ export async function POST(request: NextRequest) {
     });
   } catch (error) {
     console.error('Error processing demo request:', error);
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+    const errorResponse = createErrorResponse(
+      ERROR_CODES.SERVER.INTERNAL_ERROR,
+      error instanceof Error ? error.message : 'Unknown error'
+    );
+    return NextResponse.json(errorResponse.error, { status: errorResponse.status });
   }
 }
 
