@@ -271,6 +271,13 @@ const AppLayoutContent: React.FC<AppLayoutContentProps> = ({
           isAuthenticated
             ? [
                 {
+                  id: 'insights',
+                  label: 'Insights',
+                  onClick: () => router.push('/insights'),
+                  variant: 'text' as const,
+                  type: 'button' as const,
+                },
+                {
                   id: 'logout',
                   label: 'Log out',
                   onClick: onLogout,

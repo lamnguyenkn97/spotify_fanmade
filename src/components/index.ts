@@ -13,3 +13,5 @@ export { PlaylistHeaderSkeleton, TrackListSkeleton, ActionButtonsSkeleton } from
 export { ErrorBoundary } from './ErrorBoundary';
 export { RequestDemoModal } from './RequestDemoModal';
 export { DemoVideo } from './DemoVideo';
+export { InsightCard } from './InsightCard';
+export { GenreChart } from './GenreChart';
