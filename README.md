@@ -77,11 +77,15 @@ This is an independent educational project for portfolio demonstration.
 
 ## Features
 
-### 🎵 Playback
-- Spotify Web Playback SDK integration with automatic fallback to preview URLs
-- Full player controls: play/pause, skip, seek, volume, shuffle, repeat
-- Queue management with drag-and-drop reordering
-- Real-time position tracking
+### 🎵 Playback & Queue
+- **Spotify Web Playback SDK** integration with automatic fallback to 30s preview URLs for free users
+- **Full Player Controls**: play/pause, skip, seek, volume, shuffle, repeat modes
+- **Advanced Queue Management**: 
+  - Drag-and-drop reordering with smooth animations
+  - Add tracks from anywhere in the app
+  - Visual queue drawer with album artwork
+  - Real-time queue state management
+- **Real-time Position Tracking** with progress bar
 
 ### 📊 Listening Insights (NEW)
 Personal analytics dashboard with interactive data visualizations and time-range filtering (Last Month, 6 Months, All Time).
@@ -115,20 +119,13 @@ Personal analytics dashboard with interactive data visualizations and time-range
 - Configurable user allowlist for development mode compliance
 
 ### 🎨 UI/UX
-- Dynamic gradient backgrounds extracted from album artwork
-- Skeleton loading screens for all async content
-- Toast notifications for user feedback
-- Error boundaries for graceful error handling
-- Fully responsive design (mobile, tablet, desktop)
-- Dark theme with Spotify aesthetic
-- Custom circular icon badges with unique colors per category
-- Smooth scroll navigation to page sections
-- Hover effects with scale transforms and color transitions
-- Modal system for focused content viewing
-- Interactive stat cards with click handlers
-- Pulsing animations for NEW features
-- Nested modals (Track List → Track Detail)
-- 100% Design System compliance (no raw HTML elements)
+- **Dynamic Backgrounds**: Extracted from album artwork with gradient overlays
+- **Responsive Design**: Fully responsive across mobile, tablet, and desktop with dark Spotify theme
+- **Loading States**: Skeleton screens, toast notifications, and graceful error handling
+- **Smooth Interactions**: Hover effects, scale transforms, smooth scroll navigation, and pulsing animations
+- **Modal System**: Nested modals for focused viewing (Track List → Track Detail)
+- **Design System**: 100% compliance with custom Design System components (no raw HTML)
+- **Accessibility**: Proper ARIA labels, keyboard navigation, and semantic HTML
 
 ---
 
