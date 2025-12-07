@@ -489,23 +489,19 @@ export default function ArtistPage() {
           {/* Album Cards */}
           <Stack
             direction="row"
-            spacing="md"
-            className="overflow-x-auto overflow-y-visible pb-4 -mx-8 px-8 scrollbar-hide flex-nowrap"
+            spacing="sm"
+            className="overflow-x-auto pb-4 scrollbar-hide"
           >
             {getFilteredAlbums().map((album) => (
-              <Stack
+              <Card
                 key={album.id}
-                direction="column"
-                className="flex-shrink-0 w-[180px]"
-              >
-                <Card
-                  title={album.name}
-                  subtitle={getAlbumSubtitle(album)}
-                  imageUrl={album.images?.[0]?.url || ''}
-                  variant="default"
-                  onClick={() => handleAlbumClick(album.id)}
-                />
-              </Stack>
+                title={album.name}
+                subtitle={getAlbumSubtitle(album)}
+                imageUrl={album.images?.[0]?.url || ''}
+                variant="default"
+                onClick={() => handleAlbumClick(album.id)}
+                className="flex-shrink-0"
+              />
             ))}
           </Stack>
         </Stack>
