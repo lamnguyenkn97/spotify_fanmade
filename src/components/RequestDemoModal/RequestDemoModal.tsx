@@ -18,7 +18,6 @@ export const RequestDemoModal: React.FC<RequestDemoModalProps> = ({ isOpen, onCl
   const [isAlreadyApproved, setIsAlreadyApproved] = useState(false);
   const emailInputRef = useRef<HTMLInputElement>(null);
   const nameInputRef = useRef<HTMLInputElement>(null);
-  const messageInputRef = useRef<HTMLTextAreaElement>(null);
   const [activeField, setActiveField] = useState<'email' | 'name' | 'message' | null>(null);
 
   // Restore focus after re-render (only for Input components, not textarea)
@@ -179,16 +178,16 @@ export const RequestDemoModal: React.FC<RequestDemoModalProps> = ({ isOpen, onCl
               <Typography variant="body" color="primary" weight="medium">
                 Message (Optional)
               </Typography>
-              <textarea
-                ref={messageInputRef}
+              <Input
+                type="text"
                 placeholder="E.g., 'I'm a recruiter at Company X' or 'Frontend developer interested in your work'"
                 value={message}
-                onChange={(e) => setMessage(e.target.value)}
+                onValueChange={setMessage}
                 onFocus={() => setActiveField('message')}
                 onBlur={() => setActiveField(null)}
                 disabled={loading}
-                rows={3}
-                className="w-full px-3 py-2 bg-grey-grey1 text-white rounded border border-grey-grey2 focus:border-spotify-green focus:outline-none resize-none"
+                fullWidth
+                className="h-20"
               />
             </Stack>
 
