@@ -21,7 +21,7 @@ import { useRouter } from 'next/navigation';
 import { DiscographyFilterType, AlbumType, SpotifyArtistData, SpotifyAlbum, SpotifyTrack } from '@/types';
 import { formatDuration } from '@/utils/formatHelpers';
 import { useMusicPlayerContext } from '@/contexts/MusicPlayerContext';
-import { convertTracksToQueue } from '@/utils/trackHelpers';
+import { convertTracksToQueue, convertTrackToCurrentTrack } from '@/utils/trackHelpers';
 
 interface ArtistDataExtended {
   id: string;
@@ -113,7 +113,8 @@ export default function ArtistPage() {
       // Play first track and set queue to all top tracks
       const queue = convertTracksToQueue(artist.topTracks as any);
       setQueue(queue);
-      await playTrack(artist.topTracks[0] as any);
+      const trackToPlay = convertTrackToCurrentTrack(artist.topTracks[0] as any);
+      await playTrack(trackToPlay);
     } catch (error) {
       console.error('Failed to play artist tracks:', error);
     }
@@ -127,7 +128,8 @@ export default function ArtistPage() {
       const shuffled = [...artist.topTracks].sort(() => Math.random() - 0.5);
       const queue = convertTracksToQueue(shuffled as any);
       setQueue(queue);
-      await playTrack(shuffled[0] as any);
+      const trackToPlay = convertTrackToCurrentTrack(shuffled[0] as any);
+      await playTrack(trackToPlay);
     } catch (error) {
       console.error('Failed to shuffle artist tracks:', error);
     }
@@ -140,7 +142,8 @@ export default function ArtistPage() {
       // Set queue to all top tracks and play the clicked track
       const queue = convertTracksToQueue(artist.topTracks as any);
       setQueue(queue);
-      await playTrack(track);
+      const trackToPlay = convertTrackToCurrentTrack(track);
+      await playTrack(trackToPlay);
     } catch (error) {
       console.error('Failed to play track:', error);
     }
@@ -445,9 +448,14 @@ export default function ArtistPage() {
       {artist.albums && artist.albums.length > 0 && (
         <Stack direction="column" spacing="md" className="px-8 pt-8 pb-8">
           <Stack direction="row" justify="space-between" align="center">
-            <Typography variant="heading" size="xl" weight="bold" color="primary">
-              Discography
-            </Typography>
+            <Stack direction="column" spacing="xs">
+              <Typography variant="heading" size="xl" weight="bold" color="primary">
+                Discography
+              </Typography>
+              <Typography variant="body" size="sm" color="secondary">
+                {artist.albums.length} releases
+              </Typography>
+            </Stack>
           </Stack>
 
           {/* Filter Buttons */}
