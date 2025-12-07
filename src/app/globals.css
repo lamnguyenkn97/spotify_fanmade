@@ -56,8 +56,3 @@ body {
 .scrollbar-hide::-webkit-scrollbar {
   display: none; /* Chrome, Safari, Opera */
 }
-
-/* Make Insights button text bolder */
-button[aria-label="Insights"] {
-  font-weight: 700 !important;
-}
