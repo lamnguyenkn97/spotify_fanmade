@@ -148,24 +148,13 @@ export const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
     }
   }, [router]);
 
-  // Handle login click - bypass modal for admin, show Request Demo modal for others
+  // Handle login click - show Request Demo modal for unauthenticated users
   const handleLoginClick = useCallback(() => {
     if (isAuthenticated) {
       // User is already logged in, do nothing
       return;
     }
-    
-    // Check if admin (based on saved email)
-    const savedEmail = typeof window !== 'undefined' ? localStorage.getItem('spotify_demo_email') : null;
-    const ADMIN_EMAILS = ['lamnguyen.hcmut@gmail.com'];
-    
-    if (savedEmail && ADMIN_EMAILS.includes(savedEmail.toLowerCase())) {
-      // Admin bypass - go straight to OAuth
-      window.location.href = '/api/auth/login';
-      return;
-    }
-    
-    // Show Request Demo modal for non-admin users
+    // Show Request Demo modal (modal itself handles admin auto-redirect)
     showRequestDemoModal();
   }, [isAuthenticated, showRequestDemoModal]);
 

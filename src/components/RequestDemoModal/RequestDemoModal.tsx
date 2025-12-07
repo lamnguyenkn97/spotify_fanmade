@@ -219,16 +219,15 @@ export const RequestDemoModal: React.FC<RequestDemoModalProps> = ({ isOpen, onCl
               <Typography variant="body" color="primary" weight="medium">
                 Message (Optional)
               </Typography>
-              <Input
+              <input
                 type="text"
                 placeholder="E.g., 'I'm a recruiter at Company X' or 'Frontend developer interested in your work'"
                 value={message}
-                onValueChange={setMessage}
+                onChange={(e) => setMessage(e.target.value)}
                 onFocus={() => setActiveField('message')}
                 onBlur={() => setActiveField(null)}
                 disabled={loading}
-                fullWidth
-                className="h-20"
+                className="w-full px-3 py-2 bg-grey-grey1 text-white rounded border border-grey-grey2 focus:border-spotify-green focus:outline-none"
               />
             </Stack>
 
