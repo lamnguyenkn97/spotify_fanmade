@@ -120,32 +120,29 @@ export const RequestDemoModal: React.FC<RequestDemoModalProps> = ({ isOpen, onCl
       <Stack direction="column" spacing="lg" className="p-6">
         {isAlreadyApproved ? (
           <Stack direction="column" spacing="md" align="center" className="py-8">
-            <Typography variant="body" color="primary" className="text-center text-lg">
-              ✅ Great news! You're already approved!
+            <Typography variant="body" color="primary" className="text-center text-lg" weight="medium">
+              Already Approved
             </Typography>
             <Typography variant="body" color="secondary" className="text-center">
-              Redirecting you to Spotify login...
+              Redirecting to Spotify login...
             </Typography>
           </Stack>
         ) : submitted ? (
-          <Stack direction="column" spacing="md" align="center" className="py-8">
-            <Typography variant="body" color="primary" className="text-center text-lg">
-              ✅ Thank you for your interest!
-            </Typography>
-            <Typography variant="body" color="secondary" className="text-center">
-              I'll review your request and add you to the allowlist within 24 hours.
-              You'll receive a confirmation email at <strong>{email}</strong>
-            </Typography>
-            <Typography variant="caption" color="secondary" className="text-center mt-4">
-              Watch the demo video in the meantime!
-            </Typography>
+          <Stack direction="column" spacing="lg" align="center" className="py-8">
+            <Stack direction="column" spacing="sm" align="center">
+              <Typography variant="body" color="primary" className="text-center text-lg" weight="medium">
+                Request Submitted
+              </Typography>
+              <Typography variant="body" color="secondary" className="text-center">
+                You'll receive confirmation at <strong>{email}</strong> within 24 hours.
+              </Typography>
+            </Stack>
             <Button
               variant={ButtonVariant.Primary}
               size={ButtonSize.Medium}
               onClick={handleClose}
-              className="mt-4"
             >
-              Close
+              Done
             </Button>
           </Stack>
         ) : (
