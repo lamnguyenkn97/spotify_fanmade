@@ -3,13 +3,14 @@
 import React, { createContext, useContext, useState, useCallback, ReactNode } from 'react';
 import { Modal, ModalSize } from 'spotify-design-system';
 import { loginWithSpotify } from '@/hooks/api';
-import { RequestDemoModal } from '@/components';
+import { RequestDemoModal, TrackDetailModal } from '@/components';
+import { SpotifyTrack } from '@/types';
 
 // ============================================================================
 // Types
 // ============================================================================
 
-type ModalType = 'login' | 'featureNotImplemented' | 'cardInfo' | 'requestDemo' | null;
+type ModalType = 'login' | 'featureNotImplemented' | 'cardInfo' | 'requestDemo' | 'trackDetail' | null;
 
 interface ModalConfig {
   type: ModalType;
@@ -17,6 +18,7 @@ interface ModalConfig {
   description?: string;
   cardTitle?: string;
   cardImageUrl?: string;
+  track?: SpotifyTrack | null;
 }
 
 interface ModalContextValue {
@@ -24,6 +26,7 @@ interface ModalContextValue {
   showFeatureNotImplementedModal: () => void;
   showCardModal: (title: string, imageUrl?: string) => void;
   showRequestDemoModal: () => void;
+  showTrackDetailModal: (track: SpotifyTrack) => void;
   closeModal: () => void;
 }
 
@@ -72,6 +75,13 @@ export const ModalProvider: React.FC<{ children: ReactNode }> = ({ children }) =
     });
   }, []);
 
+  const showTrackDetailModal = useCallback((track: SpotifyTrack) => {
+    setModalConfig({
+      type: 'trackDetail',
+      track,
+    });
+  }, []);
+
   const closeModal = useCallback(() => {
     setModalConfig({ type: null });
   }, []);
@@ -93,6 +103,7 @@ export const ModalProvider: React.FC<{ children: ReactNode }> = ({ children }) =
         showFeatureNotImplementedModal,
         showCardModal,
         showRequestDemoModal,
+        showTrackDetailModal,
         closeModal,
       }}
     >
@@ -165,6 +176,13 @@ export const ModalProvider: React.FC<{ children: ReactNode }> = ({ children }) =
       <RequestDemoModal 
         isOpen={modalConfig.type === 'requestDemo'} 
         onClose={closeModal} 
+      />
+
+      {/* Track Detail Modal */}
+      <TrackDetailModal
+        isOpen={modalConfig.type === 'trackDetail'}
+        onClose={closeModal}
+        track={modalConfig.track || null}
       />
     </ModalContext.Provider>
   );

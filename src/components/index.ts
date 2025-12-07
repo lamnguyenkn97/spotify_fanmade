@@ -16,3 +16,4 @@ export { DemoVideo } from './DemoVideo';
 export { InsightCard } from './InsightCard';
 export { GenreChart } from './GenreChart';
 export { TopArtistChart } from './TopArtistChart';
+export { TrackDetailModal } from './TrackDetailModal';

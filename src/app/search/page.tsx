@@ -11,6 +11,7 @@ import {
   colors,
   Skeleton,
   borderRadius,
+  Image,
 } from 'spotify-design-system';
 import { SpotifySearchResults, TrackTableRow } from '@/types';
 import { getBestImageUrl } from '@/utils/imageHelpers';
@@ -127,10 +128,11 @@ function SearchPageContent() {
       renderCell: (row: TrackTableRow) => (
         <Stack direction="row" spacing="sm" align="center">
           {row.albumImage && (
-            <img
+            <Image
               src={row.albumImage}
               alt={row.album}
-              className="w-10 h-10 rounded"
+              variant="default"
+              className="w-10 h-10 rounded flex-shrink-0"
             />
           )}
           <Stack direction="column" spacing="xs">
@@ -449,10 +451,11 @@ function SearchPageContent() {
                       style={{ borderRadius: borderRadius.md }}
                       onClick={() => handleShowClick(episode.show?.id || '')}
                     >
-                      <img
+                      <Image
                         src={getBestImageUrl(episode.images || [])}
                         alt={episode.name || 'Episode'}
-                        className="w-15 h-15 rounded"
+                        variant="default"
+                        className="w-15 h-15 rounded flex-shrink-0"
                       />
                       <Stack direction="column" spacing="xs" className="flex-1">
                         <Typography variant="body" size="sm" weight="medium" color="primary">

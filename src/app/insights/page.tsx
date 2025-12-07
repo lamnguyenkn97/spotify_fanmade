@@ -1,15 +1,17 @@
 'use client';
 
 import React, { useState, useMemo } from 'react';
-import { Stack, Typography, Button, ButtonVariant, ButtonSize, Skeleton } from 'spotify-design-system';
+import { Stack, Typography, Button, ButtonVariant, ButtonSize, Skeleton, Image } from 'spotify-design-system';
 import { Doughnut, Radar, Bar } from 'react-chartjs-2';
 import { useTopArtists, useTopTracks } from '@/hooks/api/useSpotifyApi';
 import { TimeRange } from '@/types';
 import { InsightCard, GenreChart, TopArtistChart } from '@/components';
 import { useSpotify } from '@/hooks/useSpotify';
+import { useModal } from '@/contexts';
 import { useRouter } from 'next/navigation';
 import { faMusic, faUserFriends, faCompactDisc, faClock } from '@fortawesome/free-solid-svg-icons';
 import { getDonutChartOptions, getRadarChartOptions, getBarChartOptions, chartColors } from '@/utils/chartConfig';
+import { getBestImageUrl } from '@/utils/imageHelpers';
 
 const TIME_RANGES = [
   { value: TimeRange.SHORT_TERM, label: 'Last Month', description: '~4 weeks' },
@@ -20,6 +22,7 @@ const TIME_RANGES = [
 export default function InsightsPage() {
   const router = useRouter();
   const { isAuthenticated, loading: authLoading } = useSpotify();
+  const { showTrackDetailModal } = useModal();
   const [selectedTimeRange, setSelectedTimeRange] = useState<TimeRange>(TimeRange.SHORT_TERM);
 
   // Fetch data based on selected time range
@@ -28,9 +31,32 @@ export default function InsightsPage() {
     isAuthenticated
   );
   const { tracks, isLoading: tracksLoading } = useTopTracks(
-    { time_range: selectedTimeRange, limit: 20 },
+    { time_range: selectedTimeRange, limit: 50 },
     isAuthenticated
   );
+
+  // Calculate estimated listening time per artist
+  const artistListeningTime = useMemo(() => {
+    const artistTime: Record<string, { minutes: number; trackCount: number }> = {};
+    
+    // Average track duration is ~3.5 minutes, but we can be more precise
+    // Top tracks are listened to more frequently, so we estimate based on their rank
+    tracks.forEach((track, index) => {
+      track.artists.forEach((artist) => {
+        if (!artistTime[artist.id]) {
+          artistTime[artist.id] = { minutes: 0, trackCount: 0 };
+        }
+        // Estimate: Higher ranked tracks = more plays
+        // Top track might be played 50+ times, decreasing logarithmically
+        const estimatedPlays = Math.max(5, 50 - (index * 2));
+        const estimatedMinutes = estimatedPlays * 3.5; // avg 3.5 min per track
+        artistTime[artist.id].minutes += estimatedMinutes;
+        artistTime[artist.id].trackCount += 1;
+      });
+    });
+    
+    return artistTime;
+  }, [tracks]);
 
   // Calculate genre data from artists
   const genreData = useMemo(() => {
@@ -137,44 +163,60 @@ export default function InsightsPage() {
       </Stack>
 
       {/* Stats Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <Stack direction="row" spacing="md" className="flex-wrap">
         {isLoading ? (
           <>
-            <Skeleton variant="rectangular" width="100%" height="140px" className="rounded-lg" />
-            <Skeleton variant="rectangular" width="100%" height="140px" className="rounded-lg" />
-            <Skeleton variant="rectangular" width="100%" height="140px" className="rounded-lg" />
-            <Skeleton variant="rectangular" width="100%" height="140px" className="rounded-lg" />
+            <Stack className="flex-1 min-w-[250px]">
+              <Skeleton variant="rectangular" width="100%" height="140px" className="rounded-lg" />
+            </Stack>
+            <Stack className="flex-1 min-w-[250px]">
+              <Skeleton variant="rectangular" width="100%" height="140px" className="rounded-lg" />
+            </Stack>
+            <Stack className="flex-1 min-w-[250px]">
+              <Skeleton variant="rectangular" width="100%" height="140px" className="rounded-lg" />
+            </Stack>
+            <Stack className="flex-1 min-w-[250px]">
+              <Skeleton variant="rectangular" width="100%" height="140px" className="rounded-lg" />
+            </Stack>
           </>
         ) : (
           <>
-            <InsightCard 
-              icon={faMusic} 
-              value={tracks.length} 
-              label="Top Tracks" 
-              color="#FF6B9D"
-            />
-            <InsightCard 
-              icon={faUserFriends} 
-              value={artists.length} 
-              label="Top Artists" 
-              color="#4ECDC4"
-            />
-            <InsightCard 
-              icon={faCompactDisc} 
-              value={genreData.length} 
-              label="Genres" 
-              color="#95E1D3"
-            />
-            <InsightCard 
-              icon={faClock} 
-              value={`${estimatedHours}h`} 
-              label="Estimated Listening" 
-              description="Approximate"
-              color="#FFA07A"
-            />
+            <Stack className="flex-1 min-w-[250px]">
+              <InsightCard 
+                icon={faMusic} 
+                value={tracks.length} 
+                label="Top Tracks" 
+                color="#FF6B9D"
+              />
+            </Stack>
+            <Stack className="flex-1 min-w-[250px]">
+              <InsightCard 
+                icon={faUserFriends} 
+                value={artists.length} 
+                label="Top Artists" 
+                color="#4ECDC4"
+              />
+            </Stack>
+            <Stack className="flex-1 min-w-[250px]">
+              <InsightCard 
+                icon={faCompactDisc} 
+                value={genreData.length} 
+                label="Genres" 
+                color="#95E1D3"
+              />
+            </Stack>
+            <Stack className="flex-1 min-w-[250px]">
+              <InsightCard 
+                icon={faClock} 
+                value={`${estimatedHours}h`} 
+                label="Estimated Listening" 
+                description="Approximate"
+                color="#FFA07A"
+              />
+            </Stack>
           </>
         )}
-      </div>
+      </Stack>
 
       {/* Top Artists Section */}
       <Stack direction="column" spacing="lg">
@@ -190,7 +232,7 @@ export default function InsightsPage() {
         {isLoading ? (
           <Skeleton variant="rectangular" width="100%" height="400px" className="rounded-lg" />
         ) : artists.length > 0 ? (
-          <TopArtistChart artists={artists} maxArtists={5} />
+          <TopArtistChart artists={artists} maxArtists={5} artistListeningTime={artistListeningTime} />
         ) : (
           <Typography variant="body" color="secondary">
             No artist data available for this time range
@@ -262,6 +304,75 @@ export default function InsightsPage() {
           ) : (
             <Stack className="p-6 bg-surface-elevated rounded-lg">
               <Bar data={trackPopularityData} options={getBarChartOptions()} />
+            </Stack>
+          )}
+        </Stack>
+      )}
+
+      {/* Top Tracks List */}
+      {tracks.length > 0 && (
+        <Stack direction="column" spacing="lg">
+          <Stack direction="column" spacing="sm">
+            <Typography variant="heading" size="lg" weight="bold" color="primary">
+              Your Top Tracks
+            </Typography>
+            <Typography variant="body" color="secondary">
+              Click on any track to see detailed information
+            </Typography>
+          </Stack>
+          
+          {isLoading ? (
+            <Stack direction="column" spacing="sm">
+              {Array.from({ length: 10 }).map((_, i) => (
+                <Skeleton key={i} variant="rectangular" width="100%" height="80px" className="rounded-lg" />
+              ))}
+            </Stack>
+          ) : (
+            <Stack direction="column" spacing="sm">
+              {tracks.slice(0, 20).map((track, index) => (
+                <Stack
+                  key={track.id}
+                  direction="row"
+                  spacing="md"
+                  align="center"
+                  className="p-4 bg-surface-elevated rounded-lg hover:bg-surface-elevated-hover transition-colors cursor-pointer group"
+                  onClick={() => showTrackDetailModal(track)}
+                >
+                  {/* Track Number */}
+                  <Typography variant="body" size="lg" weight="bold" color="secondary" className="w-8 text-center flex-shrink-0">
+                    {index + 1}
+                  </Typography>
+                  
+                  {/* Album Art */}
+                  {track.album?.images && track.album.images.length > 0 && (
+                    <Image
+                      src={getBestImageUrl(track.album.images) || track.album.images[0].url}
+                      alt={track.name}
+                      variant="default"
+                      className="w-16 h-16 flex-shrink-0 rounded"
+                    />
+                  )}
+                  
+                  {/* Track Info */}
+                  <Stack direction="column" spacing="xs" className="flex-1 min-w-0">
+                    <Typography variant="body" size="md" weight="medium" color="primary" className="truncate group-hover:text-spotify-green transition-colors">
+                      {track.name}
+                    </Typography>
+                    <Typography variant="body" size="sm" color="secondary" className="truncate">
+                      {track.artists.map(a => a.name).join(', ')}
+                    </Typography>
+                  </Stack>
+                  
+                  {/* Popularity */}
+                  {track.popularity !== undefined && (
+                    <Stack direction="row" spacing="xs" align="center" className="flex-shrink-0">
+                      <Typography variant="body" size="sm" color="secondary">
+                        {track.popularity}
+                      </Typography>
+                    </Stack>
+                  )}
+                </Stack>
+              ))}
             </Stack>
           )}
         </Stack>

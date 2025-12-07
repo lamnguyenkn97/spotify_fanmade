@@ -11,9 +11,10 @@ import { getBestImageUrlByWidth } from '@/utils/imageHelpers';
 interface TopArtistChartProps {
   artists: SpotifyArtist[];
   maxArtists?: number;
+  artistListeningTime?: Record<string, { minutes: number; trackCount: number }>;
 }
 
-export const TopArtistChart: React.FC<TopArtistChartProps> = ({ artists, maxArtists = 5 }) => {
+export const TopArtistChart: React.FC<TopArtistChartProps> = ({ artists, maxArtists = 5, artistListeningTime = {} }) => {
   if (!artists || artists.length === 0) {
     return (
       <Typography variant="body" color="secondary">
@@ -25,12 +26,20 @@ export const TopArtistChart: React.FC<TopArtistChartProps> = ({ artists, maxArti
   const topArtists = artists.slice(0, maxArtists);
   const champion = artists[0];
 
-  // Prepare chart data - showing follower count as a metric
+  // Get listening time data for champion
+  const championTime = artistListeningTime[champion.id];
+  const championHours = championTime ? Math.round(championTime.minutes / 60) : 0;
+  const championMinutes = championTime ? Math.round(championTime.minutes % 60) : 0;
+
+  // Prepare chart data - showing estimated listening time
   const chartData = {
     labels: topArtists.map((artist, index) => `${index + 1}. ${artist.name}`),
     datasets: [{
-      label: 'Followers',
-      data: topArtists.map(artist => artist.followers?.total || 0),
+      label: 'Listening Time (hours)',
+      data: topArtists.map(artist => {
+        const time = artistListeningTime[artist.id];
+        return time ? Math.round(time.minutes / 60 * 10) / 10 : 0; // Round to 1 decimal
+      }),
       backgroundColor: topArtists.map((_, index) => chartColors.palette[index % chartColors.palette.length]),
       borderRadius: 8,
       barThickness: 40,
@@ -46,12 +55,7 @@ export const TopArtistChart: React.FC<TopArtistChartProps> = ({ artists, maxArti
         ticks: {
           callback: function(value: number | string) {
             const numValue = typeof value === 'string' ? parseFloat(value) : value;
-            if (numValue >= 1000000) {
-              return (numValue / 1000000).toFixed(1) + 'M';
-            } else if (numValue >= 1000) {
-              return (numValue / 1000).toFixed(1) + 'K';
-            }
-            return numValue.toString();
+            return numValue + 'h';
           },
           color: '#b3b3b3',
           font: {
@@ -82,8 +86,13 @@ export const TopArtistChart: React.FC<TopArtistChartProps> = ({ artists, maxArti
       tooltip: {
         callbacks: {
           label: function(context: any) {
-            const value = context.parsed.x;
-            return `Followers: ${value.toLocaleString()}`;
+            const hours = context.parsed.x;
+            const minutes = Math.round((hours % 1) * 60);
+            if (hours >= 1) {
+              return `~${Math.floor(hours)}h ${minutes}m listening time`;
+            } else {
+              return `~${Math.round(hours * 60)}m listening time`;
+            }
           }
         }
       }
@@ -130,7 +139,17 @@ export const TopArtistChart: React.FC<TopArtistChartProps> = ({ artists, maxArti
                 {champion.genres.slice(0, 3).join(' • ')}
               </Typography>
             )}
-            <Typography variant="body" size="sm" color="secondary">
+            <Stack direction="row" spacing="xs" align="center" className="flex-wrap">
+              <Typography variant="body" size="md" weight="bold" className="text-spotify-green">
+                {championHours > 0 && `~${championHours}h ${championMinutes}m`}
+                {championHours === 0 && championMinutes > 0 && `~${championMinutes}m`}
+                {championHours === 0 && championMinutes === 0 && 'Your top artist'}
+              </Typography>
+              <Typography variant="body" size="sm" color="secondary">
+                estimated listening time
+              </Typography>
+            </Stack>
+            <Typography variant="body" size="xs" color="secondary">
               {(champion.followers?.total || 0).toLocaleString()} followers on Spotify
             </Typography>
           </Stack>
@@ -144,7 +163,7 @@ export const TopArtistChart: React.FC<TopArtistChartProps> = ({ artists, maxArti
             Your Top {topArtists.length} Artists
           </Typography>
           <Typography variant="body" size="sm" color="secondary">
-            Ranked by your listening activity
+            Estimated listening time based on your top tracks
           </Typography>
         </Stack>
         <div className="h-64">
