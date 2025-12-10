@@ -17,7 +17,7 @@
 
 ## 🎯 Key Achievements
 
-- **📦 Published Design System to NPM** - 23 reusable components with TypeScript + Storybook documentation
+- **📦 Published Design System to NPM** - ~30 reusable components with TypeScript + Storybook documentation
 - **📊 Listening Insights Dashboard** - Personal analytics with Chart.js (donut, radar, bar charts) and time-range filtering
 - **🎵 Advanced Queue System** - Drag-and-drop reordering, add from anywhere, visual drawer with album artwork
 - **🎨 100% Design System Compliance** - Zero raw HTML elements, all custom components
