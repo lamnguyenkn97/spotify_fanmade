@@ -253,37 +253,20 @@ const AppLayoutContent: React.FC<AppLayoutContentProps> = ({
         customLinks={
           !isAuthenticated
             ? [
-                { id: 'portfolio', label: 'Portfolio Demo', href: '#' },
-                {
-                  id: 'npm',
-                  label: 'Design System',
-                  href: 'https://www.npmjs.com/package/spotify-design-system',
+                { 
+                  id: 'portfolio', 
+                  label: 'Portfolio', 
+                  href: 'https://lamnguyenkn97-portfolio.vercel.app/' 
+                },
+                { 
+                  id: 'github', 
+                  label: 'GitHub', 
+                  href: 'https://github.com/lamnguyenkn97/spotify_fanmade' 
                 },
                 {
                   id: 'storybook',
-                  label: 'Documentation',
+                  label: 'Storybook',
                   href: 'https://spotify-storybook.vercel.app',
-                },
-              ]
-            : []
-        }
-        customActions={
-          isAuthenticated
-            ? [
-                {
-                  id: 'insights',
-                  label: 'Insights',
-                  icon: <Icon icon={faChartLine} size="sm" />,
-                  onClick: () => router.push('/insights'),
-                  variant: 'primary' as const,
-                  type: 'button' as const,
-                },
-                {
-                  id: 'logout',
-                  label: 'Log out',
-                  onClick: onLogout,
-                  variant: 'text' as const,
-                  type: 'button' as const,
                 },
               ]
             : []
